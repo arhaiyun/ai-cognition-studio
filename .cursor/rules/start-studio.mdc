@@ -1,0 +1,17 @@
+---
+description: 用户说「启动项目 / 打开导航页 / start studio」时启动 studio 门户
+alwaysApply: false
+---
+
+# 启动 AI Cognition Studio
+
+当用户要求**启动项目**、**打开导航页**、**打开 Studio** 或 **start studio** 时：
+
+1. `cd studio && npm install`（首次或依赖缺失时）
+2. `npm run content:build` — 扫描 `cognition/`、`essays/` 等 Markdown 生成索引
+3. `npm run dev` — 后台启动 Vite（默认 `http://127.0.0.1:5173`）
+4. 用浏览器打开上述 URL，确认导航页与目录可见
+
+详细约定见 [studio/PROMPT.md](../studio/PROMPT.md)。
+
+新增定稿文章后，提醒用户或自动执行 `npm run content:build` 刷新目录。

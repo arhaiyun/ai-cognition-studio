@@ -12,18 +12,37 @@
 | Mini 项目 | `labs/*/` | 必须可运行或有明确 TODO 与运行步骤 |
 | Checklist | `playbooks/` | 可打印、可勾选 |
 
-## Markdown Front Matter（essays / cognition 长文）
+## Markdown Front Matter（统一 schema）
+
+所有编入 Studio 索引的 Markdown 使用同一 front matter。`type` 通常可省略（由目录自动推断）。
+
+| 目录 | 默认 `type` |
+|------|-------------|
+| `cognition/`、`essays/` | `article` |
+| `podcast/` | `podcast-card` |
+| `playbooks/` | `playbook` |
+| `meta/` | `meta` |
+| `labs/*/README.md` | `lab` |
+
+### 通用字段
 
 ```yaml
 ---
 title: ""
 date: YYYY-MM-DD
-status: draft | exploring | published
+status: exploring   # exploring | stable | archived（draft 请放 .private/）
+type: article       # 可选，覆盖目录默认值
 audience: [self, dev, general]
 tags: []
 summary: ""
 ---
 ```
+
+`status` 说明：`exploring` 探索中 · `stable` 相对稳定 · `archived` 归档保留。
+
+### 播客卡片额外字段（`podcast/`）
+
+见 [`podcast/_template.md`](podcast/_template.md)：`hosts`、`guests`、`links`、`takeaways`、`related` 等。
 
 ## Lab 最低标准
 

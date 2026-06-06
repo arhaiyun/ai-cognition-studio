@@ -26,6 +26,20 @@
 
 ---
 
+## Studio 导航门户
+
+Markdown 知识库的可视化阅读入口，位于 [`studio/`](studio/)：
+
+```bash
+cd studio
+npm install
+npm run dev    # 打开 http://127.0.0.1:5173
+```
+
+构建时扫描各目录 Markdown，生成静态索引；`src/generated/` 不入库，由 `npm run content:build` 或 CI 生成。
+
+---
+
 ## 快速导航
 
 - [学习路线图](meta/learning-roadmap.md)

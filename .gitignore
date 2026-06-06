@@ -12,7 +12,11 @@ venv/
 node_modules/
 dist/
 
+# Studio 构建产物（CI / npm run content:build 生成）
+studio/src/generated/
+
 # OS / Editor
 .DS_Store
 .idea/
 .vscode/
+studio/tsconfig.tsbuildinfo
