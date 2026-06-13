@@ -54,6 +54,7 @@ npm run dev    # 打开 http://127.0.0.1:5173
 |-----|------|
 | [mcp-hello](labs/mcp-hello/) | 最小 MCP Server（Python FastMCP） |
 | [cursor-skill-template](labs/cursor-skill-template/) | Cursor Skill 模板 |
+| [project-incubator](labs/project-incubator/) | 项目 0→1 孵化 Skill（PRD → UED Demo → 实现 Prompt） |
 | [prompt-patterns](labs/prompt-patterns/) | 可复用 Prompt 模式 |
 
 ---
