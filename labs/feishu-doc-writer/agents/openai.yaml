@@ -1,0 +1,7 @@
+interface:
+  display_name: "飞书文档写入"
+  short_description: "把 Markdown 内容写入指定飞书 Wiki 父节点下的新子文档"
+  default_prompt: "Use $feishu-doc-writer to write this Markdown document into the configured Feishu Wiki parent as a child document."
+
+policy:
+  allow_implicit_invocation: true

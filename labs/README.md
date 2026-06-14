@@ -9,6 +9,7 @@
 | [project-incubator](project-incubator/) | Claude Code Skill · 8 阶段产品孵化 | ✅ 可用 |
 | [studio-skill-sync](studio-skill-sync/) | Skill 三端同步 meta skill | ✅ 可用 |
 | [social-video-toolkit](social-video-toolkit/) | 社媒视频下载与字幕/帧分析 CLI | ✅ 可用 |
+| [feishu-doc-writer](feishu-doc-writer/) | 飞书 Wiki 子文档写入 Skill | ✅ 可用 |
 | [prompt-patterns](prompt-patterns/) | Markdown 模板 | ✅ 可用 |
 
 ## 新建 Lab
