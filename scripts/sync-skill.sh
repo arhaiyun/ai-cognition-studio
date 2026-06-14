@@ -30,4 +30,12 @@ else
   echo "  警告: 缺少 agents/openai.yaml，建议为 Codex 补上" >&2
 fi
 
+if [[ -d "$LAB/scripts" ]]; then
+  echo "→ 同步 scripts/"
+  mkdir -p "$HOME/.cursor/skills/$SKILL_NAME/scripts"
+  cp -R "$LAB/scripts/." "$HOME/.cursor/skills/$SKILL_NAME/scripts/"
+  mkdir -p "$HOME/.agents/skills/$SKILL_NAME/scripts"
+  cp -R "$LAB/scripts/." "$HOME/.agents/skills/$SKILL_NAME/scripts/"
+fi
+
 echo "✓ 完成。Codex 需重启后 skill 列表才会刷新。"

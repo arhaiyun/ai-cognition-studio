@@ -1,0 +1,7 @@
+interface:
+  display_name: "Social Video Toolkit"
+  short_description: "Download social videos and extract transcripts/captions"
+  default_prompt: "Use $social-video-toolkit to download this social video, extract subtitles, and prepare analysis artifacts."
+
+policy:
+  allow_implicit_invocation: false

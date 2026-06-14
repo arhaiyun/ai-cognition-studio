@@ -67,6 +67,7 @@ npm run dev    # 打开 http://127.0.0.1:5173
 | [cursor-skill-template](labs/cursor-skill-template/) | Cursor Skill 模板 |
 | [project-incubator](labs/project-incubator/) | 项目 0→1 孵化 Skill（PRD → UED Demo → 实现 Prompt） |
 | [studio-skill-sync](labs/studio-skill-sync/) | Skill 三端同步（Cursor + Codex + Studio） |
+| [social-video-toolkit](labs/social-video-toolkit/) | 社媒视频下载、转写与烧录字幕分析 |
 | [prompt-patterns](labs/prompt-patterns/) | 可复用 Prompt 模式 |
 
 ---
