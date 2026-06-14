@@ -9,7 +9,7 @@ summary: 全仓库 LLM API Key 与 Profile 的唯一维护入口；密钥存 .pr
 
 # LLM 凭证统一管理
 
-> **TL;DR**：**一个 env 文件存密钥**，**一个 yaml 存 profile 元数据**，**一篇接入说明**（[`cognition/01-domestic-llm-integration.md`](../cognition/01-domestic-llm-integration.md)）存厂商文档。Agent / Lab 只引用 profile id，不各自维护 Key。
+> **TL;DR**：本仓库为**公开项目**。API Key **绝不入库**；每人本机维护 `.private/llm-credentials.env`。公开的是 profile 注册表与接入文档。
 
 ---
 
@@ -96,12 +96,22 @@ python3 scripts/llm_env.py --profile deepseek-media-agent --check
 
 ---
 
-## 安全说明
+## 安全说明（公开仓库）
 
-- **即使 GitHub 私有仓库，也不要把 Key commit 进 git**（历史难清理、误公开、CI 日志泄露）
-- Key 只放在 `.private/llm-credentials.env`（已 gitignore）
-- 若 Key 曾在聊天 / 截图中暴露，建议在平台 **轮换** 后更新 env 文件
-- CI 使用 GitHub Actions **Secrets**，不读 `.private/`
+本仓库 **公开可见**，因此：
+
+| 做法 | 是否允许 |
+|------|----------|
+| commit `meta/llm-providers.yaml`、`.env.example` 模板 | ✅ |
+| commit `.private/llm-credentials.env` 或任何含 `sk-` 的文件 | ❌ **禁止** |
+| 在 Issue / PR / 聊天中粘贴 Key | ❌ 泄露后请立即轮换 |
+
+- Key **只**放在 `.private/llm-credentials.env`（已 gitignore，仅本机）
+- Fork 本仓库的他人需自行申请 Key，复制 `meta/llm-credentials.env.example` 到 `.private/`
+- CI 若需调用模型，用 GitHub Actions **Repository Secrets**，不读 `.private/`
+- 已核对：当前 git 历史中**未**包含 API Key
+
+**你曾在对话中粘贴过 Key，建议在 DeepSeek 控制台轮换**，并只更新本机 `.private/llm-credentials.env`。
 
 ---
 
