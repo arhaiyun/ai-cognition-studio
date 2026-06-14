@@ -3,6 +3,7 @@ export type ContentType =
   | "article"
   | "playbook"
   | "lab"
+  | "agent"
   | "podcast-card"
   | "meta";
 

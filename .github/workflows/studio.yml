@@ -11,6 +11,7 @@ on:
       - "playbooks/**"
       - "meta/**"
       - "labs/**"
+      - "agents/**"
       - ".github/workflows/studio.yml"
   pull_request:
     paths:
@@ -21,6 +22,7 @@ on:
       - "playbooks/**"
       - "meta/**"
       - "labs/**"
+      - "agents/**"
 
 permissions:
   contents: read

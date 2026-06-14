@@ -1,0 +1,7 @@
+interface:
+  display_name: "AGENT_DISPLAY_NAME"
+  short_description: "One-line description for Codex skill picker."
+  default_prompt: "Use $AGENT_ID to …"
+
+policy:
+  allow_implicit_invocation: false

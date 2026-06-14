@@ -22,7 +22,7 @@
 |------|------|------|
 | **思** | [`cognition/`](cognition/) · [`essays/`](essays/) | AI 认知构建、深度长文、读书/论文笔记 |
 | **听** | [`podcast/`](podcast/) | 播客外链 + 摘要卡片（不托管音频） |
-| **做** | [`labs/`](labs/) · [`playbooks/`](playbooks/) | Mini 项目与可复用 checklist |
+| **做** | [`labs/`](labs/) · [`agents/`](agents/) · [`playbooks/`](playbooks/) | Mini 项目、Sub-Agent 实践与 checklist |
 
 ---
 
@@ -45,9 +45,17 @@ npm run dev    # 打开 http://127.0.0.1:5173
 - [学习路线图](meta/learning-roadmap.md)
 - [Labels 说明](meta/labels.md)
 - [写作与 Lab 规范](CONTRIBUTING.md)
+- [Agent 编写 Checklist](playbooks/agent-authoring-checklist.md)
 - [MCP 设计 Checklist](playbooks/mcp-design-checklist.md)
 - [Skill 编写 Checklist](playbooks/skill-authoring-checklist.md)
 - [Skill 三端同步（Cursor + Codex + Studio）](playbooks/skill-dual-install.md)
+
+### Agents（Sub-Agent 实践）
+
+| 路径 | 说明 |
+|------|------|
+| [`agents/`](agents/) | 应用 Sub-Agent 工作区（`scripts/new-agent.sh` 创建） |
+| [`agents/registry.yaml`](agents/registry.yaml) | Sub-Agent 注册表 |
 
 ### Labs
 

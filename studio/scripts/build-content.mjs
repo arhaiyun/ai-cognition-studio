@@ -16,13 +16,15 @@ const SECTIONS = [
   { id: "podcast", label: "播客笔记", dir: "podcast", icon: "◎", type: "podcast-card" },
   { id: "playbooks", label: "实践手册", dir: "playbooks", icon: "▣", type: "playbook" },
   { id: "meta", label: "元信息", dir: "meta", icon: "◇", type: "meta" },
-  { id: "labs", label: "Labs", dir: "labs", icon: "⚙", type: "lab", labReadmes: true },
+  { id: "labs", label: "Labs", dir: "labs", icon: "⚙", type: "lab", subReadmes: true },
+  { id: "agents", label: "Agents", dir: "agents", icon: "⬡", type: "agent", subReadmes: true, includeRootReadme: true },
 ];
 
 const CONTENT_TYPES = new Set([
   "article",
   "playbook",
   "lab",
+  "agent",
   "podcast-card",
   "meta",
 ]);
@@ -86,15 +88,21 @@ function collectMarkdownFiles(section) {
 
   const files = [];
 
-  if (section.labReadmes) {
+  if (section.subReadmes) {
     for (const entry of fs.readdirSync(baseDir, { withFileTypes: true })) {
-      if (!entry.isDirectory()) continue;
+      if (!entry.isDirectory() || entry.name.startsWith("_")) continue;
       const readme = path.join(baseDir, entry.name, "README.md");
       if (fs.existsSync(readme)) {
         files.push({
           absPath: readme,
           relativePath: `${entry.name}/README.md`,
         });
+      }
+    }
+    if (section.includeRootReadme) {
+      const rootReadme = path.join(baseDir, "README.md");
+      if (fs.existsSync(rootReadme)) {
+        files.unshift({ absPath: rootReadme, relativePath: "README.md" });
       }
     }
     return files;

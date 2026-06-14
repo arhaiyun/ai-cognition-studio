@@ -8,6 +8,7 @@
 | `essay` | 长文与笔记（`essays/`） |
 | `podcast` | 播客卡片 |
 | `lab` | Mini 项目 |
+| `agent` | Sub-Agent 实践（`agents/`） |
 | `mcp` | MCP 相关 |
 | `skill` | Cursor / Agent Skill |
 | `playbook` | Checklist 与流程 |
@@ -34,6 +35,7 @@ gh label create cognition --color "1D76DB" --description "认知框架"
 gh label create essay --color "5319E7" --description "长文与笔记"
 gh label create podcast --color "FBCA04" --description "播客索引"
 gh label create lab --color "0E8A16" --description "Mini 项目"
+gh label create agent --color "C2E0C6" --description "Sub-Agent"
 gh label create mcp --color "006B75" --description "MCP"
 gh label create skill --color "B60205" --description "Skill"
 gh label create playbook --color "D4C5F9" --description "Checklist"

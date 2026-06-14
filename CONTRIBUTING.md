@@ -10,6 +10,7 @@
 | 长文/笔记 | `essays/` | 单篇独立文件，带 front matter |
 | 播客 | `podcast/` | 外链 + 3 条 takeaway，不存音频 |
 | Mini 项目 | `labs/*/` | 必须可运行或有明确 TODO 与运行步骤 |
+| Sub-Agent | `agents/*/` | README + SKILL.md + agents/openai.yaml；登记 registry.yaml |
 | Checklist | `playbooks/` | 可打印、可勾选 |
 
 ## Markdown Front Matter（统一 schema）
@@ -23,6 +24,7 @@
 | `playbooks/` | `playbook` |
 | `meta/` | `meta` |
 | `labs/*/README.md` | `lab` |
+| `agents/` 模块 README、`agents/*/README.md` | `agent` |
 
 ### 通用字段
 

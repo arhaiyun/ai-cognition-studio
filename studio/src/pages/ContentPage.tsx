@@ -9,6 +9,7 @@ const TYPE_LABELS: Record<string, string> = {
   article: "文章",
   playbook: "手册",
   lab: "Lab",
+  agent: "Agent",
   "podcast-card": "播客",
   meta: "元信息",
 };
