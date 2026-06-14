@@ -1,0 +1,33 @@
+# AI Cognition Studio · LLM Profile 注册表
+# 密钥本身写在 .private/llm-credentials.env（不入库）
+# 文档：meta/llm-credentials.md
+
+version: 1
+default_profile: deepseek-media-agent
+
+profiles:
+  deepseek-media-agent:
+    provider: deepseek
+    label: "DeepSeek · media-agent"
+    description: 媒体/灵感类 Agent 默认 DeepSeek 配置
+    env:
+      api_key: DEEPSEEK_MEDIA_AGENT_API_KEY
+      base_url: DEEPSEEK_MEDIA_AGENT_BASE_URL
+      model: DEEPSEEK_MEDIA_AGENT_MODEL
+    defaults:
+      base_url: https://api.deepseek.com
+      model: deepseek-v4-flash
+    used_by:
+      - agents/inspiration-curator
+
+  # 后续在此追加，例如：
+  # qwen-default:
+  #   provider: qwen
+  #   label: "通义千问 · 默认"
+  #   env:
+  #     api_key: QWEN_DEFAULT_API_KEY
+  #     base_url: QWEN_DEFAULT_BASE_URL
+  #     model: QWEN_DEFAULT_MODEL
+  #   defaults:
+  #     base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+  #     model: qwen-plus

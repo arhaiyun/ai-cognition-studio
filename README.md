@@ -42,8 +42,9 @@ npm run dev    # 打开 http://127.0.0.1:5173
 
 ## 快速导航
 
-- [AI 认知地图](cognition/00-ai-cognition-map.md)
+- [LLM 凭证统一管理](meta/llm-credentials.md)
 - [国产大模型接入说明](cognition/01-domestic-llm-integration.md)
+- [学习路线图](meta/learning-roadmap.md)
 - [Labels 说明](meta/labels.md)
 - [写作与 Lab 规范](CONTRIBUTING.md)
 - [Agent 编写 Checklist](playbooks/agent-authoring-checklist.md)

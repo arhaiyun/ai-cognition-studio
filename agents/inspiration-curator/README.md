@@ -20,14 +20,18 @@ summary: 调用 DeepSeek API 理解零散日常灵感，输出结构化整理（
 
 ## 快速开始
 
-### 1. 配置 API Key
+### 1. 配置 API Key（统一凭证）
 
 ```bash
+cp meta/llm-credentials.env.example .private/llm-credentials.env
+# 编辑 .private/llm-credentials.env，填入 DEEPSEEK_MEDIA_AGENT_API_KEY
+
 cd agents/inspiration-curator/tools
-cp .env.example .env
-# 编辑 .env，填入 DEEPSEEK_API_KEY（https://platform.deepseek.com）
 pip install -r requirements.txt
+python3 ../../../scripts/llm_env.py --profile deepseek-media-agent --check
 ```
+
+详见 [`meta/llm-credentials.md`](../../meta/llm-credentials.md)。
 
 ### 2. 运行 Demo
 
@@ -93,6 +97,7 @@ cp agents/inspiration-curator/references/* ~/.agents/skills/inspiration-curator/
 
 ## 关联
 
+- [LLM 凭证统一管理](../../meta/llm-credentials.md)
 - [国产大模型接入说明](../../cognition/01-domestic-llm-integration.md)
 - [Agent 编写 Checklist](../../playbooks/agent-authoring-checklist.md)
 - [AI 认知地图](../../cognition/00-ai-cognition-map.md)

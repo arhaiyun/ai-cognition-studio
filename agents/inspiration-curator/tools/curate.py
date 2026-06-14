@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import argparse
-import os
 import re
 import sys
 from datetime import datetime, timezone
@@ -25,12 +24,21 @@ TOOLS_DIR = Path(__file__).resolve().parent
 AGENT_DIR = TOOLS_DIR.parent
 REPO_ROOT = AGENT_DIR.parent.parent
 REFERENCES = AGENT_DIR / "references"
+SCRIPTS_DIR = REPO_ROOT / "scripts"
+
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
 
 
 def load_env() -> None:
-    if load_dotenv:
-        load_dotenv(TOOLS_DIR / ".env")
-        load_dotenv(REPO_ROOT / ".env")
+    try:
+        from llm_env import load_credentials
+
+        load_credentials()
+    except ImportError:
+        if load_dotenv:
+            load_dotenv(TOOLS_DIR / ".env")
+            load_dotenv(REPO_ROOT / ".env")
 
 
 def read_input(args: argparse.Namespace) -> str:
@@ -57,20 +65,24 @@ def slugify(text: str, max_len: int = 40) -> str:
     return (s[:max_len] or "inspiration").strip("-")
 
 
-def call_deepseek(raw_input: str) -> str:
-    api_key = os.environ.get("DEEPSEEK_API_KEY")
-    if not api_key:
+def call_deepseek(raw_input: str, profile: str | None = None) -> str:
+    from llm_env import get_client_config
+
+    try:
+        cfg = get_client_config(profile)
+    except KeyError as e:
+        print(f"错误: {e}", file=sys.stderr)
+        sys.exit(1)
+
+    if not cfg.api_key:
         print(
-            "错误: 未设置 DEEPSEEK_API_KEY\n"
-            "请 cp .env.example .env 并填入 Key，或 export DEEPSEEK_API_KEY=...",
+            "错误: 未设置 API Key\n"
+            "请 cp meta/llm-credentials.env.example .private/llm-credentials.env 并填入 Key",
             file=sys.stderr,
         )
         sys.exit(1)
 
-    base_url = os.environ.get("DEEPSEEK_BASE_URL", "https://api.deepseek.com")
-    model = os.environ.get("DEEPSEEK_MODEL", "deepseek-v4-flash")
-
-    client = OpenAI(api_key=api_key, base_url=base_url)
+    client = OpenAI(api_key=cfg.api_key, base_url=cfg.base_url)
     system = load_system_prompt()
     user_msg = (
         f"请整理以下日常灵感输入。\n\n"
@@ -79,7 +91,7 @@ def call_deepseek(raw_input: str) -> str:
     )
 
     response = client.chat.completions.create(
-        model=model,
+        model=cfg.model,
         messages=[
             {"role": "system", "content": system},
             {"role": "user", "content": user_msg},
@@ -105,6 +117,7 @@ def main() -> None:
     parser.add_argument("text", nargs="?", help="灵感文字")
     parser.add_argument("-f", "--file", help="从文件读取")
     parser.add_argument("--save", action="store_true", help="保存到 .private/inbox/")
+    parser.add_argument("--profile", help="LLM profile id，默认 deepseek-media-agent")
     parser.add_argument("--dry-run", action="store_true", help="只检查配置，不调用 API")
     args = parser.parse_args()
 
@@ -112,11 +125,17 @@ def main() -> None:
     raw = read_input(args)
 
     if args.dry_run:
+        from llm_env import get_client_config
+
+        cfg = get_client_config(args.profile)
         print("✓ 配置 OK（未调用 API）")
+        print(f"  profile: {cfg.profile} ({cfg.label})")
+        print(f"  model:   {cfg.model}")
+        print(f"  api_key: {'✓ 已设置' if cfg.api_key else '✗ 未设置'}")
         print(f"  输入长度: {len(raw)} 字")
         return
 
-    result = call_deepseek(raw)
+    result = call_deepseek(raw, profile=args.profile)
     print(result)
 
     if args.save:

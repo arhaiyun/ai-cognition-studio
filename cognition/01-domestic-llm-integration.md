@@ -266,13 +266,24 @@ flowchart TD
 
 ## 8. 与本仓库集成
 
-| 用途 | 路径 | 默认模型示例 |
-|------|------|--------------|
-| 灵感整理 Agent | [`agents/inspiration-curator/`](../agents/inspiration-curator/) | DeepSeek `deepseek-v4-flash` |
-| 切换厂商 | 改 `tools/.env` 中 `*_API_KEY` 与 `*_BASE_URL` | 见各 Agent README |
-| 统一配置 | 根目录 [`.env.example`](../.env.example) | 注释列出四家 Key |
+**凭证统一管理**（推荐入口）：[`meta/llm-credentials.md`](../meta/llm-credentials.md)
 
-**抽象多厂商**（可选）：应用层读 `LLM_PROVIDER=deepseek|qwen|kimi|glm`，映射到对应 base_url / model，避免业务代码散落 if-else。
+| 文件 | 作用 |
+|------|------|
+| `.private/llm-credentials.env` | 真实 API Key（**不入库**） |
+| `meta/llm-providers.yaml` | Profile 注册表（无密钥） |
+| `scripts/llm_env.py` | 加载与校验 |
+
+| Profile | Provider | 使用者 |
+|---------|----------|--------|
+| `deepseek-media-agent` | DeepSeek | inspiration-curator |
+
+```bash
+cp meta/llm-credentials.env.example .private/llm-credentials.env
+python3 scripts/llm_env.py --profile deepseek-media-agent --check
+```
+
+新增模型：在 `llm-providers.yaml` 加 profile → 在 env 文件加 Key → 更新本文档对应厂商章节。
 
 ---
 
