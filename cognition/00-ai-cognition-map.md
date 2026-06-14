@@ -48,6 +48,7 @@ flowchart LR
 | MCP 怎么设计 | [playbooks/mcp-design-checklist.md](../playbooks/mcp-design-checklist.md) |
 | Skill 怎么写 | [labs/cursor-skill-template/](../labs/cursor-skill-template/) |
 | 跑通最小 MCP | [labs/mcp-hello/](../labs/mcp-hello/) |
+| 国产模型怎么接 | [cognition/01-domestic-llm-integration.md](01-domestic-llm-integration.md) |
 
 ---
 

@@ -4,10 +4,10 @@
 version: 1
 
 agents:
-  # - id: example-agent
-  #   name: "示例 Agent"
-  #   path: agents/example-agent
-  #   status: exploring
-  #   triggers: ["$example-agent", "/example-agent"]
-  #   depends_on: []
-  #   summary: "一句话说明职责"
+  - id: inspiration-curator
+    name: "灵感整理 Agent"
+    path: agents/inspiration-curator
+    status: exploring
+    triggers: ["$inspiration-curator", "整理灵感"]
+    depends_on: []
+    summary: "DeepSeek API demo：理解日常灵感输入并结构化整理与归档建议"

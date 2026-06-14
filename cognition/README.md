@@ -7,6 +7,7 @@
 | 文档 | 状态 | 摘要 |
 |------|------|------|
 | [00-ai-cognition-map.md](00-ai-cognition-map.md) | exploring | 认知地图 v0.1：能力边界与人机分工 |
+| [01-domestic-llm-integration.md](01-domestic-llm-integration.md) | exploring | 国产大模型接入：DeepSeek / 千问 / Kimi / GLM |
 
 ## 写什么
 

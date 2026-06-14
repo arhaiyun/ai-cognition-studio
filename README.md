@@ -42,7 +42,8 @@ npm run dev    # 打开 http://127.0.0.1:5173
 
 ## 快速导航
 
-- [学习路线图](meta/learning-roadmap.md)
+- [AI 认知地图](cognition/00-ai-cognition-map.md)
+- [国产大模型接入说明](cognition/01-domestic-llm-integration.md)
 - [Labels 说明](meta/labels.md)
 - [写作与 Lab 规范](CONTRIBUTING.md)
 - [Agent 编写 Checklist](playbooks/agent-authoring-checklist.md)
@@ -54,7 +55,7 @@ npm run dev    # 打开 http://127.0.0.1:5173
 
 | 路径 | 说明 |
 |------|------|
-| [`agents/`](agents/) | 应用 Sub-Agent 工作区（`scripts/new-agent.sh` 创建） |
+| [`agents/`](agents/) | 应用 Sub-Agent 工作区（[`inspiration-curator`](agents/inspiration-curator/) 等） |
 | [`agents/registry.yaml`](agents/registry.yaml) | Sub-Agent 注册表 |
 
 ### Labs

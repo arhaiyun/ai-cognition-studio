@@ -1,0 +1,7 @@
+interface:
+  display_name: "灵感整理"
+  short_description: "理解零散日常灵感并输出结构化整理与归档建议（DeepSeek demo）"
+  default_prompt: "Use $inspiration-curator to understand and organize my daily inspiration input into structured notes with tags and suggested next steps."
+
+policy:
+  allow_implicit_invocation: false

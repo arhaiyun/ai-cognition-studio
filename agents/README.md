@@ -47,7 +47,7 @@ agents/
 
 所有已发布的 Sub-Agent 登记在 [`registry.yaml`](registry.yaml)。Studio 导航会索引各 Agent 的 `README.md`。
 
-当前：**0 个 Sub-Agent**（使用 `_template/` 或脚本创建第一个）。
+当前：**1 个 Sub-Agent** — [`inspiration-curator`](inspiration-curator/)（DeepSeek 灵感整理 demo）
 
 ---
 
