@@ -1,0 +1,7 @@
+interface:
+  display_name: "项目孵化"
+  short_description: "从想法到 PRD、UED Demo、技术方案与实现 Prompt 的 8 阶段流水线"
+  default_prompt: "Use $project-incubator to incubate this project idea from domain discovery through PRD, UED demo, tech spec, and implementation prompts."
+
+policy:
+  allow_implicit_invocation: false

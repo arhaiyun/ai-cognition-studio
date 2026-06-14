@@ -19,32 +19,51 @@ Claude Code **Skill**：把「我有一个项目想法」变成可交给 Cursor 
 
 ## 使用
 
-### 安装到 Claude Code（个人级，全项目可用）
+### Claude Code
 
 ```bash
-# 从本 lab 同步到 Claude Code 个人 skills 目录
 mkdir -p ~/.claude/skills/project-incubator/references
 cp labs/project-incubator/SKILL.md ~/.claude/skills/project-incubator/
 cp labs/project-incubator/references/*.md ~/.claude/skills/project-incubator/references/
 ```
 
-或在任意项目里用项目级 skill：
-
-```bash
-mkdir -p .claude/skills/project-incubator/references
-cp path/to/ai-cognition-studio/labs/project-incubator/SKILL.md .claude/skills/project-incubator/
-cp path/to/ai-cognition-studio/labs/project-incubator/references/*.md .claude/skills/project-incubator/references/
-```
-
-### 调用
-
-在 Claude Code 中：
+调用：
 
 ```text
 /project-incubator 做一个个人记账 web app
 ```
 
-不带参数也可以，会从 Stage 0 领域识别开始追问。
+### Codex（本机）
+
+Codex 从 **`~/.agents/skills/`**（用户级）或 **`.agents/skills/`**（项目级）加载 skill，与 Claude Code 的 `~/.claude/skills/` 是不同目录。
+
+```bash
+mkdir -p ~/.agents/skills/project-incubator/{references,agents}
+cp labs/project-incubator/SKILL.md ~/.agents/skills/project-incubator/
+cp labs/project-incubator/references/*.md ~/.agents/skills/project-incubator/references/
+cp labs/project-incubator/agents/openai.yaml ~/.agents/skills/project-incubator/agents/
+```
+
+调用方式（任选）：
+
+```text
+$project-incubator 做一个个人记账 web app
+```
+
+或在 Codex 输入 `$` 搜索 **项目孵化**，选中后补项目想法。
+
+`agents/openai.yaml` 里 `allow_implicit_invocation: false` 表示只有显式 `$project-incubator` 才启动，避免误触发。
+
+安装后若 skill 未出现，**重启 Codex**。
+
+### 项目级（跟仓库走）
+
+```bash
+mkdir -p .agents/skills/project-incubator/{references,agents}
+cp path/to/ai-cognition-studio/labs/project-incubator/SKILL.md .agents/skills/project-incubator/
+cp path/to/ai-cognition-studio/labs/project-incubator/references/*.md .agents/skills/project-incubator/references/
+cp path/to/ai-cognition-studio/labs/project-incubator/agents/openai.yaml .agents/skills/project-incubator/agents/
+```
 
 ## 文件结构
 

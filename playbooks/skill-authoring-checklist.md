@@ -26,6 +26,7 @@
 - [ ] 在新对话中说触发语，Agent 应读取该 skill
 - [ ] 按 skill 执行一遍，记录 1 处可改进点
 - [ ] 若 skill 依赖 MCP，README 中写清 MCP 配置
+- [ ] **三端同步**：已入库 `labs/<name>/`，已同步 `~/.cursor/skills/` 与 `~/.agents/skills/`（见 [skill-dual-install.md](skill-dual-install.md)）
 
 ## 反模式
 
@@ -38,4 +39,5 @@
 ## 延伸阅读
 
 - Cursor 官方：[Creating Skills](https://cursor.com/docs/context/skills)
+- [skill-dual-install.md](skill-dual-install.md) — Cursor + Codex + Studio 三端同步
 - [labs/cursor-skill-template/SKILL.md](../labs/cursor-skill-template/SKILL.md)

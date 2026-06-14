@@ -10,7 +10,12 @@ disable-model-invocation: true
 
 # 本次想法
 
-$ARGUMENTS
+用户在调用本 skill 时提供的项目想法：
+
+- **Claude Code**：`/project-incubator` 后面的文字（`$ARGUMENTS`）
+- **Codex**：`$project-incubator` 后面的文字，或 default prompt 里填写的想法
+
+若未提供，Stage 0 先请用户用一句话描述项目。
 
 ---
 

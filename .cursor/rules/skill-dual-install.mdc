@@ -1,0 +1,19 @@
+---
+description: Cursor Skill 三端同步：安装/新建 skill 时必须同步 Codex 并入库 ai-cognition-studio
+alwaysApply: true
+---
+
+# Skill 三端同步（强制）
+
+每当用户要求**新建、安装、复制或更新 Cursor Skill** 时，必须按以下流程执行，不可只装 Cursor 一侧：
+
+1. **源码入库** `~/github/ai-cognition-studio/labs/<skill-name>/`（README + SKILL.md + references/ + agents/openai.yaml）
+2. **同步 Cursor** `~/.cursor/skills/<skill-name>/`
+3. **同步 Codex** `~/.agents/skills/<skill-name>/`（含 `agents/openai.yaml`）
+4. **更新索引** `ai-cognition-studio/labs/README.md` 与根 `README.md`
+
+详细 checklist：[playbooks/skill-dual-install.md](playbooks/skill-dual-install.md)
+
+一键同步：`cd ai-cognition-studio && ./scripts/sync-skill.sh <skill-name>`
+
+SKILL.md 须双平台兼容（Claude Code `/name` + Codex `$name`；AskUserQuestion 与 `$ARGUMENTS` 写清替代方式）。

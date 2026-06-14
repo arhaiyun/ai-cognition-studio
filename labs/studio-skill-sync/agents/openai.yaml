@@ -1,0 +1,7 @@
+interface:
+  display_name: "Skill 三端同步"
+  short_description: "新建/安装 Skill 时同步 Cursor、Codex 与 ai-cognition-studio"
+  default_prompt: "Use $studio-skill-sync before creating or installing any skill."
+
+policy:
+  allow_implicit_invocation: true

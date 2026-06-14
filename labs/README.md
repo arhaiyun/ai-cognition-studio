@@ -7,6 +7,7 @@
 | [mcp-hello](mcp-hello/) | Python · FastMCP · stdio | ✅ 可运行 |
 | [cursor-skill-template](cursor-skill-template/) | Cursor SKILL.md | ✅ 模板 |
 | [project-incubator](project-incubator/) | Claude Code Skill · 8 阶段产品孵化 | ✅ 可用 |
+| [studio-skill-sync](studio-skill-sync/) | Skill 三端同步 meta skill | ✅ 可用 |
 | [prompt-patterns](prompt-patterns/) | Markdown 模板 | ✅ 可用 |
 
 ## 新建 Lab

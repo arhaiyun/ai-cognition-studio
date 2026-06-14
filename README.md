@@ -47,6 +47,7 @@ npm run dev    # 打开 http://127.0.0.1:5173
 - [写作与 Lab 规范](CONTRIBUTING.md)
 - [MCP 设计 Checklist](playbooks/mcp-design-checklist.md)
 - [Skill 编写 Checklist](playbooks/skill-authoring-checklist.md)
+- [Skill 三端同步（Cursor + Codex + Studio）](playbooks/skill-dual-install.md)
 
 ### Labs
 
@@ -55,6 +56,7 @@ npm run dev    # 打开 http://127.0.0.1:5173
 | [mcp-hello](labs/mcp-hello/) | 最小 MCP Server（Python FastMCP） |
 | [cursor-skill-template](labs/cursor-skill-template/) | Cursor Skill 模板 |
 | [project-incubator](labs/project-incubator/) | 项目 0→1 孵化 Skill（PRD → UED Demo → 实现 Prompt） |
+| [studio-skill-sync](labs/studio-skill-sync/) | Skill 三端同步（Cursor + Codex + Studio） |
 | [prompt-patterns](labs/prompt-patterns/) | 可复用 Prompt 模式 |
 
 ---
