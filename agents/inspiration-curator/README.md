@@ -5,6 +5,11 @@ status: exploring
 audience: [self, dev]
 tags: [agent, deepseek, inspiration, llm]
 summary: 调用 DeepSeek API 理解零散日常灵感，输出结构化整理（主题、标签、澄清问题、建议归档路径）。
+portfolio:
+  order: 2
+  label: Sub-Agent · Content Workflow
+  outcome: 把零散输入整理成有主题、有去向、可继续创作的内容线索。
+  capabilities: [Sub-Agent, 内容理解, LLM 接入]
 ---
 
 # inspiration-curator · 日常灵感整理

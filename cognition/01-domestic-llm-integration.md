@@ -5,6 +5,11 @@ status: exploring
 audience: [self, dev]
 tags: [cognition, llm, deepseek, qwen, kimi, glm, api]
 summary: DeepSeek、通义千问、Kimi、智谱 GLM 的 OpenAI 兼容接入方式、模型选型与适用场景；对齐本仓库 Agent 实践。
+portfolio:
+  order: 4
+  label: Engineering · Model Governance
+  outcome: 用统一接口、凭证规范和场景判断管理多家国产大模型接入。
+  capabilities: [LLM 集成, 模型选型, 凭证治理]
 ---
 
 # 国产大模型接入说明 v0.1

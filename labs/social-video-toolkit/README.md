@@ -5,6 +5,11 @@ status: stable
 audience: [self, dev]
 tags: [skill, cursor, codex, video, xiaohongshu, douyin, bilibili]
 summary: 下载小红书/抖音/B站/微博等分享链接视频，并提取 ASR、帧采样、烧录字幕 OCR 等分析产物。
+portfolio:
+  order: 3
+  label: Automation · Multimodal Tooling
+  outcome: 把社媒视频链接转化为可检索、可复盘、可继续分析的多模态素材。
+  capabilities: [自动化, ASR, OCR, 媒体处理]
 ---
 
 # social-video-toolkit

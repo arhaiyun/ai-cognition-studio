@@ -21,6 +21,13 @@ export interface ContentRelations {
   labs?: string[];
 }
 
+export interface PortfolioMeta {
+  order: number;
+  label: string;
+  outcome: string;
+  capabilities: string[];
+}
+
 export interface ContentMeta {
   slug: string;
   type: ContentType;
@@ -34,6 +41,7 @@ export interface ContentMeta {
   tags: string[];
   summary: string;
   sourcePath: string;
+  portfolio?: PortfolioMeta;
   /** 构建时生成的全文搜索索引（title + summary + tags + body 纯文本） */
   searchText: string;
   /** podcast-card 专用 */

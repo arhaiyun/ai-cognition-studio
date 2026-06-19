@@ -5,6 +5,11 @@ status: stable
 audience: [self, dev]
 tags: [skill, claude-code, product, prd, ued, prompt]
 summary: Claude Code Skill：从项目想法经多轮确认到 PRD、UED HTML Demo、技术方案，再到 3 份 Cursor/Codex 实现 Prompt 的完整孵化流水线。
+portfolio:
+  order: 1
+  label: Product · Skill · Agent Workflow
+  outcome: 把一句模糊的项目想法推进为产品方案、视觉预览、PRD、Demo 与实现 Prompt。
+  capabilities: [产品判断, 工作流设计, Skill, Agent]
 ---
 
 # project-incubator

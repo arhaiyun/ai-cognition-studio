@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import matter from "gray-matter";
+import { normalizePortfolio } from "./content-schema.mjs";
 
 const SCHEMA_VERSION = 1;
 
@@ -176,6 +177,9 @@ function buildContentMeta(section, absPath, relativePath) {
     summary: fm.summary ?? "",
     sourcePath: `${section.dir}/${relativePath}`,
   };
+
+  const portfolio = normalizePortfolio(fm.portfolio);
+  if (portfolio) meta.portfolio = portfolio;
 
   if (type === "podcast-card") {
     const takeaways = normalizeStringArray(fm.takeaways);
