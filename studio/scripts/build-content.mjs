@@ -10,6 +10,13 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "../..");
 const OUT_DIR = path.resolve(__dirname, "../src/generated");
 const ARTICLES_DIR = path.join(OUT_DIR, "articles");
+const PUBLIC_DIR = path.resolve(__dirname, "../public");
+const STATIC_ASSETS = [
+  {
+    source: path.join(ROOT, "labs/project-incubator/assets/project-incubator-flow.png"),
+    target: path.join(PUBLIC_DIR, "project-incubator-flow.png"),
+  },
+];
 
 const SECTIONS = [
   { id: "cognition", label: "认知框架", dir: "cognition", icon: "◈", type: "article" },
@@ -207,9 +214,16 @@ function buildContentMeta(section, absPath, relativePath) {
 
 function build() {
   fs.mkdirSync(ARTICLES_DIR, { recursive: true });
+  fs.mkdirSync(PUBLIC_DIR, { recursive: true });
 
   for (const file of fs.readdirSync(ARTICLES_DIR)) {
     if (file.endsWith(".md")) fs.unlinkSync(path.join(ARTICLES_DIR, file));
+  }
+
+  for (const asset of STATIC_ASSETS) {
+    if (fs.existsSync(asset.source)) {
+      fs.copyFileSync(asset.source, asset.target);
+    }
   }
 
   const contents = [];

@@ -70,16 +70,11 @@ export function HomePage() {
           />
           <div className="home-work__layout">
             <Link className="featured-project" to={`/c/${featured.slug}`}>
-              <div className="featured-project__visual" aria-hidden>
-                <span>领域识别</span>
-                <span>需求访谈</span>
-                <span>产品方案</span>
-                <span>视觉预览</span>
-                <span>PRD</span>
-                <span>交互 Demo</span>
-                <span>技术方案</span>
-                <span>实现 Prompt</span>
-              </div>
+              <img
+                className="featured-project__image"
+                src={`${import.meta.env.BASE_URL}project-incubator-flow.png`}
+                alt="Project Incubator 八阶段决策工作流"
+              />
               <div className="project-card__body">
                 <p className="project-card__label">{featured.portfolio?.label}</p>
                 <h3>{featured.title}</h3>

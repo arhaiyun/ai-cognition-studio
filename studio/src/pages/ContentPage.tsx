@@ -80,6 +80,13 @@ export function ContentPage() {
       </header>
 
       {loading && <p className="content-page__loading">加载中…</p>}
+      {meta.slug === "labs--project-incubator-readme" && (
+        <img
+          className="content-page__case-image"
+          src={`${import.meta.env.BASE_URL}project-incubator-flow.png`}
+          alt="Project Incubator 八阶段决策工作流"
+        />
+      )}
       {!loading && body && <MarkdownBody markdown={body} />}
       {!loading && !body && <p className="content-page__error">正文加载失败</p>}
     </div>

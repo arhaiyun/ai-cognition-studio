@@ -463,26 +463,20 @@ button {
   transform: translateY(-2px);
 }
 
-.featured-project__visual {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 7px;
-  min-height: 230px;
-  padding: 28px;
-  align-content: center;
+.featured-project__image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
   background: #253b31;
 }
 
-.featured-project__visual span {
-  display: grid;
-  min-height: 58px;
-  place-items: center;
-  padding: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.24);
-  border-radius: 4px;
-  color: #edf4ee;
-  font-size: 11px;
-  text-align: center;
+.content-page__case-image {
+  display: block;
+  width: 100%;
+  margin: 0 0 28px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
 }
 
 .project-card__body,
