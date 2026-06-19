@@ -25,6 +25,15 @@ AGENT_DIR = TOOLS_DIR.parent
 REPO_ROOT = AGENT_DIR.parent.parent
 REFERENCES = AGENT_DIR / "references"
 SCRIPTS_DIR = REPO_ROOT / "scripts"
+REQUIRED_OUTPUT_HEADINGS = [
+    "核心灵感",
+    "主题与标签",
+    "类型判断",
+    "澄清问题",
+    "建议下一步",
+    "结构化摘要",
+    "原文",
+]
 
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
@@ -63,6 +72,20 @@ def load_system_prompt() -> str:
 def slugify(text: str, max_len: int = 40) -> str:
     s = re.sub(r"[^\w\u4e00-\u9fff]+", "-", text.lower()).strip("-")
     return (s[:max_len] or "inspiration").strip("-")
+
+
+def inspect_output_schema(content: str) -> list[str]:
+    headings = {
+        match.group(1).strip()
+        for match in re.finditer(r"^##\s+(.+?)\s*$", content, flags=re.MULTILINE)
+    }
+    return [heading for heading in REQUIRED_OUTPUT_HEADINGS if heading not in headings]
+
+
+def build_inbox_filename(content: str, raw_input: str, date: str) -> str:
+    title_line = content.split("\n", 1)[0] if content else raw_input[:30]
+    slug = slugify(title_line.replace("#", "").strip())
+    return f"{date}-{slug}.md"
 
 
 def call_deepseek(raw_input: str, profile: str | None = None) -> str:
@@ -104,10 +127,8 @@ def call_deepseek(raw_input: str, profile: str | None = None) -> str:
 def save_inbox(content: str, raw_input: str) -> Path:
     inbox = REPO_ROOT / ".private" / "inbox"
     inbox.mkdir(parents=True, exist_ok=True)
-    title_line = content.split("\n", 1)[0] if content else raw_input[:30]
-    slug = slugify(title_line.replace("#", "").strip())
     date = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    path = inbox / f"{date}-{slug}.md"
+    path = inbox / build_inbox_filename(content, raw_input, date)
     path.write_text(content.strip() + "\n", encoding="utf-8")
     return path
 
@@ -137,6 +158,13 @@ def main() -> None:
 
     result = call_deepseek(raw, profile=args.profile)
     print(result)
+
+    missing_headings = inspect_output_schema(result)
+    if missing_headings:
+        print(
+            f"\n警告: 模型输出缺少章节: {', '.join(missing_headings)}",
+            file=sys.stderr,
+        )
 
     if args.save:
         path = save_inbox(result, raw)
