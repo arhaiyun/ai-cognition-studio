@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import matter from "gray-matter";
-import { normalizePortfolio } from "./content-schema.mjs";
+import { normalizePortfolio, normalizeSeries } from "./content-schema.mjs";
 
 const SCHEMA_VERSION = 1;
 
@@ -37,7 +37,7 @@ const CONTENT_TYPES = new Set([
   "meta",
 ]);
 
-const SKIP_FILES = new Set(["README.md", "_template.md"]);
+const SKIP_FILES = new Set(["README.md", "_template.md", "_template-series.md"]);
 
 function slugify(text) {
   return text
@@ -188,6 +188,9 @@ function buildContentMeta(section, absPath, relativePath) {
   const portfolio = normalizePortfolio(fm.portfolio);
   if (portfolio) meta.portfolio = portfolio;
 
+  const series = normalizeSeries(fm.series);
+  if (series) meta.series = series;
+
   if (type === "podcast-card") {
     const takeaways = normalizeStringArray(fm.takeaways);
     if (takeaways.length > 0) meta.takeaways = takeaways;
@@ -210,6 +213,57 @@ function buildContentMeta(section, absPath, relativePath) {
   meta.searchText = buildSearchText(meta, body);
 
   return { meta, body, slug };
+}
+
+function loadPublishingSchedule() {
+  const schedulePath = path.join(ROOT, "meta/publishing-schedule.json");
+  if (!fs.existsSync(schedulePath)) return undefined;
+
+  try {
+    return JSON.parse(fs.readFileSync(schedulePath, "utf8"));
+  } catch (error) {
+    console.warn("⚠ 无法解析 meta/publishing-schedule.json:", error.message);
+    return undefined;
+  }
+}
+
+function buildPublishingLine(schedule, contents) {
+  if (!schedule?.activeSeries) return undefined;
+
+  const bySource = new Map(contents.map((item) => [item.sourcePath, item]));
+  const currentWeek = schedule.activeSeries.currentWeek;
+  const weekPlan = schedule.weeks?.find((week) => week.week === currentWeek);
+
+  const currentWeekArticles = (weekPlan?.articles ?? []).map((planned) => {
+    const published = bySource.get(planned.sourcePath);
+    return {
+      ...planned,
+      status: published ? "published" : planned.status ?? "planned",
+      slug: published?.slug,
+      sectionLabel: published?.sectionLabel,
+    };
+  });
+
+  const seriesContents = contents
+    .filter((item) => item.series?.id === schedule.activeSeries.id)
+    .slice()
+    .sort((a, b) => (a.series?.part ?? 0) - (b.series?.part ?? 0));
+
+  return {
+    activeSeries: schedule.activeSeries,
+    cadence: schedule.cadence,
+    phases: schedule.phases ?? [],
+    currentWeek: weekPlan
+      ? {
+          week: weekPlan.week,
+          theme: weekPlan.theme,
+          status: weekPlan.status,
+          phase: weekPlan.phase,
+          articles: currentWeekArticles,
+        }
+      : undefined,
+    seriesContents,
+  };
 }
 
 function build() {
@@ -247,6 +301,9 @@ function build() {
     return a.title.localeCompare(b.title, "zh-CN");
   });
 
+  const schedule = loadPublishingSchedule();
+  const publishingLine = buildPublishingLine(schedule, contents);
+
   const index = {
     schemaVersion: SCHEMA_VERSION,
     generatedAt: new Date().toISOString(),
@@ -257,6 +314,7 @@ function build() {
       defaultType: type,
     })),
     contents,
+    publishingLine,
   };
 
   fs.writeFileSync(

@@ -25,6 +25,26 @@ export function groupContentsBySection(): Map<string, ContentMeta[]> {
   return map;
 }
 
+const SLOT_LABELS: Record<string, string> = {
+  pillar: "框架",
+  practice: "实践",
+  handbook: "手册",
+  input: "输入",
+  recap: "复盘",
+};
+
+export function getSeriesSlotLabel(slot: string): string {
+  return SLOT_LABELS[slot] ?? slot;
+}
+
+export function getPublishingLine() {
+  return content.publishingLine;
+}
+
+export function getSeriesContents(): ContentMeta[] {
+  return content.publishingLine?.seriesContents ?? [];
+}
+
 /** @deprecated 使用 groupContentsBySection */
 export const groupArticlesBySection = groupContentsBySection;
 

@@ -42,6 +42,23 @@ summary: ""
 
 `status` 说明：`exploring` 探索中 · `stable` 相对稳定 · `archived` 归档保留。
 
+### 连载字段（深度文主线）
+
+编入 [更新主线](../meta/publishing-line.md) 的文章须带 `series`：
+
+```yaml
+series:
+  id: copilot-practice-2026
+  title: AI 副驾实践手记
+  part: 3              # 连载全局序号
+  week: 2026-W23       # ISO 周，与 publishing-schedule.json 一致
+  slot: pillar         # pillar | practice | handbook | input | recap
+```
+
+- 每周 **2–3 篇**：至少 `pillar` + `practice`
+- 计划与进度：`meta/publishing-schedule.json`
+- 模板：[`essays/_template-series.md`](../essays/_template-series.md)
+
 ### 播客卡片额外字段（`podcast/`）
 
 见 [`podcast/_template.md`](podcast/_template.md)：`hosts`、`guests`、`links`、`takeaways`、`related` 等。

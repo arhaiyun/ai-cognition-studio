@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useLayout } from "../components/layout/LayoutContext";
-import { content } from "../lib/content";
+import { content, getPublishingLine, getSeriesSlotLabel } from "../lib/content";
 import { selectPortfolioContents } from "../lib/portfolio.js";
 
 const BUILD_METHOD = [
@@ -13,10 +13,11 @@ const BUILD_METHOD = [
 
 export function HomePage() {
   const { setToc } = useLayout();
+  const publishingLine = getPublishingLine();
   const selectedWork = selectPortfolioContents(content.contents);
   const [featured, ...supporting] = selectedWork;
   const recent = content.contents
-    .filter((item) => item.date)
+    .filter((item) => item.date && !item.series)
     .slice()
     .sort((a, b) => String(b.date).localeCompare(String(a.date)))
     .slice(0, 3);
@@ -131,6 +132,45 @@ export function HomePage() {
           </Link>
         </div>
       </section>
+
+      {publishingLine?.currentWeek && (
+        <section className="home-section home-series" id="publishing-line">
+          <SectionHeading
+            eyebrow="Publishing line"
+            title={`本周连载 · ${publishingLine.currentWeek.theme}`}
+            description={`${publishingLine.activeSeries.title} · ${publishingLine.currentWeek.week} · 每周 ${publishingLine.cadence?.minArticles ?? 2}–${publishingLine.cadence?.maxArticles ?? 3} 篇深度文`}
+          />
+          <div className="series-progress">
+            <span className="series-progress__label">
+              已发布 {publishingLine.seriesContents.length} 篇
+            </span>
+            <Link className="series-progress__link" to="/c/meta--publishing-line">
+              查看完整主线 →
+            </Link>
+          </div>
+          <ol className="series-week-list">
+            {publishingLine.currentWeek.articles.map((article) => (
+              <li
+                key={`${article.sourcePath}-${article.part}`}
+                className={
+                  article.status === "published" ? "series-week-list__item--done" : "series-week-list__item--planned"
+                }
+              >
+                <span className="series-week-list__part">#{article.part}</span>
+                <span className="series-week-list__slot">{getSeriesSlotLabel(String(article.slot))}</span>
+                {article.slug ? (
+                  <Link to={`/c/${article.slug}`}>{article.title}</Link>
+                ) : (
+                  <span className="series-week-list__planned">{article.title}</span>
+                )}
+                <span className="series-week-list__status">
+                  {article.status === "published" ? "已发" : "计划"}
+                </span>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
 
       <section className="home-section home-latest">
         <SectionHeading

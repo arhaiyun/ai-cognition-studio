@@ -1,13 +1,15 @@
 # 认知 · 框架与概念
 
-相对稳定的 AI 认知框架，区别于单篇 essay 的「观点输出」。
+相对稳定的 AI 认知框架，区别于单篇 essay 的「观点输出」。大版本修订可带 `series.part` 作为连载更新（如认知地图 v0.2）。
+
+**连载**：见 [更新主线](../meta/publishing-line.md)
 
 ## 索引
 
-| 文档 | 状态 | 摘要 |
-|------|------|------|
-| [00-ai-cognition-map.md](00-ai-cognition-map.md) | exploring | 认知地图 v0.1：能力边界与人机分工 |
-| [01-domestic-llm-integration.md](01-domestic-llm-integration.md) | exploring | 国产大模型接入：DeepSeek / 千问 / Kimi / GLM |
+| 文档 | Part | 状态 | 摘要 |
+|------|------|------|------|
+| [00-ai-cognition-map.md](00-ai-cognition-map.md) | #1 | exploring | 认知地图 v0.1：能力边界与人机分工 |
+| [01-domestic-llm-integration.md](01-domestic-llm-integration.md) | #2 | exploring | 国产大模型接入：DeepSeek / 千问 / Kimi / GLM |
 
 ## 写什么
 

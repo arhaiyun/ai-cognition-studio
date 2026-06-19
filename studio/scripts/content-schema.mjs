@@ -4,6 +4,24 @@ function normalizeStringArray(value) {
     : [];
 }
 
+const SERIES_SLOTS = new Set(["pillar", "practice", "handbook", "input", "recap"]);
+
+export function normalizeSeries(value) {
+  if (!value || typeof value !== "object") return undefined;
+
+  const id = typeof value.id === "string" ? value.id.trim() : "";
+  const title = typeof value.title === "string" ? value.title.trim() : "";
+  const part = Number(value.part);
+  const week = typeof value.week === "string" ? value.week.trim() : "";
+  const slot = typeof value.slot === "string" ? value.slot.trim() : "";
+
+  if (!id || !title || !Number.isInteger(part) || part < 1 || !week || !SERIES_SLOTS.has(slot)) {
+    return undefined;
+  }
+
+  return { id, title, part, week, slot };
+}
+
 export function normalizePortfolio(value) {
   if (!value || typeof value !== "object") return undefined;
 

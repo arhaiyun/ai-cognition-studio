@@ -5,6 +5,12 @@ status: exploring
 audience: [self, dev]
 tags: [cognition, llm, deepseek, qwen, kimi, glm, api]
 summary: DeepSeek、通义千问、Kimi、智谱 GLM 的 OpenAI 兼容接入方式、模型选型与适用场景；对齐本仓库 Agent 实践。
+series:
+  id: copilot-practice-2026
+  title: AI 副驾实践手记
+  part: 2
+  week: 2026-W22
+  slot: practice
 portfolio:
   order: 4
   label: Engineering · Model Governance

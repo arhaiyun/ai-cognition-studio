@@ -1,0 +1,159 @@
+{
+  "version": 1,
+  "cadence": {
+    "minArticles": 2,
+    "maxArticles": 3,
+    "publishDays": ["周二", "周四", "周六"]
+  },
+  "activeSeries": {
+    "id": "copilot-practice-2026",
+    "title": "AI 副驾实践手记",
+    "tagline": "从认知边界到可复用 Agent 工作流",
+    "currentWeek": "2026-W23"
+  },
+  "phases": [
+    {
+      "id": "phase-1-cognition",
+      "title": "认知打底",
+      "weeks": 4,
+      "goal": "建立副驾心智模型，能描述 AI 能/不能做什么"
+    },
+    {
+      "id": "phase-2-tools",
+      "title": "工具与 MCP",
+      "weeks": 4,
+      "goal": "独立做最小 MCP，知道何时用 workflow tool"
+    },
+    {
+      "id": "phase-3-agents",
+      "title": "Skills 与 Agent",
+      "weeks": 4,
+      "goal": "Skill 可触发、Agent 工作流可复现"
+    }
+  ],
+  "weeks": [
+    {
+      "week": "2026-W21",
+      "phase": "phase-1-cognition",
+      "theme": "副驾心智模型",
+      "status": "published",
+      "articles": [
+        {
+          "sourcePath": "cognition/00-ai-cognition-map.md",
+          "part": 1,
+          "slot": "pillar",
+          "title": "AI 认知地图 v0.1"
+        }
+      ]
+    },
+    {
+      "week": "2026-W22",
+      "phase": "phase-1-cognition",
+      "theme": "模型接入与选型",
+      "status": "published",
+      "articles": [
+        {
+          "sourcePath": "cognition/01-domestic-llm-integration.md",
+          "part": 2,
+          "slot": "practice",
+          "title": "国产大模型接入说明 v0.1"
+        }
+      ]
+    },
+    {
+      "week": "2026-W23",
+      "phase": "phase-1-cognition",
+      "theme": "Context 三层设计",
+      "status": "in_progress",
+      "articles": [
+        {
+          "sourcePath": "essays/2026-W23-01-rules-skills-mcp.md",
+          "part": 3,
+          "slot": "pillar",
+          "title": "Rules / Skills / MCP：Context 三层怎么分工",
+          "status": "planned"
+        },
+        {
+          "sourcePath": "essays/2026-W23-02-skill-dual-install-case.md",
+          "part": 4,
+          "slot": "practice",
+          "title": "案例：Skill 三端同步是怎样落地的",
+          "status": "planned"
+        },
+        {
+          "sourcePath": "playbooks/skill-dual-install.md",
+          "part": 5,
+          "slot": "handbook",
+          "title": "Skill 三端同步安装",
+          "status": "published"
+        }
+      ]
+    },
+    {
+      "week": "2026-W24",
+      "phase": "phase-1-cognition",
+      "theme": "幻觉与校准",
+      "status": "planned",
+      "articles": [
+        {
+          "sourcePath": "essays/2026-W24-01-hallucination-calibration.md",
+          "part": 6,
+          "slot": "pillar",
+          "title": "幻觉不是 bug：如何设计人审与校准",
+          "status": "planned"
+        },
+        {
+          "sourcePath": "essays/2026-W24-02-verification-checklist.md",
+          "part": 7,
+          "slot": "practice",
+          "title": "实践：AI 输出复核清单（可打印版）",
+          "status": "planned"
+        }
+      ]
+    },
+    {
+      "week": "2026-W25",
+      "phase": "phase-1-cognition",
+      "theme": "阶段复盘",
+      "status": "planned",
+      "articles": [
+        {
+          "sourcePath": "essays/2026-W25-01-phase1-recap.md",
+          "part": 8,
+          "slot": "recap",
+          "title": "阶段复盘：认知打底四周我改了什么判断",
+          "status": "planned"
+        },
+        {
+          "sourcePath": "cognition/00-ai-cognition-map.md",
+          "part": 9,
+          "slot": "pillar",
+          "title": "AI 认知地图 v0.2（更新）",
+          "status": "planned"
+        }
+      ]
+    },
+    {
+      "week": "2026-W26",
+      "phase": "phase-2-tools",
+      "theme": "MCP 入门",
+      "status": "planned",
+      "articles": [
+        {
+          "sourcePath": "essays/2026-W26-01-mcp-when-and-why.md",
+          "part": 10,
+          "slot": "pillar",
+          "title": "什么时候该做 MCP，而不是多写几个 Skill",
+          "status": "planned"
+        },
+        {
+          "sourcePath": "labs/mcp-hello/README.md",
+          "part": 11,
+          "slot": "practice",
+          "title": "Lab：最小 MCP Server 跑通记录",
+          "status": "planned"
+        }
+      ]
+    }
+  ]
+}

@@ -42,6 +42,7 @@ npm run dev    # 打开 http://127.0.0.1:5173
 
 ## 快速导航
 
+- [内容更新主线](meta/publishing-line.md)
 - [LLM 凭证统一管理](meta/llm-credentials.md)
 - [国产大模型接入说明](cognition/01-domestic-llm-integration.md)
 - [学习路线图](meta/learning-roadmap.md)

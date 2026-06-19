@@ -1,6 +1,17 @@
 # 学习路线图
 
-> 3 个月滚动计划 · 认知 → 工具 → Agent · 按自己节奏调整
+> 3 个月滚动计划 · 认知 → 工具 → Agent · **与 [更新主线](publishing-line.md) 按周对齐**
+
+---
+
+## 与连载的关系
+
+| 文档 | 作用 |
+|------|------|
+| [publishing-line.md](publishing-line.md) | 人类可读：每周写什么、怎么写 |
+| [publishing-schedule.json](publishing-schedule.json) | 机器可读：Studio 首页「本周连载」 |
+
+**节奏**：每周 2–3 篇深度文 · 周二 / 周四 / 周六
 
 ---
 
@@ -56,6 +67,7 @@
 
 ## 度量（轻量）
 
-- 每月：公开 essay ≥ 1 或 lab 迭代 ≥ 1
-- 播客：有 takeaway 的卡片 ≥ 2/月
-- 不追求数量；追求 **可复用 artifact**
+- 每周：连载 **2–3 篇**（pillar + practice 为最低交付）
+- 每月：阶段复盘 1 篇（`slot: recap`）
+- 播客：有 takeaway 的卡片 ≥ 2/月（可作第三篇 `slot: input`）
+- 不追求数量；追求 **可跟读的主线 + 可复用 artifact**

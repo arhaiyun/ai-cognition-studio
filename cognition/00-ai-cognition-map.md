@@ -5,6 +5,12 @@ status: exploring
 audience: [self, dev, general]
 tags: [cognition, agent, context]
 summary: 能力边界、人机分工与 Context 三层结构的占位索引。
+series:
+  id: copilot-practice-2026
+  title: AI 副驾实践手记
+  part: 1
+  week: 2026-W21
+  slot: pillar
 ---
 
 # AI 认知地图 v0.1

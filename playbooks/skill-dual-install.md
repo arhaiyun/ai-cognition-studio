@@ -6,6 +6,12 @@ type: playbook
 audience: [self, dev]
 tags: [skill, cursor, codex, claude-code, ai-cognition-studio]
 summary: 每次新建或安装 Cursor Skill 时，同步安装到 Codex，并以 ai-cognition-studio/labs/ 为源码仓库管理。
+series:
+  id: copilot-practice-2026
+  title: AI 副驾实践手记
+  part: 5
+  week: 2026-W23
+  slot: handbook
 ---
 
 # Skill 三端同步安装 Checklist

@@ -28,6 +28,51 @@ export interface PortfolioMeta {
   capabilities: string[];
 }
 
+export type SeriesSlot = "pillar" | "practice" | "handbook" | "input" | "recap";
+
+export interface SeriesMeta {
+  id: string;
+  title: string;
+  part: number;
+  week: string;
+  slot: SeriesSlot;
+}
+
+export interface PlannedArticle {
+  sourcePath: string;
+  part: number;
+  slot: SeriesSlot | string;
+  title: string;
+  status?: string;
+  slug?: string;
+  sectionLabel?: string;
+}
+
+export interface PublishingWeek {
+  week: string;
+  theme: string;
+  status: string;
+  phase?: string;
+  articles: PlannedArticle[];
+}
+
+export interface PublishingLine {
+  activeSeries: {
+    id: string;
+    title: string;
+    tagline: string;
+    currentWeek: string;
+  };
+  cadence?: {
+    minArticles: number;
+    maxArticles: number;
+    publishDays: string[];
+  };
+  phases?: Array<{ id: string; title: string; weeks: number; goal: string }>;
+  currentWeek?: PublishingWeek;
+  seriesContents: ContentMeta[];
+}
+
 export interface ContentMeta {
   slug: string;
   type: ContentType;
@@ -42,6 +87,7 @@ export interface ContentMeta {
   summary: string;
   sourcePath: string;
   portfolio?: PortfolioMeta;
+  series?: SeriesMeta;
   /** 构建时生成的全文搜索索引（title + summary + tags + body 纯文本） */
   searchText: string;
   /** podcast-card 专用 */
@@ -65,6 +111,7 @@ export interface ContentIndex {
   generatedAt: string;
   sections: SectionMeta[];
   contents: ContentMeta[];
+  publishingLine?: PublishingLine;
 }
 
 export interface TocItem {
