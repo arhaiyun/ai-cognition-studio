@@ -14,6 +14,10 @@ dist/
 
 # Studio 构建产物（CI / npm run content:build 生成）
 studio/src/generated/
+studio/public/project-incubator-flow.png
+
+# 本地设计讨论产物
+.superpowers/
 
 # OS / Editor
 .DS_Store
