@@ -1,18 +1,21 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { Sidebar } from "./Sidebar";
 import { TocPanel } from "./TocPanel";
 import { TopBar } from "./TopBar";
 
 export function StudioLayout() {
+  const location = useLocation();
+  const isHome = location.pathname === "/";
+
   return (
-    <div className="studio">
+    <div className={`studio${isHome ? " studio--home" : ""}`}>
       <TopBar />
       <div className="studio__body">
-        <Sidebar />
+        {!isHome && <Sidebar />}
         <main className="studio__main">
           <Outlet />
         </main>
-        <TocPanel />
+        {!isHome && <TocPanel />}
       </div>
     </div>
   );
