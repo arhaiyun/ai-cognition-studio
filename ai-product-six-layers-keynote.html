@@ -1,0 +1,494 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 产品的六个层次</title>
+<style>
+:root{
+  --blue:#4285F4;--red:#EA4335;--yellow:#FBBC04;--green:#34A853;
+  --ink:#202124;--ink2:#303134;--sub:#5f6368;--sub2:#80868b;
+  --line:#e8eaed;--bg:#fff;--soft:#f8f9fa;
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:"Google Sans",-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",sans-serif;
+  background:#000;color:var(--ink);overflow:hidden;-webkit-font-smoothing:antialiased;
+}
+.slide{
+  position:fixed;inset:0;display:none;flex-direction:column;justify-content:center;
+  padding:8vh 10vw 10vh;opacity:0;transition:opacity .55s var(--ease);
+  background:var(--bg);
+}
+.slide.active{display:flex;opacity:1}
+.slide.dark{background:var(--ink);color:#fff}
+.slide.dark::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 70% 55% at 78% 18%,rgba(66,133,244,.14),transparent 60%);
+}
+.slide.soft{background:var(--soft)}
+.inner{position:relative;z-index:1;max-width:78vw;width:100%}
+.mark{display:flex;gap:.55vw;margin-bottom:3.5vh}
+.mark i{width:.72vw;height:.72vw;border-radius:50%}
+.mark i:nth-child(1){background:var(--blue)}.mark i:nth-child(2){background:var(--red)}
+.mark i:nth-child(3){background:var(--yellow)}.mark i:nth-child(4){background:var(--green)}
+.kicker{
+  font-size:.95vw;font-weight:600;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--sub);margin-bottom:2.4vh
+}
+.slide.dark .kicker{color:#9aa0a6}
+h1{
+  font-size:clamp(2.5rem,5.6vw,5.5rem);line-height:1.06;font-weight:500;
+  letter-spacing:-.035em;max-width:74vw
+}
+h1 strong{font-weight:700}
+h1 .ne{color:var(--blue)}.slide.dark h1 .ne{color:#8ab4f8}
+h1 .ok{color:var(--green)}.slide.dark h1 .ok{color:#81c995}
+h2{
+  font-size:clamp(1.75rem,3.5vw,3.4rem);line-height:1.14;font-weight:500;
+  letter-spacing:-.03em;margin-bottom:2.5vh;max-width:70vw
+}
+h2 strong{font-weight:700}
+.sub{font-size:clamp(.95rem,1.55vw,1.35rem);line-height:1.65;color:var(--sub);max-width:52vw;margin-top:1.5vh}
+.slide.dark .sub{color:#bdc1c6}
+.reveal>*{opacity:0;transform:translateY(1.8vh);transition:opacity .65s var(--ease),transform .65s var(--ease)}
+.slide.active .reveal>*{opacity:1;transform:none}
+.slide.active .reveal>*:nth-child(1){transition-delay:.04s}
+.slide.active .reveal>*:nth-child(2){transition-delay:.1s}
+.slide.active .reveal>*:nth-child(3){transition-delay:.16s}
+.slide.active .reveal>*:nth-child(4){transition-delay:.22s}
+.slide.active .reveal>*:nth-child(5){transition-delay:.28s}
+
+/* Cover */
+.cover-ring{
+  position:absolute;right:8vw;top:50%;transform:translateY(-50%);
+  width:28vw;height:28vw;border-radius:50%;
+  border:1px solid rgba(255,255,255,.08);
+  pointer-events:none;
+}
+.cover-ring::before,.cover-ring::after{
+  content:"";position:absolute;border-radius:50%;border:1px solid rgba(255,255,255,.06)
+}
+.cover-ring::before{inset:3vw}.cover-ring::after{inset:6vw}
+.cover-foot{margin-top:6vh;font-size:1.05vw;color:#9aa0a6;letter-spacing:.06em}
+
+/* Quote / center */
+.slide.center{align-items:center;text-align:center}
+.slide.center .inner{display:flex;flex-direction:column;align-items:center}
+.slide.center .kicker{margin-bottom:3vh}
+.mega{
+  font-size:clamp(2rem,4.2vw,4rem);line-height:1.28;font-weight:500;
+  letter-spacing:-.03em;max-width:68vw
+}
+.mega strong{font-weight:700;color:#8ab4f8}
+
+/* VS compare */
+.vs{
+  display:grid;grid-template-columns:1fr 1px 1fr;gap:0;margin-top:4vh;
+  max-width:76vw;background:#fff;border:1px solid var(--line);border-radius:1.4vw;overflow:hidden
+}
+.vs-side{padding:4vh 3vw;min-height:34vh;display:flex;flex-direction:column;justify-content:center}
+.vs-side h3{font-size:1.35vw;font-weight:700;margin-bottom:2vh;letter-spacing:-.01em}
+.vs-side p{font-size:1.2vw;line-height:1.65;color:var(--sub)}
+.vs-no h3{color:var(--red)}.vs-yes h3{color:var(--green)}
+.vs-no{background:#fffafa}.vs-yes{background:#f8fbf9}
+.vs-divider{background:var(--line)}
+.vs-badge{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:2.8vw;height:2.8vw;border-radius:50%;font-size:1.1vw;font-weight:700;
+  margin-bottom:2vh;color:#fff
+}
+.vs-no .vs-badge{background:var(--red)}.vs-yes .vs-badge{background:var(--green)}
+
+/* Pyramid ladder */
+.pyramid{margin-top:3vh;display:flex;flex-direction:column;gap:.85vh;max-width:64vw;margin-left:auto;margin-right:auto}
+.py-row{
+  display:flex;align-items:center;gap:1.5vw;padding:1.35vh 2vw;
+  border-radius:.9vw;border:1px solid var(--line);background:#fff;
+  width:var(--w);margin-left:auto;margin-right:auto;transition:width .3s
+}
+.py-row .tag{
+  font-size:1vw;font-weight:700;color:#fff;background:var(--blue);
+  padding:.35vh .9vw;border-radius:.35vw;min-width:2.8vw;text-align:center
+}
+.py-row .name{font-size:1.15vw;font-weight:600;flex:1}
+.py-row .hint{font-size:1vw;color:var(--sub);text-align:right}
+.py-row.peak{border-color:rgba(52,168,83,.35);background:linear-gradient(90deg,#f6fbf7,#fff)}
+.py-row.peak .tag{background:var(--green)}
+.py-row[data-l="5"] .tag{background:var(--blue)}
+.py-row[data-l="4"] .tag{background:#5c6bc0}
+.py-row[data-l="3"] .tag{background:var(--yellow);color:var(--ink)}
+.py-row[data-l="2"] .tag{background:#34a853}
+.py-row[data-l="1"] .tag{background:var(--sub)}
+
+/* Layer slide */
+.layer-grid{display:grid;grid-template-columns:14vw 1fr;gap:4vw;align-items:center;max-width:76vw}
+.layer-badge{
+  aspect-ratio:1;border-radius:1.6vw;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;color:#fff;font-weight:700;
+  box-shadow:0 1.2vw 3vw rgba(0,0,0,.08)
+}
+.layer-badge .num{font-size:3.2vw;line-height:1;letter-spacing:-.04em}
+.layer-badge .lbl{font-size:.85vw;opacity:.85;margin-top:.8vh;letter-spacing:.12em;text-transform:uppercase}
+.lb1{background:linear-gradient(145deg,#6b7280,#4b5563)}
+.lb2{background:linear-gradient(145deg,#34a853,#1e8e3e)}
+.lb3{background:linear-gradient(145deg,#fbbc04,#f59e0b);color:var(--ink)}
+.lb4{background:linear-gradient(145deg,#5c6bc0,#3f51b5)}
+.lb5{background:linear-gradient(145deg,#4285f4,#1967d2)}
+.lb6{background:linear-gradient(145deg,#0d9488,#059669)}
+.chain{
+  display:flex;flex-wrap:wrap;align-items:center;gap:.6vw;margin:2.5vh 0 2vh;
+  font-size:1.05vw;color:var(--sub)
+}
+.chain span{
+  padding:.7vh 1.1vw;background:#fff;border:1px solid var(--line);
+  border-radius:.5vw;font-weight:500;color:var(--ink2)
+}
+.chain em{font-style:normal;color:var(--blue);opacity:.45;font-size:1.2vw}
+.slide.soft .chain span{background:#fff}
+.pills{display:flex;flex-wrap:wrap;gap:.7vw;margin-top:1vh}
+.pill{
+  font-size:.95vw;padding:.55vh 1.1vw;border-radius:99px;
+  background:#e8f0fe;color:#1967d2;font-weight:500
+}
+
+/* Three pillars on dark */
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:1.8vw;margin-top:4vh;max-width:76vw}
+.pillar{
+  padding:3vh 2.2vw;border-radius:1.2vw;background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.1)
+}
+.pillar .bar{height:.35vh;width:2.5vw;border-radius:99px;margin-bottom:2.2vh}
+.pillar .bar.b{background:var(--blue)}.pillar .bar.g{background:var(--green)}.pillar .bar.r{background:var(--red)}
+.pillar h3{font-size:1.35vw;font-weight:600;margin-bottom:1vh}
+.pillar p{font-size:1.05vw;line-height:1.55;color:#bdc1c6}
+
+/* Human steps */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5vw;margin-top:4vh;max-width:76vw}
+.step{
+  position:relative;padding:2.5vh 1.8vw 2.2vh;border-radius:1.1vw;
+  background:#fff;border:1px solid var(--line);text-align:center
+}
+.step::before{
+  content:"";position:absolute;top:0;left:50%;transform:translate(-50%,-50%);
+  width:2.6vw;height:2.6vw;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:1vw;font-weight:700;color:#fff
+}
+.step:nth-child(1)::before{content:"L3";background:var(--blue)}
+.step:nth-child(2)::before{content:"L4";background:var(--yellow);color:var(--ink)}
+.step:nth-child(3)::before{content:"L5";background:var(--green)}
+.step:nth-child(4)::before{content:"L6";background:var(--red)}
+.step .role{font-size:.85vw;color:var(--sub);letter-spacing:.08em;text-transform:uppercase;margin:1.5vh 0 .8vh}
+.step .say{font-size:1.05vw;line-height:1.45;font-weight:500;color:var(--ink2)}
+
+/* Skill cards light */
+.cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.8vw;margin-top:3.5vh;max-width:76vw}
+.fcard{
+  background:#fff;border:1px solid var(--line);border-radius:1.2vw;
+  padding:3vh 2.2vw;position:relative;overflow:hidden
+}
+.fcard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:.45vw}
+.fcard:nth-child(1)::before{background:var(--blue)}
+.fcard:nth-child(2)::before{background:var(--green)}
+.fcard:nth-child(3)::before{background:var(--red)}
+.fcard .idx{font-size:.9vw;font-weight:700;color:var(--sub);letter-spacing:.15em;margin-bottom:1.5vh}
+.fcard h3{font-size:1.35vw;font-weight:600;margin-bottom:1vh;line-height:1.3}
+.fcard p{font-size:1.05vw;line-height:1.55;color:var(--sub)}
+
+/* Checks */
+.qlist{margin-top:3vh;max-width:62vw;display:flex;flex-direction:column;gap:2.5vh}
+.qitem{display:grid;grid-template-columns:4.5vw 1fr;gap:2vw;align-items:start}
+.qnum{
+  width:4.5vw;height:4.5vw;border-radius:50%;background:var(--blue);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:1.6vw;font-weight:700
+}
+.qitem:nth-child(2) .qnum{background:var(--green)}
+.qitem:nth-child(3) .qnum{background:var(--red)}
+.qitem h3{font-size:1.45vw;font-weight:600;margin-bottom:.6vh;line-height:1.3}
+.qitem p{font-size:1.1vw;color:var(--sub);line-height:1.5}
+
+/* Takeaway end */
+.take-list{margin-top:4vh;display:flex;flex-direction:column;gap:2.2vh;max-width:50vw}
+.take{
+  display:flex;align-items:baseline;gap:1.5vw;
+  font-size:clamp(1.1rem,1.65vw,1.5rem);line-height:1.4;color:#e8eaed
+}
+.take b{
+  font-size:2vw;font-weight:700;min-width:3vw;
+  background:linear-gradient(135deg,var(--blue),var(--green));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text
+}
+.qa{margin-top:7vh;font-size:clamp(1.5rem,2.8vw,2.5rem);font-weight:500;letter-spacing:.08em;color:#9aa0a6}
+
+.gbar{height:.75vh;width:100%;display:flex;position:absolute;left:0;bottom:0;z-index:5}
+.gbar span{flex:1}
+.gbar span:nth-child(1){background:var(--blue)}.gbar span:nth-child(2){background:var(--red)}
+.gbar span:nth-child(3){background:var(--yellow)}.gbar span:nth-child(4){background:var(--green)}
+.pageno{position:absolute;right:3.2vw;bottom:2.6vh;font-size:.88vw;color:var(--sub2);z-index:6;font-variant-numeric:tabular-nums}
+.slide.dark .pageno{color:#80868b}
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--blue);z-index:50;transition:width .45s var(--ease);width:0}
+@media (prefers-reduced-motion:reduce){
+  .reveal>*,.slide,.progress{transition:none!important}
+}
+</style></head><body>
+<div class="progress" id="prog"></div>
+<div id="stage">
+
+<!-- 01 -->
+<section class="slide dark active">
+  <div class="cover-ring"></div>
+  <div class="inner reveal">
+    <div class="mark"><i></i><i></i><i></i><i></i></div>
+    <div class="kicker">AI Cognition Studio</div>
+    <h1>会用 AI 写代码<br><span class="ne">≠</span> 会做 <span class="ok">AI 产品</span></h1>
+    <p class="sub">六层成熟度 · 人的能力 L3→L6 · 15 min</p>
+    <p class="cover-foot">AI 副驾实践手记 #6</p>
+  </div>
+  <div class="gbar"><span></span><span></span><span></span><span></span></div>
+  <div class="pageno"></div>
+</section>
+
+<!-- 02 -->
+<section class="slide dark center">
+  <div class="inner reveal">
+    <div class="kicker">Common mistake</div>
+    <p class="mega">用 Cursor 做出了网页、插件、小工具<br><span style="opacity:.45">≠</span><br><strong>「我已经会做 AI 产品了」</strong></p>
+  </div>
+  <div class="gbar"><span></span><span></span><span></span><span></span></div>
+  <div class="pageno"></div>
+</section>
+
+<!-- 03 -->
+<section class="slide soft">
+  <div class="inner reveal">
+    <div class="kicker">Foundation</div>
+    <h2><strong>runtime</strong> 决定它是不是 AI 产品</h2>
+    <p class="sub">不看开发时有没有用 AI — 看用户使用时 AI 是否参与任务执行</p>
+    <div class="vs">
+      <div class="vs-side vs-no">
+        <span class="vs-badge">✕</span>
+        <h3>AI-assisted Building</h3>
+        <p>开发时 AI 帮你写代码<br>用户打开 App，AI 不在场</p>
+      </div>
+      <div class="vs-divider"></div>
+      <div class="vs-side vs-yes">
+        <span class="vs-badge">✓</span>
+        <h3>AI Runtime · Product</h3>
+        <p>读上下文 · 调工具 · 执行 · 记忆<br>邮件助手：读信 → 生成 → 确认 → 发送</p>
+      </div>
+    </div>
+  </div>
+  <div class="gbar"><span></span><span></span><span></span><span></span></div>
+  <div class="pageno"></div>
+</section>
+
+<!-- 04 -->
+<section class="slide">
+  <div class="inner reveal">
+    <div class="kicker">Framework</div>
+    <h2>AI 应用有 <strong>六层</strong>，自下而上成熟度递增</h2>
+    <div class="pyramid">
+      <div class="py-row peak" data-l="6" style="--w:100%"><span class="tag">L6</span><span class="name">AI-native System</span><span class="hint">系统智能层</span></div>
+      <div class="py-row" data-l="5" style="--w:92%"><span class="tag">L5</span><span class="name">Agentic Core</span><span class="hint">控制执行</span></div>
+      <div class="py-row" data-l="4" style="--w:84%"><span class="tag">L4</span><span class="name">LLM Workflow</span><span class="hint">可控流程</span></div>
+      <div class="py-row" data-l="3" style="--w:76%"><span class="tag">L3</span><span class="name">Tool-using AI</span><span class="hint">连接工具</span></div>
+      <div class="py-row" data-l="2" style="--w:68%"><span class="tag">L2</span><span class="name">Grounded / RAG</span><span class="hint">检索回答</span></div>
+      <div class="py-row" data-l="1" style="--w:60%"><span class="tag">L1</span><span class="name">Prompt Wrapper</span><span class="hint">包装功能</span></div>
+    </div>
+  </div>
+  <div class="gbar"><span></span><span></span><span></span><span></span></div>
+  <div class="pageno"></div>
+</section>
+
+<!-- 05 L1 -->
+<section class="slide soft">
+  <div class="inner reveal">
+    <div class="layer-grid">
+      <div class="layer-badge lb1"><span class="num">L1</span><span class="lbl">Wrapper</span></div>
+      <div>
+        <div class="kicker">Layer 01</div>
+        <h2>只是把 LLM <strong>包装成一个功能</strong></h2>
+        <div class="chain"><span>输入</span><em>→</em><span>prompt</span><em>→</em><span>LLM</span><em>→</em><span>输出</span></div>
+        <p class="sub" style="max-width:48vw">无上下文 · 无工具 · 无状态 · 易被复制</p>
+        <div class="pills"><span class="pill">标题生成</span><span class="pill">邮件润色</span><span class="pill">简单聊天</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="gbar"><span></span><span></span><span></span><span></span></div>
+  <div class="pageno"></div>
+</section>
+
+<!-- 06 L2 -->
+<section class="slide">
+  <div class="inner reveal">
+    <div class="layer-grid">
+      <div class="layer-badge lb2"><span class="num">L2</span><span class="lbl">RAG</span></div>
+      <div>
+        <div class="kicker">Layer 02</div>
+        <h2>重点是 <strong>检索</strong>，不是写好 prompt</h2>
+        <div class="chain"><span>问题</span><em>→</em><span>检索</span><em>→</em><span>rerank</span><em>→</em><span>LLM</span><em>→</em><span>引用</span></div>
+        <p class="sub" style="max-width:48vw">chunking · hybrid search · 权限 · 降幻觉</p>
+        <div class="pills"><span class="pill">知识库</span><span class="pill">FAQ</span><span class="pill">助教</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="gbar"><span></span><span></span><span></span><span></span></div>
+  <div class="pageno"></div>
+</section>
+
+<!-- 07 L3 -->
+<section class="slide soft">
+  <div class="inner reveal">
+    <div class="layer-grid">
+      <div class="layer-badge lb3"><span class="num">L3</span><span class="lbl">Tools</span></div>
+      <div>
+        <div class="kicker">Layer 03</div>
+        <h2>模型长出了 <strong>「手脚」</strong></h2>
+        <div class="chain"><span>目标</span><em>→</em><span>选工具</span><em>→</em><span>调用</span><em>→</em><span>结果</span></div>
+        <p class="sub" style="max-width:48vw">schema · auth · 校验 · 执行前确认</p>
+        <div class="pills"><span class="pill">日历</span><span class="pill">邮件</span><span class="pill">CRM</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="gbar"><span></span><span></span><span></span><span></span></div>
+  <div class="pageno"></div>
+</section>
+
+<!-- 08 L4 -->
+<section class="slide">
+  <div class="inner reveal">
+    <div class="layer-grid">
+      <div class="layer-badge lb4"><span class="num">L4</span><span class="lbl">Workflow</span></div>
+      <div>
+        <div class="kicker">Layer 04 · Builder 主战场</div>
+        <h2>AI 进入 <strong>可控流程</strong></h2>
+        <div class="chain"><span>分类</span><em>→</em><span>生成</span><em>→</em><span>人审</span><em>→</em><span>执行</span><em>→</em><span>eval</span></div>
+        <p class="sub" style="max-width:48vw">路径明确 · 可预测 · 知道哪步必须人审</p>
+        <div class="pills"><span class="pill">退款审核</span><span class="pill">合同初审</span><span class="pill">triage</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="gbar"><span></span><span></span><span></span><span></span></div>
+  <div class="pageno"></div>
+</section>
+
+<!-- 09 L5 -->
+<section class="slide soft">
+  <div class="inner reveal">
+    <div class="layer-grid">
+      <div class="layer-badge lb5"><span class="num">L5</span><span class="lbl">Agent</span></div>
+      <div>
+        <div class="kicker">Layer 05</div>
+        <h2>从「回答」到 <strong>控制执行</strong></h2>
+        <div class="chain"><span>Plan</span><em>→</em><span>Act</span><em>→</em><span>Observe</span><em>→</em><span>Continue</span></div>
+        <p class="sub" style="max-width:48vw">guardrails · eval · tracing · human handoff</p>
+        <div class="pills"><span class="pill">OpenAI Agent</span><span class="pill">Google Agent</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="gbar"><span></span><span></span><span></span><span></span></div>
+  <div class="pageno"></div>
+</section>
+
+<!-- 10 L6 -->
+<section class="slide dark">
+  <div class="inner reveal">
+    <div class="kicker">Layer 06 · Peak</div>
+    <h2>AI 不再是功能，<span class="ok">而是系统的智能层</span></h2>
+    <div class="pillars">
+      <div class="pillar"><div class="bar b"></div><h3>低摩擦交互</h3><p>inline edit · approval · HITL</p></div>
+      <div class="pillar"><div class="bar g"></div><h3>上下文智能</h3><p>memory · RAG · 权限</p></div>
+      <div class="pillar"><div class="bar r"></div><h3>主动智能</h3><p>cron · webhook · runner</p></div>
+    </div>
+  </div>
+  <div class="gbar"><span></span><span></span><span></span><span></span></div>
+  <div class="pageno"></div>
+</section>
+
+<!-- 11 -->
+<section class="slide">
+  <div class="inner reveal">
+    <div class="kicker">Human capability</div>
+    <h2>你的层级，决定 AI 的<strong>角色</strong></h2>
+    <div class="steps">
+      <div class="step"><div class="role">Consumer</div><div class="say">我会问 AI</div></div>
+      <div class="step"><div class="role">Tinkerer</div><div class="say">我会让 AI 做 demo</div></div>
+      <div class="step"><div class="role">Builder</div><div class="say">我会把 AI 放进可靠流程</div></div>
+      <div class="step"><div class="role">Architect</div><div class="say">我会设计 AI 系统</div></div>
+    </div>
+  </div>
+  <div class="gbar"><span></span><span></span><span></span><span></span></div>
+  <div class="pageno"></div>
+</section>
+
+<!-- 12 -->
+<section class="slide soft">
+  <div class="inner reveal">
+    <div class="kicker">Level up</div>
+    <h2>L5→L6 要补的 <strong>三块硬功夫</strong></h2>
+    <div class="cards3">
+      <div class="fcard"><div class="idx">01</div><h3>Context Engineering</h3><p>context window 是工作台，不是垃圾桶</p></div>
+      <div class="fcard"><div class="idx">02</div><h3>Evaluation</h3><p>没有 eval，就没有可靠性</p></div>
+      <div class="fcard"><div class="idx">03</div><h3>Orchestration</h3><p>何时 workflow · agent · 交给人</p></div>
+    </div>
+  </div>
+  <div class="gbar"><span></span><span></span><span></span><span></span></div>
+  <div class="pageno"></div>
+</section>
+
+<!-- 13 -->
+<section class="slide">
+  <div class="inner reveal">
+    <div class="kicker">Self check</div>
+    <h2>三个快问，<strong>定位你的项目</strong></h2>
+    <div class="qlist">
+      <div class="qitem"><span class="qnum">1</span><div><h3>用户使用时，AI 有没有参与？</h3><p>没有 → building · 有 → AI product</p></div></div>
+      <div class="qitem"><span class="qnum">2</span><div><h3>AI 只会回答，还是会行动？</h3><p>回答 L1–2 · 工具 L3 · 流程 L4 · 循环 L5</p></div></div>
+      <div class="qitem"><span class="qnum">3</span><div><h3>有没有 memory / eval / 主动触发？</h3><p>有 → 接近 L6 Architect</p></div></div>
+    </div>
+  </div>
+  <div class="gbar"><span></span><span></span><span></span><span></span></div>
+  <div class="pageno"></div>
+</section>
+
+<!-- 14 -->
+<section class="slide dark center">
+  <div class="inner reveal">
+    <div class="kicker">The goal</div>
+    <p class="mega">真正的终点不是「我会用 AI」<br><strong>而是设计一个在真实世界里<br>可靠替我工作的 AI 系统</strong></p>
+  </div>
+  <div class="gbar"><span></span><span></span><span></span><span></span></div>
+  <div class="pageno"></div>
+</section>
+
+<!-- 15 -->
+<section class="slide dark">
+  <div class="inner reveal">
+    <div class="mark"><i></i><i></i><i></i><i></i></div>
+    <div class="kicker">Takeaway</div>
+    <h2 style="font-size:2.6vw;margin-bottom:1vh">带走这三条</h2>
+    <div class="take-list">
+      <div class="take"><b>1</b><span>看 runtime，不看 building</span></div>
+      <div class="take"><b>2</b><span>用六层地图定位现状</span></div>
+      <div class="take"><b>3</b><span>按 L3→L6 逐步升级</span></div>
+    </div>
+    <p class="qa">Q &amp; A</p>
+  </div>
+  <div class="gbar"><span></span><span></span><span></span><span></span></div>
+  <div class="pageno"></div>
+</section>
+
+</div>
+<script>
+const slides=[...document.querySelectorAll('.slide')];let i=0;
+function show(n){i=Math.max(0,Math.min(slides.length-1,n));
+slides.forEach((s,k)=>s.classList.toggle('active',k===i));
+document.getElementById('prog').style.width=(slides.length>1?i/(slides.length-1)*100:100)+'%';
+slides.forEach((s,k)=>{const p=s.querySelector('.pageno');if(p)p.textContent=String(k+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0');});}
+addEventListener('keydown',e=>{const k=e.key;
+if(k==='ArrowRight'||k==='PageDown'||k===' ')show(i+1);
+else if(k==='ArrowLeft'||k==='PageUp')show(i-1);
+else if(k==='Home')show(0);else if(k==='End')show(slides.length-1);
+else if(k.toLowerCase()==='f'){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();}});
+document.getElementById('stage').addEventListener('click',e=>{e.clientX/innerWidth>0.35?show(i+1):show(i-1)});
+show(0);
+</script></body></html>

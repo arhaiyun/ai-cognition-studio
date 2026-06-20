@@ -174,7 +174,7 @@ L3 高质量用模型 → L4 AI coding 原型 → L5 workflow/eval/RAG → L6 or
 
 ## 延伸阅读
 
-- [Presentation · PPT + 讲解稿](../docs/presentation/README.md)
+- [Presentation · Keynote](../ai-product-six-layers-keynote.html) · [讲解稿](../docs/presentation/README.md)
 - [5 分钟视频全稿](../docs/video/ai-product-six-layers-5min-full-script.md)
 - [AI 认知地图 v0.1](00-ai-cognition-map.md)
 - [内容更新主线](../meta/publishing-line.md)
