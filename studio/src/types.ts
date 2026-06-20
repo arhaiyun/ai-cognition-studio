@@ -73,6 +73,18 @@ export interface PublishingLine {
   seriesContents: ContentMeta[];
 }
 
+export interface DiagramMeta {
+  src: string;
+  title: string;
+  height: number;
+}
+
+export interface SourceMeta {
+  title?: string;
+  url?: string;
+  author?: string;
+}
+
 export interface ContentMeta {
   slug: string;
   type: ContentType;
@@ -88,6 +100,8 @@ export interface ContentMeta {
   sourcePath: string;
   portfolio?: PortfolioMeta;
   series?: SeriesMeta;
+  diagram?: DiagramMeta;
+  source?: SourceMeta;
   /** 构建时生成的全文搜索索引（title + summary + tags + body 纯文本） */
   searchText: string;
   /** podcast-card 专用 */

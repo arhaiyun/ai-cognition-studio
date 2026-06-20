@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { MarkdownBody } from "../components/MarkdownBody";
+import { DiagramEmbed } from "../components/DiagramEmbed";
 import { useLayout } from "../components/layout/LayoutContext";
 import { extractToc, getContent, loadContentBody } from "../lib/content";
 import type { ContentMeta } from "../types";
@@ -80,7 +81,14 @@ export function ContentPage() {
       </header>
 
       {loading && <p className="content-page__loading">加载中…</p>}
-      {meta.slug === "labs--project-incubator-readme" && (
+      {meta.diagram && (
+        <DiagramEmbed
+          src={meta.diagram.src}
+          title={meta.diagram.title}
+          height={meta.diagram.height}
+        />
+      )}
+      {meta.slug === "labs--project-incubator-readme" && !meta.diagram && (
         <img
           className="content-page__case-image"
           src={`${import.meta.env.BASE_URL}project-incubator-flow.png`}

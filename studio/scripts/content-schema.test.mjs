@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { normalizePortfolio, normalizeSeries } from "./content-schema.mjs";
+import { normalizePortfolio, normalizeSeries, normalizeDiagram } from "./content-schema.mjs";
 
 test("normalizePortfolio returns normalized featured-project metadata", () => {
   assert.deepEqual(
@@ -95,4 +95,25 @@ test("normalizeSeries rejects invalid slot or part", () => {
     }),
     undefined,
   );
+});
+
+test("normalizeDiagram accepts string or object", () => {
+  assert.deepEqual(normalizeDiagram("diagrams/foo.html"), {
+    src: "diagrams/foo.html",
+    title: "架构图",
+    height: 960,
+  });
+  assert.deepEqual(
+    normalizeDiagram({
+      src: "diagrams/ai-product-six-layers.html",
+      title: "AI 产品六层",
+      height: 1280,
+    }),
+    {
+      src: "diagrams/ai-product-six-layers.html",
+      title: "AI 产品六层",
+      height: 1280,
+    },
+  );
+  assert.equal(normalizeDiagram({ src: "", title: "x" }), undefined);
 });

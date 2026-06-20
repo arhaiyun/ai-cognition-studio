@@ -36,3 +36,24 @@ export function normalizePortfolio(value) {
 
   return { order, label, outcome, capabilities };
 }
+
+export function normalizeDiagram(value) {
+  if (typeof value === "string") {
+    const src = value.trim();
+    return src ? { src, title: "架构图", height: 960 } : undefined;
+  }
+
+  if (!value || typeof value !== "object") return undefined;
+
+  const src = typeof value.src === "string" ? value.src.trim() : "";
+  const title = typeof value.title === "string" ? value.title.trim() : "架构图";
+  const height = Number(value.height);
+
+  if (!src) return undefined;
+
+  return {
+    src,
+    title: title || "架构图",
+    height: Number.isInteger(height) && height >= 320 ? height : 960,
+  };
+}

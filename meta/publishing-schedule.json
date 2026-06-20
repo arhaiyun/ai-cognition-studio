@@ -9,7 +9,7 @@
     "id": "copilot-practice-2026",
     "title": "AI 副驾实践手记",
     "tagline": "从认知边界到可复用 Agent 工作流",
-    "currentWeek": "2026-W23"
+    "currentWeek": "2026-W24"
   },
   "phases": [
     {
@@ -92,20 +92,27 @@
     {
       "week": "2026-W24",
       "phase": "phase-1-cognition",
-      "theme": "幻觉与校准",
-      "status": "planned",
+      "theme": "幻觉、校准与产品分层",
+      "status": "in_progress",
       "articles": [
         {
-          "sourcePath": "essays/2026-W24-01-hallucination-calibration.md",
+          "sourcePath": "cognition/02-ai-product-six-layers.md",
           "part": 6,
           "slot": "pillar",
+          "title": "AI 产品的六个层次 v0.1",
+          "status": "published"
+        },
+        {
+          "sourcePath": "essays/2026-W24-01-hallucination-calibration.md",
+          "part": 7,
+          "slot": "practice",
           "title": "幻觉不是 bug：如何设计人审与校准",
           "status": "planned"
         },
         {
           "sourcePath": "essays/2026-W24-02-verification-checklist.md",
-          "part": 7,
-          "slot": "practice",
+          "part": 8,
+          "slot": "handbook",
           "title": "实践：AI 输出复核清单（可打印版）",
           "status": "planned"
         }

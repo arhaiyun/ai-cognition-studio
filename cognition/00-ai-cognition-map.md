@@ -51,6 +51,7 @@ flowchart LR
 
 | 想理解… | 去看… |
 |---------|--------|
+| AI 产品成熟度与 L3–L6 | [02-ai-product-six-layers.md](02-ai-product-six-layers.md) |
 | MCP 怎么设计 | [playbooks/mcp-design-checklist.md](../playbooks/mcp-design-checklist.md) |
 | Skill 怎么写 | [labs/cursor-skill-template/](../labs/cursor-skill-template/) |
 | 跑通最小 MCP | [labs/mcp-hello/](../labs/mcp-hello/) |

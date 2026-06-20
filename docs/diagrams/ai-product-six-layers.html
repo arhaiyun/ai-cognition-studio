@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI 产品的六个层次 · 架构总览</title>
+  <style>
+    :root {
+      --bg: #0b0f14;
+      --surface: #121820;
+      --surface-2: #1a2230;
+      --border: #2a3544;
+      --text: #e8edf4;
+      --muted: #8b9cb3;
+      --accent: #5b9cf5;
+      --accent-2: #34d399;
+      --accent-3: #f59e0b;
+      --accent-4: #a78bfa;
+      --accent-5: #f472b6;
+      --warn: #fb923c;
+      --radius: 10px;
+      --font: "PingFang SC", "Hiragino Sans GB", system-ui, sans-serif;
+      --mono: "SF Mono", "JetBrains Mono", ui-monospace, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 32px 20px 48px;
+      font-family: var(--font);
+      background:
+        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(91, 156, 245, 0.12), transparent),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .diagram-header {
+      max-width: 1200px;
+      margin: 0 auto 28px;
+    }
+    .diagram-header h1 {
+      margin: 0 0 8px;
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .diagram-header .subtitle {
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      max-width: 720px;
+    }
+    .diagram-header .source {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .diagram-header .source a { color: var(--accent); }
+
+    .diagram-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      gap: 24px;
+    }
+    @media (min-width: 960px) {
+      .diagram-grid {
+        grid-template-columns: 1fr 340px;
+        align-items: start;
+      }
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+    .panel-title {
+      margin: 0 0 16px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ── Building vs Runtime ── */
+    .distinction {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 12px;
+      align-items: stretch;
+    }
+    @media (max-width: 640px) {
+      .distinction { grid-template-columns: 1fr; }
+      .distinction-arrow { display: none; }
+    }
+    .dist-box {
+      padding: 14px 16px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+    }
+    .dist-box h3 {
+      margin: 0 0 6px;
+      font-size: 0.9rem;
+    }
+    .dist-box.build h3 { color: var(--muted); }
+    .dist-box.runtime h3 { color: var(--accent-2); }
+    .dist-box p {
+      margin: 0;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .distinction-arrow {
+      display: flex;
+      align-items: center;
+      color: var(--warn);
+      font-size: 0.75rem;
+      font-weight: 600;
+      writing-mode: vertical-rl;
+      text-align: center;
+    }
+
+    /* ── Six layers stack ── */
+    .layers-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      position: relative;
+    }
+    .layer-row {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 12px;
+      align-items: stretch;
+      position: relative;
+    }
+    .layer-row + .layer-row { margin-top: 8px; }
+    .layer-num {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--bg);
+      background: var(--accent);
+      border-radius: 8px;
+      min-height: 100%;
+    }
+    .layer-row:nth-child(1) .layer-num { background: #64748b; }
+    .layer-row:nth-child(2) .layer-num { background: #3b82f6; }
+    .layer-row:nth-child(3) .layer-num { background: #06b6d4; }
+    .layer-row:nth-child(4) .layer-num { background: #10b981; }
+    .layer-row:nth-child(5) .layer-num { background: #8b5cf6; }
+    .layer-row:nth-child(6) .layer-num { background: linear-gradient(135deg, #f59e0b, #ef4444); }
+
+    .layer-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      background: var(--surface-2);
+      transition: border-color 0.2s;
+    }
+    .layer-card:hover { border-color: var(--accent); }
+    .layer-card h3 {
+      margin: 0 0 4px;
+      font-size: 1rem;
+    }
+    .layer-card .essence {
+      margin: 0 0 10px;
+      font-size: 0.78rem;
+      color: var(--accent-3);
+      font-style: italic;
+    }
+    .layer-card .flow {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--muted);
+      background: rgba(0,0,0,0.25);
+      padding: 8px 10px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      line-height: 1.6;
+      overflow-x: auto;
+    }
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .tag {
+      font-size: 0.68rem;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      background: rgba(255,255,255,0.03);
+    }
+    .layer-connector {
+      position: absolute;
+      left: 23px;
+      top: 100%;
+      width: 2px;
+      height: 8px;
+      background: var(--border);
+    }
+    .layer-row:last-child .layer-connector { display: none; }
+
+    /* ── Human levels sidebar ── */
+    .human-levels { display: flex; flex-direction: column; gap: 10px; }
+    .human-card {
+      padding: 12px 14px;
+      border-radius: var(--radius);
+      border-left: 3px solid var(--border);
+      background: var(--surface-2);
+    }
+    .human-card.l3 { border-left-color: #64748b; }
+    .human-card.l4 { border-left-color: #3b82f6; }
+    .human-card.l5 { border-left-color: #10b981; }
+    .human-card.l6 { border-left-color: #f59e0b; }
+    .human-card .level-id {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+    .human-card h4 {
+      margin: 0 0 4px;
+      font-size: 0.88rem;
+    }
+    .human-card .keyword {
+      font-size: 0.72rem;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+    .human-card p {
+      margin: 0;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+    .human-card .maps-to {
+      margin-top: 8px;
+      font-size: 0.7rem;
+      color: var(--accent-2);
+    }
+
+    /* ── L6 expansion ── */
+    .l6-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }
+    .pillar {
+      padding: 14px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+    }
+    .pillar h4 {
+      margin: 0 0 8px;
+      font-size: 0.85rem;
+      color: var(--accent-2);
+    }
+    .pillar ul {
+      margin: 0;
+      padding-left: 16px;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .pillar li { margin-bottom: 3px; }
+
+    .resilience-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .chip {
+      text-align: center;
+      padding: 8px;
+      font-size: 0.72rem;
+      border-radius: 6px;
+      border: 1px dashed var(--border);
+      color: var(--muted);
+    }
+
+    /* ── Maturity ladder ── */
+    .maturity {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .maturity-step {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 10px;
+      align-items: start;
+      font-size: 0.78rem;
+    }
+    .maturity-step .q {
+      font-family: var(--mono);
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .maturity-step .a { color: var(--muted); }
+
+    .diagram-legend {
+      max-width: 1200px;
+      margin: 28px auto 0;
+      padding: 16px 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .diagram-legend h2 {
+      margin: 0 0 10px;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .legend-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px 24px;
+    }
+    .legend-item { display: flex; align-items: center; gap: 8px; }
+    .legend-swatch {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+  <!--
+    Architecture inventory (Superlinear Academy · AI产品的六个层次)
+    Nodes: Building vs Runtime · 6 product layers · L3-L6 human levels · L6 pillars · maturity questions
+    Edges: vertical maturity ↑ · human level ↔ product layer mapping
+  -->
+  <header class="diagram-header">
+    <h1>AI 产品的六个层次 · 完整架构图</h1>
+    <p class="subtitle">
+      核心 distinction：判断是否为 AI 产品，不看开发时是否用 AI，而看<strong>用户使用时 AI 是否参与 runtime</strong>（理解、判断、行动、记忆、协作、交付）。
+    </p>
+    <p class="source">
+      来源：<a href="https://www.superlinear.academy/c/ai-resources/ai-product" target="_blank" rel="noopener">Superlinear Academy · AI产品的六个层次</a>
+      · 对齐 Anthropic / OpenAI / Google Cloud agent 框架
+    </p>
+  </header>
+
+  <div class="diagram-grid">
+    <div class="main-column" style="display:flex;flex-direction:column;gap:24px;">
+
+      <!-- Distinction -->
+      <section class="panel" aria-labelledby="sec-distinction">
+        <h2 class="panel-title" id="sec-distinction">0 · 先区分两件事</h2>
+        <div class="distinction">
+          <div class="dist-box build">
+            <h3>AI-assisted Building</h3>
+            <p>AI 在<strong>开发过程</strong>中帮你写代码、造软件。用户打开产品时，AI 不参与 runtime。</p>
+            <p style="margin-top:8px;font-size:0.78rem;">例：用 Cursor 写的普通日历 App</p>
+          </div>
+          <div class="distinction-arrow">≠ AI 产品</div>
+          <div class="dist-box runtime">
+            <h3>AI Runtime · AI Product</h3>
+            <p>AI 在<strong>产品运行过程</strong>中读取上下文、调用工具、做决策、执行任务、记忆与交付。</p>
+            <p style="margin-top:8px;font-size:0.78rem;">例：邮件助手读信 → 判断意图 → 调 Gmail API → 等人确认 → 发送</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Six layers -->
+      <section class="panel" aria-labelledby="sec-layers">
+        <h2 class="panel-title" id="sec-layers">I · AI 应用六层架构（自下而上 · 成熟度递增）</h2>
+        <div class="layers-stack" role="img" aria-label="AI 产品六层架构栈">
+
+          <div class="layer-row">
+            <div class="layer-num">L1</div>
+            <div class="layer-card">
+              <h3>Prompt Wrapper · 薄 AI 工具</h3>
+              <p class="essence">Model as a feature — 模型只是文本处理功能</p>
+              <div class="flow">用户输入 → prompt template → LLM API → 输出 → 展示</div>
+              <div class="tags">
+                <span class="tag">标题/邮件/简历生成</span>
+                <span class="tag">无上下文</span>
+                <span class="tag">无工具</span>
+                <span class="tag">≈ L4 早期 demo</span>
+              </div>
+            </div>
+            <div class="layer-connector"></div>
+          </div>
+
+          <div class="layer-row">
+            <div class="layer-num">L2</div>
+            <div class="layer-card">
+              <h3>Grounded AI / RAG · 带知识的 AI</h3>
+              <p class="essence">AI knows more, but still mostly answers</p>
+              <div class="flow">问题 → query rewrite → 检索 KB/DB → rerank → 拼接上下文 → LLM → citation</div>
+              <div class="tags">
+                <span class="tag">chunking / embedding</span>
+                <span class="tag">hybrid search</span>
+                <span class="tag">permission-aware retrieval</span>
+                <span class="tag">知识库/客服 FAQ</span>
+              </div>
+            </div>
+            <div class="layer-connector"></div>
+          </div>
+
+          <div class="layer-row">
+            <div class="layer-num">L3</div>
+            <div class="layer-card">
+              <h3>Tool-using AI · 能调用工具</h3>
+              <p class="essence">Model as an interface to tools — 模型成为工具入口</p>
+              <div class="flow">用户目标 → LLM 选工具 → function call / API → 获取结果 → 继续执行</div>
+              <div class="tags">
+                <span class="tag">tool schema</span>
+                <span class="tag">auth / permission</span>
+                <span class="tag">confirmation</span>
+                <span class="tag">Gmail / CRM / 日历</span>
+              </div>
+            </div>
+            <div class="layer-connector"></div>
+          </div>
+
+          <div class="layer-row">
+            <div class="layer-num">L4</div>
+            <div class="layer-card">
+              <h3>LLM Workflow · 固定流程里的 AI</h3>
+              <p class="essence">AI inside a controlled process — 可控业务流程</p>
+              <div class="flow">分类 → 检索 → 抽取 → 调 API → 生成方案 → 人工确认 → 执行 → 日志/eval</div>
+              <div class="tags">
+                <span class="tag">Anthropic Workflow</span>
+                <span class="tag">可预测性</span>
+                <span class="tag">human-in-the-loop</span>
+                <span class="tag">≈ L5 主战场</span>
+              </div>
+            </div>
+            <div class="layer-connector"></div>
+          </div>
+
+          <div class="layer-row">
+            <div class="layer-num">L5</div>
+            <div class="layer-card">
+              <h3>Agentic Core · 智能体核心</h3>
+              <p class="essence">Model as a controller — 模型控制任务执行</p>
+              <div class="flow">Goal → Plan → Choose tool → Act → Observe → Update state → Continue / Stop / Ask human</div>
+              <div class="tags">
+                <span class="tag">ReAct loop</span>
+                <span class="tag">tool registry</span>
+                <span class="tag">guardrails</span>
+                <span class="tag">evaluator / tracing</span>
+                <span class="tag">≈ L6 底层能力</span>
+              </div>
+            </div>
+            <div class="layer-connector"></div>
+          </div>
+
+          <div class="layer-row">
+            <div class="layer-num">L6</div>
+            <div class="layer-card" style="border-color: rgba(245,158,11,0.5);">
+              <h3>AI-native Product / System · 落地的 AI 系统</h3>
+              <p class="essence">AI 不再是一个功能，而是系统的智能层 · Building what you can't buy</p>
+              <div class="flow">Agentic Core + 产品场景 + 三大能力模块（见下方展开）</div>
+              <div class="tags">
+                <span class="tag">低摩擦交互</span>
+                <span class="tag">上下文智能</span>
+                <span class="tag">主动触发</span>
+                <span class="tag">权限 / eval / runtime</span>
+                <span class="tag">≈ L6 Architect 完整形态</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- L6 detail -->
+      <section class="panel" aria-labelledby="sec-l6">
+        <h2 class="panel-title" id="sec-l6">II · L6 系统三大产品能力 → 技术模块</h2>
+        <div class="l6-grid">
+          <div class="pillar">
+            <h4>Frictionless Interaction<br><small style="color:var(--muted);font-weight:400;">低摩擦交互</small></h4>
+            <ul>
+              <li>chat / voice / command palette</li>
+              <li>browser extension / inline edit</li>
+              <li>sidebar / one-click apply</li>
+              <li>approval UI · undo / review</li>
+              <li>human-in-the-loop</li>
+            </ul>
+          </div>
+          <div class="pillar">
+            <h4>Contextual Intelligence<br><small style="color:var(--muted);font-weight:400;">上下文智能</small></h4>
+            <ul>
+              <li>user profile · workspace context</li>
+              <li>conversation state · documents</li>
+              <li>emails / calendar / CRM / tickets</li>
+              <li>RAG · entity graph</li>
+              <li>long-term memory · permission filter</li>
+            </ul>
+          </div>
+          <div class="pillar">
+            <h4>Proactive Intelligence<br><small style="color:var(--muted);font-weight:400;">主动智能</small></h4>
+            <ul>
+              <li>cron · event triggers · webhooks</li>
+              <li>monitoring · notification queue</li>
+              <li>agent runner · action queue</li>
+              <li>approval policy</li>
+              <li>每日 briefing / 风险提醒</li>
+            </ul>
+          </div>
+        </div>
+
+        <h2 class="panel-title" style="margin-top:20px;">L6 Architect 三大核心能力</h2>
+        <div class="l6-grid">
+          <div class="pillar">
+            <h4>System Resilience · 系统韧性</h4>
+            <div class="resilience-grid">
+              <span class="chip">retry</span>
+              <span class="chip">fallback</span>
+              <span class="chip">structured output</span>
+              <span class="chip">human escalation</span>
+              <span class="chip">observability</span>
+              <span class="chip">eval regression</span>
+            </div>
+          </div>
+          <div class="pillar">
+            <h4>Contextual Architecture · 上下文架构</h4>
+            <ul>
+              <li><strong>Working memory</strong> — 任务状态、工具观察</li>
+              <li><strong>Long-term memory</strong> — 偏好、规则、历史</li>
+              <li><strong>Transactional memory</strong> — 审计、审批、状态变更</li>
+            </ul>
+          </div>
+          <div class="pillar">
+            <h4>Orchestration & Integration · 编排与集成</h4>
+            <ul>
+              <li>multi-model routing</li>
+              <li>workflow vs agent 选型</li>
+              <li>single / multi-agent patterns</li>
+              <li>并行 vs 串行 · 自动 vs 确认</li>
+              <li>agent ↔ human handoff</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Maturity questions -->
+      <section class="panel" aria-labelledby="sec-maturity">
+        <h2 class="panel-title" id="sec-maturity">III · 实用判断框架（10 问）</h2>
+        <div class="maturity">
+          <div class="maturity-step"><span class="q">1</span><span class="a">AI 只在开发时参与？→ AI-assisted building，非 AI 产品</span></div>
+          <div class="maturity-step"><span class="q">2</span><span class="a">用户使用时 AI 参与？→ 进入 AI product 范畴</span></div>
+          <div class="maturity-step"><span class="q">3</span><span class="a">一次性生成文本？→ Prompt Wrapper</span></div>
+          <div class="maturity-step"><span class="q">4</span><span class="a">接入外部知识/业务上下文？→ Grounded AI / RAG</span></div>
+          <div class="maturity-step"><span class="q">5</span><span class="a">能调用工具或 API？→ Tool-using AI</span></div>
+          <div class="maturity-step"><span class="q">6</span><span class="a">嵌入稳定业务流程？→ LLM Workflow</span></div>
+          <div class="maturity-step"><span class="q">7</span><span class="a">决定下一步、循环执行、观察调整？→ Agentic Core</span></div>
+          <div class="maturity-step"><span class="q">8</span><span class="a">有 memory / permission / guardrails / eval / runtime？→ 接近 AI-native</span></div>
+          <div class="maturity-step"><span class="q">9</span><span class="a">能主动触发（非等用户提问）？→ Proactive intelligence</span></div>
+          <div class="maturity-step"><span class="q">10</span><span class="a">成为个人/组织工作系统一部分？→ L6 AI Architect 目标</span></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Sidebar: Human levels -->
+    <aside class="sidebar-column" style="display:flex;flex-direction:column;gap:24px;">
+      <section class="panel" aria-labelledby="sec-human">
+        <h2 class="panel-title" id="sec-human">人的能力四档 L3→L6</h2>
+        <div class="human-levels">
+          <div class="human-card l3">
+            <div class="level-id">L3</div>
+            <h4>The AI Consumer</h4>
+            <div class="keyword">Chatting · 把 AI 当咨询师</div>
+            <p>消费模型输出：提问 → 答案 → regenerate。上限取决于模型本身。</p>
+            <div class="maps-to">↔ 主要停留在 L1–L2 使用侧</div>
+          </div>
+          <div class="human-card l4">
+            <div class="level-id">L4</div>
+            <h4>The AI Tinkerer / Vibe Coder</h4>
+            <div class="keyword">One-off · 把 AI 当外包</div>
+            <p>AI coding 做 demo/脚本/插件。Happy path 可行，edge cases 崩。</p>
+            <div class="maps-to">↔ 产出 L1 Prompt Wrapper / 普通 App</div>
+          </div>
+          <div class="human-card l5">
+            <div class="level-id">L5</div>
+            <h4>The AI Builder</h4>
+            <div class="keyword">Reliability & Iteration · 把 AI 当逻辑引擎</div>
+            <p>Context Engineering · Evaluation · 迭代 workflow。职场需要稳定交付。</p>
+            <div class="maps-to">↔ 构建 L4 Workflow + L2/L3 组件</div>
+          </div>
+          <div class="human-card l6">
+            <div class="level-id">L6</div>
+            <h4>The AI Architect</h4>
+            <div class="keyword">Orchestration & Integration</div>
+            <p>设计长期运行的 AI architecture：韧性、记忆、编排、主动系统。</p>
+            <div class="maps-to">↔ 设计 L5 Agentic + L6 AI-native System</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2 class="panel-title">能力跃迁 · 一句话</h2>
+        <div style="font-size:0.82rem;color:var(--muted);line-height:1.8;">
+          <p style="margin:0 0 8px;"><strong style="color:var(--text);">L3</strong>：我会问 AI。</p>
+          <p style="margin:0 0 8px;"><strong style="color:var(--text);">L4</strong>：我会让 AI 帮我做一个东西。</p>
+          <p style="margin:0 0 8px;"><strong style="color:var(--text);">L5</strong>：我会把 AI 放进一个可靠流程。</p>
+          <p style="margin:0;"><strong style="color:var(--text);">L6</strong>：我会设计一个 AI 驱动的系统。</p>
+        </div>
+        <hr style="border:none;border-top:1px solid var(--border);margin:16px 0;" />
+        <p style="margin:0;font-size:0.78rem;color:var(--accent-3);">
+          终点：设计一个 AI 系统，让它在真实世界里<strong style="color:var(--text);">可靠地替你工作</strong>。
+        </p>
+      </section>
+
+      <section class="panel">
+        <h2 class="panel-title">学习路径（建议顺序）</h2>
+        <div style="font-family:var(--mono);font-size:0.72rem;color:var(--muted);line-height:1.9;">
+          L3 prompt & 任务拆解<br />
+          ↓<br />
+          L4 AI coding 原型<br />
+          ↓<br />
+          L5 workflow · RAG · eval · HITL<br />
+          ↓<br />
+          L6 orchestration · memory · runtime · proactive
+        </div>
+      </section>
+    </aside>
+  </div>
+
+  <footer class="diagram-legend">
+    <h2>图例</h2>
+    <div class="legend-row">
+      <div class="legend-item"><span class="legend-swatch" style="background:#64748b;"></span> L1 Prompt Wrapper</div>
+      <div class="legend-item"><span class="legend-swatch" style="background:#3b82f6;"></span> L2 RAG</div>
+      <div class="legend-item"><span class="legend-swatch" style="background:#06b6d4;"></span> L3 Tool-using</div>
+      <div class="legend-item"><span class="legend-swatch" style="background:#10b981;"></span> L4 Workflow</div>
+      <div class="legend-item"><span class="legend-swatch" style="background:#8b5cf6;"></span> L5 Agentic Core</div>
+      <div class="legend-item"><span class="legend-swatch" style="background:linear-gradient(135deg,#f59e0b,#ef4444);"></span> L6 AI-native System</div>
+    </div>
+    <p style="margin:12px 0 0;font-size:0.72rem;">
+      注：产品六层（L1–L6）与人的能力四档（L3–L6）编号体系不同 — 文中 L3 Consumer 对应产品 L1–L2 使用，L6 Architect 对应产品 L5–L6 系统设计。
+    </p>
+  </footer>
+</body>
+</html>

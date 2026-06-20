@@ -43,6 +43,7 @@ npm run dev    # 打开 http://127.0.0.1:5173
 ## 快速导航
 
 - [内容更新主线](meta/publishing-line.md)
+- [AI 产品的六个层次](cognition/02-ai-product-six-layers.md)
 - [LLM 凭证统一管理](meta/llm-credentials.md)
 - [国产大模型接入说明](cognition/01-domestic-llm-integration.md)
 - [学习路线图](meta/learning-roadmap.md)

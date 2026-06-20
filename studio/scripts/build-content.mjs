@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import matter from "gray-matter";
-import { normalizePortfolio, normalizeSeries } from "./content-schema.mjs";
+import { normalizePortfolio, normalizeSeries, normalizeDiagram } from "./content-schema.mjs";
 
 const SCHEMA_VERSION = 1;
 
@@ -17,6 +17,19 @@ const STATIC_ASSETS = [
     target: path.join(PUBLIC_DIR, "project-incubator-flow.png"),
   },
 ];
+
+function collectDiagramAssets() {
+  const dir = path.join(ROOT, "docs/diagrams");
+  if (!fs.existsSync(dir)) return [];
+
+  return fs
+    .readdirSync(dir)
+    .filter((name) => name.endsWith(".html"))
+    .map((name) => ({
+      source: path.join(dir, name),
+      target: path.join(PUBLIC_DIR, "diagrams", name),
+    }));
+}
 
 const SECTIONS = [
   { id: "cognition", label: "认知框架", dir: "cognition", icon: "◈", type: "article" },
@@ -191,6 +204,17 @@ function buildContentMeta(section, absPath, relativePath) {
   const series = normalizeSeries(fm.series);
   if (series) meta.series = series;
 
+  const diagram = normalizeDiagram(fm.diagram);
+  if (diagram) meta.diagram = diagram;
+
+  if (fm.source && typeof fm.source === "object") {
+    const source = {};
+    if (fm.source.title) source.title = String(fm.source.title);
+    if (fm.source.url) source.url = String(fm.source.url);
+    if (fm.source.author) source.author = String(fm.source.author);
+    if (Object.keys(source).length > 0) meta.source = source;
+  }
+
   if (type === "podcast-card") {
     const takeaways = normalizeStringArray(fm.takeaways);
     if (takeaways.length > 0) meta.takeaways = takeaways;
@@ -274,7 +298,8 @@ function build() {
     if (file.endsWith(".md")) fs.unlinkSync(path.join(ARTICLES_DIR, file));
   }
 
-  for (const asset of STATIC_ASSETS) {
+  for (const asset of [...STATIC_ASSETS, ...collectDiagramAssets()]) {
+    fs.mkdirSync(path.dirname(asset.target), { recursive: true });
     if (fs.existsSync(asset.source)) {
       fs.copyFileSync(asset.source, asset.target);
     }

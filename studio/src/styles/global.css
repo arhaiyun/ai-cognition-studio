@@ -511,6 +511,49 @@ button {
   border-radius: var(--radius);
 }
 
+.content-page__diagram {
+  margin: 0 0 32px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: #0b0f14;
+}
+
+.content-page__diagram-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--bg-hover);
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+}
+
+.content-page__diagram-label {
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.content-page__diagram-toolbar a {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.content-page__diagram-frame {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: #0b0f14;
+}
+
+.content-page__diagram figcaption {
+  padding: 10px 14px;
+  font-size: 12px;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border);
+}
+
 .project-card__body,
 .project-card {
   padding: 24px;

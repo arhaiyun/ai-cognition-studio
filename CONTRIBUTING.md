@@ -59,6 +59,17 @@ series:
 - 计划与进度：`meta/publishing-schedule.json`
 - 模板：[`essays/_template-series.md`](../essays/_template-series.md)
 
+### 架构图（编入 Studio）
+
+```yaml
+diagram:
+  src: diagrams/my-architecture.html   # 源文件放 docs/diagrams/
+  title: 架构图标题
+  height: 960                          # iframe 高度 px，可选
+```
+
+构建时 `docs/diagrams/*.html` 会复制到 `studio/public/diagrams/`，文章页顶部以 iframe 嵌入。
+
 ### 播客卡片额外字段（`podcast/`）
 
 见 [`podcast/_template.md`](podcast/_template.md)：`hosts`、`guests`、`links`、`takeaways`、`related` 等。
