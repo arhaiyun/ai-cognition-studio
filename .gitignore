@@ -20,6 +20,10 @@ studio/public/diagrams/
 # 本地设计讨论产物
 .superpowers/
 
+# Presentation 导出物（由 Marp 从 .md 生成）
+docs/presentation/*.pptx
+docs/presentation/*.pdf
+
 # OS / Editor
 .DS_Store
 .idea/
