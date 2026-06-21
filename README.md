@@ -71,6 +71,7 @@ npm run dev    # 打开 http://127.0.0.1:5173
 | [studio-skill-sync](labs/studio-skill-sync/) | Skill 三端同步（Cursor + Codex + Studio） |
 | [social-video-toolkit](labs/social-video-toolkit/) | 社媒视频下载、转写与烧录字幕分析 |
 | [feishu-doc-writer](labs/feishu-doc-writer/) | Markdown 写入飞书 Wiki 子文档 |
+| [arch-diagram-builder](labs/arch-diagram-builder/) | 交互式分步动画架构图 HTML |
 | [prompt-patterns](labs/prompt-patterns/) | 可复用 Prompt 模式 |
 
 ---

@@ -1,0 +1,7 @@
+interface:
+  display_name: "交互式架构图"
+  short_description: "生成分步动画单文件 HTML 系统架构图（节点高亮、连线流动、粒子轨迹）"
+  default_prompt: "Use $arch-diagram-builder to create an interactive step-by-step architecture diagram as a single HTML file."
+
+policy:
+  allow_implicit_invocation: false

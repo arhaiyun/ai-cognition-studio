@@ -1,0 +1,47 @@
+{
+  "skill_name": "arch-diagram-builder",
+  "evals": [
+    {
+      "id": 1,
+      "name": "rag-pipeline-five-steps",
+      "prompt": "用 arch-diagram-builder 画 RAG Pipeline：用户问题 → Retriever → Vector DB → LLM → 回答输出，5 步演示，保存到 docs/diagrams/rag-pipeline.html",
+      "expected_output": "单文件 HTML，通过 verify-diagram.mjs",
+      "files": [],
+      "assertions": [
+        "outputs/docs/diagrams/rag-pipeline.html exists",
+        "verify-diagram.mjs exits 0",
+        "nodes include retriever and llm semantic colors (green/purple in STEPS)"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "mcp-protocol-bidirectional",
+      "prompt": "画 MCP 协议原理架构图：Client ↔ MCP Server ↔ Tools，强调双向调用，6 步，docs/diagrams/mcp-protocol.html",
+      "expected_output": "双向连线分车道，无堆叠",
+      "files": [],
+      "assertions": [
+        "verify-diagram.mjs exits 0",
+        "at least 2 curved conn paths (C in path d)",
+        "qualitative: bidirectional pairs visually separated"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "minimal-two-node-smoke",
+      "prompt": "arch-diagram-builder 最小 smoke：API → Agent 两个节点，3 步，docs/diagrams/smoke-two-node.html",
+      "expected_output": "最小可运行图",
+      "files": [],
+      "assertions": [
+        "verify-diagram.mjs exits 0",
+        "STEPS length between 3 and 9"
+      ]
+    }
+  ],
+  "trigger_evals": [
+    { "query": "画一个 RAG 的动态架构图", "should_trigger": true },
+    { "query": "交互式架构图 MCP 协议", "should_trigger": true },
+    { "query": "runtime 数据流演示 HTML", "should_trigger": true },
+    { "query": "帮我做 PPT keynote", "should_trigger": false },
+    { "query": "写一段 Python 爬虫", "should_trigger": false }
+  ]
+}

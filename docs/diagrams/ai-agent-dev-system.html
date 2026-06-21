@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Agent 开发系统架构</title>
+<style>
+:root {
+  --bg: #FFFFFF; --sf: #FFFFFF; --sf2: #EEF0F5; --bd: #B0B8C8;
+  --blu: #1558D6; --pur: #6D28D9; --grn: #047857;
+  --org: #C2410C; --cya: #0369A1;
+  --tx: #0D1117; --mt: #374151;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif; color: var(--tx); }
+
+/* ── Top Nav ── */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; height: 56px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 28px; background: var(--bg);
+  border-bottom: 1px solid var(--sf2); z-index: 100;
+}
+.nav-title { font-size: 15px; font-weight: 700; letter-spacing: -0.02em; }
+.nav-badge {
+  font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--blu); background: rgba(21,88,214,.08); padding: 5px 12px; border-radius: 20px;
+}
+.nav-order {
+  display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--mt);
+}
+.nav-order-num {
+  font-weight: 700; color: var(--blu); font-variant-numeric: tabular-nums;
+  background: rgba(21,88,214,.1); padding: 4px 10px; border-radius: 8px;
+}
+.nav-order-title { font-weight: 600; color: var(--tx); }
+
+/* ── Main SVG area ── */
+.main {
+  position: fixed; top: 92px; left: 0; right: 0; bottom: 88px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg);
+}
+#main-svg { width: 100%; max-width: 960px; height: auto; }
+
+/* ── Node styles ── */
+.node { fill: var(--sf); stroke: var(--bd); stroke-width: 2; filter: drop-shadow(0 2px 8px rgba(0,0,0,.10)); }
+.node-label { font-size: 12px; font-weight: 600; fill: var(--tx); text-anchor: middle; }
+.node-sub { font-size: 9px; fill: var(--mt); text-anchor: middle; }
+
+/* Chip */
+.chip { fill: var(--sf2); stroke: var(--bd); stroke-width: 1; }
+.chip-text { font-size: 8.5px; font-weight: 600; fill: var(--mt); text-anchor: middle; }
+.chip.lit-b { fill: rgba(21,88,214,.12); stroke: var(--blu); }
+.chip.lit-p { fill: rgba(109,40,217,.12); stroke: var(--pur); }
+.chip.lit-g { fill: rgba(4,120,87,.12); stroke: var(--grn); }
+.chip.lit-o { fill: rgba(194,65,12,.12); stroke: var(--org); }
+.chip.lit-c { fill: rgba(3,105,161,.12); stroke: var(--cya); }
+.chip.lit-b .chip-text, .chip.lit-p .chip-text, .chip.lit-g .chip-text,
+.chip.lit-o .chip-text, .chip.lit-c .chip-text { fill: var(--tx); }
+
+/* Zone */
+.zone { fill: rgba(0,0,0,.02); stroke: var(--bd); stroke-width: 1.5; stroke-dasharray: 5 4; }
+.zone-label { font-size: 9.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; fill: var(--mt); }
+
+/* Connections */
+.conn { fill: none; stroke-width: 2.5; stroke-dasharray: 8 5; opacity: 0.3; }
+.conn-label { font-size: 9px; fill: var(--mt); text-anchor: middle; opacity: 0; transition: opacity .3s; }
+.conn-label.show { opacity: 1; }
+
+/* Order badges on nodes — 执行顺序必须在图上可见 */
+.order-badge { pointer-events: none; }
+.order-ring {
+  fill: var(--sf); stroke: var(--bd); stroke-width: 1.5;
+  opacity: 0.45; transition: opacity .25s, stroke .25s, fill .25s;
+}
+.order-num {
+  font-size: 10px; font-weight: 700; fill: var(--mt); text-anchor: middle;
+  font-variant-numeric: tabular-nums;
+}
+.order-badge.active .order-ring {
+  opacity: 1; stroke: var(--blu); stroke-width: 2;
+  fill: rgba(21,88,214,.12);
+}
+.order-badge.active .order-num { fill: var(--blu); }
+.order-badge.done .order-ring {
+  opacity: 0.85; stroke: var(--blu); fill: rgba(21,88,214,.08);
+}
+.order-badge.done .order-num { fill: var(--blu); }
+
+/* Active connection step tag */
+.conn-order {
+  font-size: 8px; font-weight: 700; fill: var(--blu); text-anchor: middle;
+  opacity: 0; transition: opacity .3s;
+}
+.conn-order.show { opacity: 1; }
+
+/* Full flow strip — 总顺序一览 */
+.flow-strip {
+  position: fixed; top: 56px; left: 0; right: 0; height: 36px;
+  display: flex; align-items: center; justify-content: center; gap: 4px;
+  padding: 0 16px; background: var(--sf2); border-bottom: 1px solid var(--sf2);
+  z-index: 90; font-size: 10px; color: var(--mt);
+}
+.flow-strip-inner { display: flex; align-items: center; gap: 2px; flex-wrap: nowrap; max-width: 920px; }
+.flow-chip {
+  padding: 3px 8px; border-radius: 6px; border: 1px solid var(--bd);
+  background: var(--sf); font-weight: 600; white-space: nowrap;
+  opacity: 0.5; transition: all .2s;
+}
+.flow-chip.done { opacity: 0.75; border-color: var(--blu); color: var(--blu); }
+.flow-chip.active {
+  opacity: 1; background: var(--blu); border-color: var(--blu); color: #fff;
+  box-shadow: 0 2px 8px rgba(21,88,214,.25);
+}
+.flow-arrow { color: var(--bd); font-size: 9px; padding: 0 2px; }
+
+/* Flow animation */
+@keyframes dashFwd { to { stroke-dashoffset: -26; } }
+@keyframes dashBwd { to { stroke-dashoffset: 26; } }
+.conn.fwd { opacity: 1; animation: dashFwd .6s linear infinite; }
+.conn.bwd { opacity: 1; animation: dashBwd .6s linear infinite; }
+
+/* Particles */
+.particle { opacity: 0; }
+.particle-glow { opacity: 0; filter: url(#glow); }
+
+/* ── Bottom control bar ── */
+.controls {
+  position: fixed; bottom: 0; left: 0; right: 0; height: 88px;
+  display: flex; align-items: center; justify-content: center; gap: 24px;
+  padding: 0 28px; background: var(--bg);
+  border-top: 1px solid var(--sf2); z-index: 100;
+}
+.step-desc {
+  flex: 1; max-width: 520px; font-size: 13px; line-height: 1.55; color: var(--mt);
+}
+.step-desc .hl-b { color: var(--blu); font-weight: 600; }
+.step-desc .hl-p { color: var(--pur); font-weight: 600; }
+.step-desc .hl-g { color: var(--grn); font-weight: 600; }
+.step-desc .hl-o { color: var(--org); font-weight: 600; }
+.step-desc .hl-c { color: var(--cya); font-weight: 600; }
+
+.dots { display: flex; gap: 6px; align-items: center; }
+.dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--sf2); border: 1.5px solid var(--bd); transition: all .25s;
+}
+.dot.active { background: var(--blu); border-color: var(--blu); transform: scale(1.2); }
+.dot.done { background: var(--blu); border-color: var(--blu); opacity: .4; }
+
+.btns { display: flex; gap: 8px; }
+.btn {
+  padding: 8px 16px; border-radius: 8px; border: 1.5px solid var(--bd);
+  background: var(--sf); font-size: 12px; font-weight: 600; color: var(--tx);
+  cursor: pointer; transition: all .15s;
+}
+.btn:hover { border-color: var(--blu); color: var(--blu); }
+.btn:disabled { opacity: .35; cursor: default; border-color: var(--bd); color: var(--tx); }
+.btn-primary { background: var(--blu); border-color: var(--blu); color: #fff; }
+.btn-primary:hover { background: #1248b8; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-title">AI Agent 开发系统架构</div>
+  <div class="nav-order" id="nav-order" style="visibility:hidden">
+    <span class="nav-order-num" id="nav-step-num">步骤 1/8</span>
+    <span class="nav-order-title" id="nav-step-title"></span>
+  </div>
+  <div class="nav-badge">Architecture Overview</div>
+</nav>
+
+<div class="flow-strip" id="flow-strip" aria-label="执行顺序">
+  <div class="flow-strip-inner" id="flow-strip-inner"></div>
+</div>
+
+<div class="main">
+<svg id="main-svg" viewBox="0 0 960 520" xmlns="http://www.w3.org/2000/svg">
+
+  <defs>
+  <!-- Arrow markers -->
+  <marker id="arr-b" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#1558D6"/></marker>
+  <marker id="arr-p" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#6D28D9"/></marker>
+  <marker id="arr-g" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#047857"/></marker>
+  <marker id="arr-o" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#C2410C"/></marker>
+  <marker id="arr-c" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#0369A1"/></marker>
+
+  <!-- Glow filter for particles -->
+  <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+    <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  </defs>
+
+  <!-- ── Zones ── -->
+  <rect class="zone" x="50" y="155" width="860" height="155" rx="16" fill="rgba(109,40,217,.04)"/>
+  <text class="zone-label" x="68" y="172">INTELLIGENCE LAYER</text>
+
+  <rect class="zone" x="20" y="310" width="310" height="175" rx="16" fill="rgba(194,65,12,.04)"/>
+  <text class="zone-label" x="38" y="327">EXECUTION LAYER</text>
+
+  <rect class="zone" x="660" y="310" width="280" height="175" rx="16" fill="rgba(3,105,161,.04)"/>
+  <text class="zone-label" x="678" y="327">OBSERVABILITY</text>
+
+  <!-- ── Nodes ── -->
+  <!-- User -->
+  <g id="node-user">
+    <rect class="node" x="420" y="18" width="120" height="44" rx="12"/>
+    <text class="node-label" x="480" y="44">用户 / App</text>
+    <g class="order-badge" id="order-user" data-order="1"><circle class="order-ring" cx="432" cy="30" r="11"/><text class="order-num" x="432" y="34">1</text></g>
+  </g>
+
+  <!-- API Gateway -->
+  <g id="node-api">
+    <rect class="node" x="400" y="82" width="140" height="44" rx="12"/>
+    <text class="node-label" x="470" y="102">API Gateway</text>
+    <text class="node-sub" x="470" y="114">REST / WebSocket</text>
+    <g class="order-badge" id="order-api" data-order="2"><circle class="order-ring" cx="412" cy="94" r="11"/><text class="order-num" x="412" y="98">2</text></g>
+  </g>
+
+  <!-- Context Engine -->
+  <g id="node-context">
+    <rect class="node" x="60" y="185" width="155" height="72" rx="12"/>
+    <text class="node-label" x="137" y="210">Context Engine</text>
+    <text class="node-sub" x="137" y="222">上下文组装</text>
+    <rect class="chip" id="chip-rag" x="72" y="232" width="42" height="18" rx="9"/><text class="chip-text" x="94" y="244">RAG</text>
+    <rect class="chip" id="chip-profile" x="118" y="232" width="52" height="18" rx="9"/><text class="chip-text" x="144" y="244">Profile</text>
+    <rect class="chip" id="chip-ws" x="72" y="252" width="98" height="18" rx="9"/><text class="chip-text" x="119" y="264">Workspace</text>
+    <g class="order-badge" id="order-context" data-order="3"><circle class="order-ring" cx="72" cy="197" r="11"/><text class="order-num" x="72" y="201">3</text></g>
+  </g>
+
+  <!-- Agent Runtime -->
+  <g id="node-runtime">
+    <rect class="node" x="370" y="178" width="175" height="80" rx="12"/>
+    <text class="node-label" x="437" y="202">Agent Runtime</text>
+    <text class="node-sub" x="437" y="214">Plan → Act → Observe</text>
+    <rect class="chip" id="chip-plan" x="382" y="226" width="42" height="18" rx="9"/><text class="chip-text" x="404" y="238">Plan</text>
+    <rect class="chip" id="chip-act" x="440" y="226" width="38" height="18" rx="9"/><text class="chip-text" x="459" y="238">Act</text>
+    <rect class="chip" id="chip-observe" x="486" y="226" width="58" height="18" rx="9"/><text class="chip-text" x="515" y="238">Observe</text>
+    <g class="order-badge" id="order-runtime" data-order="4"><circle class="order-ring" cx="382" cy="190" r="11"/><text class="order-num" x="382" y="194">4</text></g>
+  </g>
+
+  <!-- LLM Provider -->
+  <g id="node-llm">
+    <rect class="node" x="640" y="190" width="130" height="56" rx="12"/>
+    <text class="node-label" x="715" y="214">LLM Provider</text>
+    <text class="node-sub" x="715" y="226">GPT / Claude / DS</text>
+    <g class="order-badge" id="order-llm" data-order="4"><circle class="order-ring" cx="652" cy="202" r="11"/><text class="order-num" x="652" y="206">4</text></g>
+  </g>
+
+  <!-- Tool Router -->
+  <g id="node-tools">
+    <rect class="node" x="100" y="350" width="145" height="56" rx="12"/>
+    <text class="node-label" x="172" y="374">Tool Router</text>
+    <text class="node-sub" x="172" y="386">工具路由 & 鉴权</text>
+    <rect class="chip" id="chip-mcp" x="112" y="392" width="48" height="18" rx="9"/><text class="chip-text" x="136" y="404">MCP</text>
+    <rect class="chip" id="chip-api" x="146" y="392" width="42" height="18" rx="9"/><text class="chip-text" x="170" y="404">API</text>
+    <g class="order-badge" id="order-tools" data-order="5"><circle class="order-ring" cx="112" cy="362" r="11"/><text class="order-num" x="112" y="366">5</text></g>
+  </g>
+
+  <!-- MCP / APIs -->
+  <g id="node-external">
+    <rect class="node" x="40" y="440" width="130" height="48" rx="12"/>
+    <text class="node-label" x="115" y="468">MCP / APIs</text>
+    <g class="order-badge" id="order-external" data-order="5"><circle class="order-ring" cx="52" cy="452" r="11"/><text class="order-num" x="52" y="456">5</text></g>
+  </g>
+
+  <!-- Memory Store -->
+  <g id="node-memory">
+    <rect class="node" x="390" y="400" width="140" height="48" rx="12"/>
+    <text class="node-label" x="470" y="428">Memory Store</text>
+    <text class="node-sub" x="470" y="440">长期 / 会话记忆</text>
+    <g class="order-badge" id="order-memory" data-order="7"><circle class="order-ring" cx="402" cy="408" r="11"/><text class="order-num" x="402" y="412">7</text></g>
+  </g>
+
+  <!-- Observability -->
+  <g id="node-observe">
+    <rect class="node" x="690" y="350" width="155" height="72" rx="12"/>
+    <text class="node-label" x="777" y="374">Observability</text>
+    <text class="node-sub" x="777" y="386">可观测性平台</text>
+    <rect class="chip" id="chip-trace" x="702" y="392" width="48" height="18" rx="9"/><text class="chip-text" x="726" y="404">Trace</text>
+    <rect class="chip" id="chip-eval" x="754" y="392" width="42" height="18" rx="9"/><text class="chip-text" x="770" y="404">Eval</text>
+    <rect class="chip" id="chip-log" x="702" y="412" width="94" height="18" rx="9"/><text class="chip-text" x="752" y="424">Log / Metrics</text>
+    <g class="order-badge" id="order-observe" data-order="7"><circle class="order-ring" cx="702" cy="362" r="11"/><text class="order-num" x="702" y="366">7</text></g>
+  </g>
+
+  <!-- Response -->
+  <g id="node-response">
+    <rect class="node" x="640" y="82" width="130" height="44" rx="12"/>
+    <text class="node-label" x="715" y="108">响应输出</text>
+    <g class="order-badge" id="order-response" data-order="8"><circle class="order-ring" cx="652" cy="94" r="11"/><text class="order-num" x="652" y="98">8</text></g>
+  </g>
+
+  <!-- ── Connections (paths) — 双向线分车道、分锚点，避免堆叠 ── -->
+  <path id="conn-user-api" class="conn" stroke="#1558D6" marker-end="url(#arr-b)"
+    d="M 480 62 L 480 82"/>
+  <path id="conn-api-runtime" class="conn" stroke="#1558D6" marker-end="url(#arr-b)"
+    d="M 445 126 C 430 148 395 162 382 178"/>
+  <path id="conn-context-runtime" class="conn" stroke="#047857" marker-end="url(#arr-g)"
+    d="M 195 204 L 370 204"/>
+  <path id="conn-runtime-llm" class="conn" stroke="#6D28D9" marker-end="url(#arr-p)"
+    d="M 505 200 L 640 200"/>
+  <path id="conn-llm-runtime" class="conn" stroke="#6D28D9" marker-end="url(#arr-p)"
+    d="M 640 252 L 505 252"/>
+  <path id="conn-runtime-tools" class="conn" stroke="#C2410C" marker-end="url(#arr-o)"
+    d="M 385 258 C 260 300 170 328 130 350"/>
+  <path id="conn-tools-external" class="conn" stroke="#C2410C" marker-end="url(#arr-o)"
+    d="M 110 406 C 75 418 62 432 72 440"/>
+  <path id="conn-external-tools" class="conn" stroke="#C2410C" marker-end="url(#arr-o)"
+    d="M 168 440 C 205 422 218 408 228 406"/>
+  <path id="conn-tools-runtime" class="conn" stroke="#C2410C" marker-end="url(#arr-o)"
+    d="M 238 350 C 360 305 455 278 478 258"/>
+  <path id="conn-runtime-memory" class="conn" stroke="#047857" marker-end="url(#arr-g)"
+    d="M 452 258 L 452 400"/>
+  <path id="conn-memory-context" class="conn" stroke="#047857" marker-end="url(#arr-g)"
+    d="M 388 408 C 220 408 90 310 88 257"/>
+  <path id="conn-runtime-observe" class="conn" stroke="#0369A1" marker-end="url(#arr-c)"
+    d="M 505 245 C 600 290 655 335 690 368"/>
+  <path id="conn-runtime-response" class="conn" stroke="#1558D6" marker-end="url(#arr-b)"
+    d="M 488 178 C 555 135 595 112 640 104"/>
+  <path id="conn-response-api" class="conn" stroke="#1558D6" marker-end="url(#arr-b)"
+    d="M 640 94 L 540 94"/>
+
+  <!-- Connection labels -->
+  <text id="lbl-user-api" class="conn-label" x="496" y="74">请求</text>
+  <text id="lbl-context-runtime" class="conn-label" x="282" y="196">上下文注入</text>
+  <text id="lbl-runtime-llm" class="conn-label" x="572" y="194">推理请求</text>
+  <text id="lbl-llm-runtime" class="conn-label" x="572" y="262">计划 / 动作</text>
+  <text id="lbl-runtime-tools" class="conn-label" x="240" y="318">工具调用</text>
+  <text id="lbl-tools-runtime" class="conn-label" x="360" y="288">执行结果</text>
+  <text id="lbl-runtime-memory" class="conn-label" x="468" y="348">状态持久化</text>
+  <text id="lbl-runtime-observe" class="conn-label" x="610" y="318">Trace 上报</text>
+  <text id="lbl-runtime-response" class="conn-label" x="575" y="132">最终响应</text>
+
+  <!-- Connection order tags — 顺序相关要点必须在图上标注 -->
+  <text id="ord-0" class="conn-order" x="488" y="66">步骤 1</text>
+  <text id="ord-1" class="conn-order" x="400" y="152">步骤 2</text>
+  <text id="ord-2" class="conn-order" x="268" y="188">步骤 3</text>
+  <text id="ord-3" class="conn-order" x="572" y="182">步骤 4 · Plan</text>
+  <text id="ord-4" class="conn-order" x="220" y="308">步骤 5 · Act</text>
+  <text id="ord-5" class="conn-order" x="348" y="278">步骤 6 · Observe</text>
+  <text id="ord-6" class="conn-order" x="540" y="332">步骤 7</text>
+  <text id="ord-7" class="conn-order" x="590" y="118">步骤 8</text>
+
+  <!-- ── Particles ── -->
+  <!-- user→api -->
+  <circle class="particle-glow" id="pg-user-api" r="9" fill="#1558D6" opacity="0.3">
+    <animateMotion id="am-pg-user-api" begin="indefinite" dur="1.2s" fill="freeze" keyPoints="0;1" keyTimes="0;1" calcMode="linear">
+      <mpath href="#conn-user-api"/>
+    </animateMotion>
+  </circle>
+  <circle class="particle" id="p-user-api" r="4.5" fill="#1558D6" stroke="white" stroke-width="2">
+    <animateMotion id="am-p-user-api" begin="indefinite" dur="1.2s" fill="freeze" keyPoints="0;1" keyTimes="0;1" calcMode="linear">
+      <mpath href="#conn-user-api"/>
+    </animateMotion>
+  </circle>
+
+  <!-- api→runtime -->
+  <circle class="particle-glow" id="pg-api-runtime" r="9" fill="#1558D6" opacity="0.3">
+    <animateMotion id="am-pg-api-runtime" begin="indefinite" dur="1.4s" fill="freeze" keyPoints="0;1" keyTimes="0;1" calcMode="linear">
+      <mpath href="#conn-api-runtime"/>
+    </animateMotion>
+  </circle>
+  <circle class="particle" id="p-api-runtime" r="4.5" fill="#1558D6" stroke="white" stroke-width="2">
+    <animateMotion id="am-p-api-runtime" begin="indefinite" dur="1.4s" fill="freeze" keyPoints="0;1" keyTimes="0;1" calcMode="linear">
+      <mpath href="#conn-api-runtime"/>
+    </animateMotion>
+  </circle>
+
+  <!-- context→runtime -->
+  <circle class="particle-glow" id="pg-context-runtime" r="9" fill="#047857" opacity="0.3">
+    <animateMotion id="am-pg-context-runtime" begin="indefinite" dur="1.3s" fill="freeze" keyPoints="0;1" keyTimes="0;1" calcMode="linear">
+      <mpath href="#conn-context-runtime"/>
+    </animateMotion>
+  </circle>
+  <circle class="particle" id="p-context-runtime" r="4.5" fill="#047857" stroke="white" stroke-width="2">
+    <animateMotion id="am-p-context-runtime" begin="indefinite" dur="1.3s" fill="freeze" keyPoints="0;1" keyTimes="0;1" calcMode="linear">
+      <mpath href="#conn-context-runtime"/>
+    </animateMotion>
+  </circle>
+
+  <!-- runtime→llm -->
+  <circle class="particle-glow" id="pg-runtime-llm" r="9" fill="#6D28D9" opacity="0.3">
+    <animateMotion id="am-pg-runtime-llm" begin="indefinite" dur="1.2s" fill="freeze" keyPoints="0;1" keyTimes="0;1" calcMode="linear">
+      <mpath href="#conn-runtime-llm"/>
+    </animateMotion>
+  </circle>
+  <circle class="particle" id="p-runtime-llm" r="4.5" fill="#6D28D9" stroke="white" stroke-width="2">
+    <animateMotion id="am-p-runtime-llm" begin="indefinite" dur="1.2s" fill="freeze" keyPoints="0;1" keyTimes="0;1" calcMode="linear">
+      <mpath href="#conn-runtime-llm"/>
+    </animateMotion>
+  </circle>
+
+  <!-- llm→runtime -->
+  <circle class="particle-glow" id="pg-llm-runtime" r="9" fill="#6D28D9" opacity="0.3">
+    <animateMotion id="am-pg-llm-runtime" begin="indefinite" dur="1.2s" fill="freeze" keyPoints="0;1" keyTimes="0;1" calcMode="linear">
+      <mpath href="#conn-llm-runtime"/>
+    </animateMotion>
+  </circle>
+  <circle class="particle" id="p-llm-runtime" r="4.5" fill="#6D28D9" stroke="white" stroke-width="2">
+    <animateMotion id="am-p-llm-runtime" begin="indefinite" dur="1.2s" fill="freeze" keyPoints="0;1" keyTimes="0;1" calcMode="linear">
+      <mpath href="#conn-llm-runtime"/>
+    </animateMotion>
+  </circle>
+
+  <!-- runtime→tools -->
+  <circle class="particle-glow" id="pg-runtime-tools" r="9" fill="#C2410C" opacity="0.3">
+    <animateMotion id="am-pg-runtime-tools" begin="indefinite" dur="1.5s" fill="freeze" keyPoints="0;1" keyTimes="0;1" calcMode="linear">
+      <mpath href="#conn-runtime-tools"/>
+    </animateMotion>
+  </circle>
+  <circle class="particle" id="p-runtime-tools" r="4.5" fill="#C2410C" stroke="white" stroke-width="2">
+    <animateMotion id="am-p-runtime-tools" begin="indefinite" dur="1.5s" fill="freeze" keyPoints="0;1" keyTimes="0;1" calcMode="linear">
+      <mpath href="#conn-runtime-tools"/>
+    </animateMotion>
+  </circle>
+
+  <!-- tools→external -->
+  <circle class="particle-glow" id="pg-tools-external" r="9" fill="#C2410C" opacity="0.3">
+    <animateMotion id="am-pg-tools-external" begin="indefinite" dur="1.2s" fill="freeze" keyPoints="0;1" keyTimes="0;1" calcMode="linear">
+      <mpath href="#conn-tools-external"/>
+    </animateMotion>
+  </circle>
+  <circle class="particle" id="p-tools-external" r="4.5" fill="#C2410C" stroke="white" stroke-width="2">
+    <animateMotion id="am-p-tools-external" begin="indefinite" dur="1.2s" fill="freeze" keyPoints="0;1" keyTimes="0;1" calcMode="linear">
+      <mpath href="#conn-tools-external"/>
+    </animateMotion>
+  </circle>
+
+  <!-- external→tools -->
+  <circle class="particle-glow" id="pg-external-tools" r="9" fill="#C2410C" opacity="0.3">
+    <animateMotion id="am-pg-external-tools" begin="indefinite" dur="1.2s" fill="freeze" keyPoints="0;1" keyTimes="0;1" calcMode="linear">
+      <mpath href="#conn-external-tools"/>
+    </animateMotion>
+  </circle>
+  <circle class="particle" id="p-external-tools" r="4.5" fill="#C2410C" stroke="white" stroke-width="2">
+    <animateMotion id="am-p-external-tools" begin="indefinite" dur="1.2s" fill="freeze" keyPoints="0;1" keyTimes="0;1" calcMode="linear">
+      <mpath href="#conn-external-tools"/>
+    </animateMotion>
+  </circle>
+
+  <!-- tools→runtime -->
+  <circle class="particle-glow" id="pg-tools-runtime" r="9" fill="#C2410C" opacity="0.3">
+    <animateMotion id="am-pg-tools-runtime" begin="indefinite" dur="1.5s" fill="freeze" keyPoints="0;1" keyTimes="0;1" calcMode="linear">
+      <mpath href="#conn-tools-runtime"/>
+    </animateMotion>
+  </circle>
+  <circle class="particle" id="p-tools-runtime" r="4.5" fill="#C2410C" stroke="white" stroke-width="2">
+    <animateMotion id="am-p-tools-runtime" begin="indefinite" dur="1.5s" fill="freeze" keyPoints="0;1" keyTimes="0;1" calcMode="linear">
+      <mpath href="#conn-tools-runtime"/>
+    </animateMotion>
+  </circle>
+
+  <!-- runtime→memory -->
+  <circle class="particle-glow" id="pg-runtime-memory" r="9" fill="#047857" opacity="0.3">
+    <animateMotion id="am-pg-runtime-memory" begin="indefinite" dur="1.3s" fill="freeze" keyPoints="0;1" keyTimes="0;1" calcMode="linear">
+      <mpath href="#conn-runtime-memory"/>
+    </animateMotion>
+  </circle>
+  <circle class="particle" id="p-runtime-memory" r="4.5" fill="#047857" stroke="white" stroke-width="2">
+    <animateMotion id="am-p-runtime-memory" begin="indefinite" dur="1.3s" fill="freeze" keyPoints="0;1" keyTimes="0;1" calcMode="linear">
+      <mpath href="#conn-runtime-memory"/>
+    </animateMotion>
+  </circle>
+
+  <!-- runtime→observe -->
+  <circle class="particle-glow" id="pg-runtime-observe" r="9" fill="#0369A1" opacity="0.3">
+    <animateMotion id="am-pg-runtime-observe" begin="indefinite" dur="1.5s" fill="freeze" keyPoints="0;1" keyTimes="0;1" calcMode="linear">
+      <mpath href="#conn-runtime-observe"/>
+    </animateMotion>
+  </circle>
+  <circle class="particle" id="p-runtime-observe" r="4.5" fill="#0369A1" stroke="white" stroke-width="2">
+    <animateMotion id="am-p-runtime-observe" begin="indefinite" dur="1.5s" fill="freeze" keyPoints="0;1" keyTimes="0;1" calcMode="linear">
+      <mpath href="#conn-runtime-observe"/>
+    </animateMotion>
+  </circle>
+
+  <!-- runtime→response -->
+  <circle class="particle-glow" id="pg-runtime-response" r="9" fill="#1558D6" opacity="0.3">
+    <animateMotion id="am-pg-runtime-response" begin="indefinite" dur="1.3s" fill="freeze" keyPoints="0;1" keyTimes="0;1" calcMode="linear">
+      <mpath href="#conn-runtime-response"/>
+    </animateMotion>
+  </circle>
+  <circle class="particle" id="p-runtime-response" r="4.5" fill="#1558D6" stroke="white" stroke-width="2">
+    <animateMotion id="am-p-runtime-response" begin="indefinite" dur="1.3s" fill="freeze" keyPoints="0;1" keyTimes="0;1" calcMode="linear">
+      <mpath href="#conn-runtime-response"/>
+    </animateMotion>
+  </circle>
+
+</svg>
+</div>
+
+<div class="controls">
+  <div class="step-desc" id="step-desc"></div>
+  <div class="dots" id="dots"></div>
+  <div class="btns">
+    <button class="btn" id="btn-prev" disabled>← 上一步</button>
+    <button class="btn btn-primary" id="btn-next">下一步 →</button>
+    <button class="btn" id="btn-reset">重置</button>
+  </div>
+</div>
+
+<script>
+const COLORS = {
+  B: { fill: 'rgba(21,88,214,.10)', stroke: '#1558D6', rgb: '21,88,214' },
+  P: { fill: 'rgba(109,40,217,.10)', stroke: '#6D28D9', rgb: '109,40,217' },
+  G: { fill: 'rgba(4,120,87,.10)', stroke: '#047857', rgb: '4,120,87' },
+  O: { fill: 'rgba(194,65,12,.10)', stroke: '#C2410C', rgb: '194,65,12' },
+  C: { fill: 'rgba(3,105,161,.10)', stroke: '#0369A1', rgb: '3,105,161' },
+};
+
+const CHIP_LIT = { B: 'lit-b', P: 'lit-p', G: 'lit-g', O: 'lit-o', C: 'lit-c' };
+
+const STEPS = [
+  {
+    title: '用户发起请求',
+    html: '① 用户通过 <span class="hl-b">App / Web</span> 发起自然语言请求，经 <span class="hl-b">API Gateway</span> 进入 Agent 系统。',
+    nodes: { user: 'B', api: 'B' },
+    conns: { 'conn-user-api': ['fwd','on'] },
+    labels: ['lbl-user-api'],
+    chips: {},
+    particles: ['user-api'],
+  },
+  {
+    title: '路由至 Runtime',
+    html: '② <span class="hl-b">API Gateway</span> 将请求路由至 <span class="hl-p">Agent Runtime</span>，触发 Plan-Act-Observe 执行循环。',
+    nodes: { api: 'B', runtime: 'P' },
+    conns: { 'conn-api-runtime': ['fwd','on'] },
+    labels: [],
+    chips: {},
+    particles: ['api-runtime'],
+  },
+  {
+    title: '加载上下文',
+    html: '③ <span class="hl-g">Context Engine</span> 组装 RAG 检索、用户 Profile 和 Workspace 上下文，注入 Runtime。',
+    nodes: { context: 'G', runtime: 'P' },
+    conns: { 'conn-context-runtime': ['fwd','on'] },
+    labels: ['lbl-context-runtime'],
+    chips: { 'chip-rag': 'G', 'chip-profile': 'G', 'chip-ws': 'G' },
+    particles: ['context-runtime'],
+  },
+  {
+    title: 'LLM 推理 · Plan',
+    html: '④ <span class="hl-p">Agent Runtime</span> 将上下文发送至 <span class="hl-p">LLM Provider</span> 进行推理，<span class="hl-p">Plan</span> 阶段决定下一步动作。',
+    nodes: { runtime: 'P', llm: 'P' },
+    conns: { 'conn-runtime-llm': ['fwd','on'], 'conn-llm-runtime': ['bwd','on'] },
+    labels: ['lbl-runtime-llm', 'lbl-llm-runtime'],
+    chips: { 'chip-plan': 'P' },
+    particles: ['runtime-llm', 'llm-runtime'],
+  },
+  {
+    title: '调用工具 · Act',
+    html: '⑤ <span class="hl-o">Act</span> 阶段：<span class="hl-p">Runtime</span> 通过 <span class="hl-o">Tool Router</span> 调用 <span class="hl-o">MCP / API</span> 执行外部动作。',
+    nodes: { runtime: 'P', tools: 'O', external: 'O' },
+    conns: {
+      'conn-runtime-tools': ['fwd','on'],
+      'conn-tools-external': ['fwd','on'],
+      'conn-external-tools': ['bwd','on'],
+    },
+    labels: ['lbl-runtime-tools'],
+    chips: { 'chip-act': 'P', 'chip-mcp': 'O', 'chip-api': 'O' },
+    particles: ['runtime-tools', 'tools-external', 'external-tools'],
+  },
+  {
+    title: '观察结果 · Observe',
+    html: '⑥ <span class="hl-o">Observe</span> 阶段：工具执行结果回流 <span class="hl-p">Runtime</span>，判断是否继续循环或生成最终回答。',
+    nodes: { runtime: 'P', tools: 'O' },
+    conns: { 'conn-tools-runtime': ['bwd','on'] },
+    labels: ['lbl-tools-runtime'],
+    chips: { 'chip-observe': 'P' },
+    particles: ['tools-runtime'],
+  },
+  {
+    title: '持久化与可观测',
+    html: '⑦ 全程 <span class="hl-c">Observability</span> 采集 Trace / Eval / Log；<span class="hl-g">Memory Store</span> 持久化会话状态供后续召回。',
+    nodes: { memory: 'G', observe: 'C', runtime: 'P' },
+    conns: {
+      'conn-runtime-memory': ['fwd','on'],
+      'conn-memory-context': ['bwd','on'],
+      'conn-runtime-observe': ['fwd','on'],
+    },
+    labels: ['lbl-runtime-memory', 'lbl-runtime-observe'],
+    chips: { 'chip-trace': 'C', 'chip-eval': 'C', 'chip-log': 'C' },
+    particles: ['runtime-memory', 'runtime-observe'],
+  },
+  {
+    title: '返回响应',
+    html: '⑧ 任务完成，<span class="hl-p">Runtime</span> 生成最终响应，经 <span class="hl-b">API Gateway</span> 返回给用户。',
+    nodes: { runtime: 'P', response: 'B', api: 'B', user: 'B' },
+    conns: {
+      'conn-runtime-response': ['fwd','on'],
+      'conn-response-api': ['fwd','on'],
+      'conn-user-api': ['bwd','on'],
+    },
+    labels: ['lbl-runtime-response'],
+    chips: {},
+    particles: ['runtime-response'],
+  },
+];
+
+const STEP_ORDER = [1, 2, 3, 4, 5, 6, 7, 8];
+const ORDER_BADGE_IDS = [
+  'order-user', 'order-api', 'order-context', 'order-runtime', 'order-llm',
+  'order-tools', 'order-external', 'order-memory', 'order-observe', 'order-response',
+];
+
+let currentStep = -1;
+const allNodeIds = ['user','api','context','runtime','llm','tools','external','memory','observe','response'];
+const allConnIds = [
+  'conn-user-api','conn-api-runtime','conn-context-runtime','conn-runtime-llm','conn-llm-runtime',
+  'conn-runtime-tools','conn-tools-external','conn-external-tools','conn-tools-runtime',
+  'conn-runtime-memory','conn-memory-context','conn-runtime-observe','conn-runtime-response','conn-response-api'
+];
+const allChipIds = ['chip-rag','chip-profile','chip-ws','chip-plan','chip-act','chip-observe','chip-mcp','chip-api','chip-trace','chip-eval','chip-log'];
+const allLabelIds = [
+  'lbl-user-api','lbl-context-runtime','lbl-runtime-llm','lbl-llm-runtime',
+  'lbl-runtime-tools','lbl-tools-runtime','lbl-runtime-memory','lbl-runtime-observe','lbl-runtime-response'
+];
+
+function resetAll() {
+  allNodeIds.forEach(id => {
+    const g = document.getElementById('node-' + id);
+    if (!g) return;
+    const rect = g.querySelector('.node');
+    if (rect) {
+      rect.style.fill = '';
+      rect.style.stroke = '';
+      rect.style.strokeWidth = '';
+      rect.style.filter = '';
+    }
+  });
+  allConnIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.className = 'conn'; el.style.opacity = ''; }
+  });
+  allChipIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.className = 'chip';
+  });
+  allLabelIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('show');
+  });
+  document.querySelectorAll('.particle, .particle-glow').forEach(el => el.style.opacity = '0');
+  document.querySelectorAll('.conn-order').forEach(el => el.classList.remove('show'));
+  ORDER_BADGE_IDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.className = 'order-badge';
+  });
+}
+
+function updateOrderUI(idx) {
+  const navOrder = document.getElementById('nav-order');
+  const ord = idx < 0 ? 0 : STEP_ORDER[idx];
+  if (idx < 0) {
+    navOrder.style.visibility = 'hidden';
+  } else {
+    navOrder.style.visibility = 'visible';
+    document.getElementById('nav-step-num').textContent = `步骤 ${idx + 1}/${STEPS.length}`;
+    document.getElementById('nav-step-title').textContent = STEPS[idx].title;
+  }
+  ORDER_BADGE_IDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const n = parseInt(el.dataset.order, 10);
+    if (idx < 0) {
+      el.className = 'order-badge';
+      return;
+    }
+    let cls = 'order-badge';
+    if (n < ord) cls += ' done';
+    else if (n === ord || (ord === 7 && n === 7) || (ord === 6 && id === 'order-runtime')) cls += ' active';
+    el.className = cls;
+  });
+  document.querySelectorAll('.conn-order').forEach(el => el.classList.remove('show'));
+  if (idx >= 0) {
+    const ordEl = document.getElementById('ord-' + idx);
+    if (ordEl) ordEl.classList.add('show');
+  }
+  document.querySelectorAll('.flow-chip').forEach((chip, i) => {
+    chip.className = 'flow-chip' + (i === idx ? ' active' : i < idx ? ' done' : '');
+  });
+}
+
+function buildFlowStrip() {
+  const inner = document.getElementById('flow-strip-inner');
+  STEPS.forEach((s, i) => {
+    const chip = document.createElement('span');
+    chip.className = 'flow-chip';
+    chip.textContent = `${i + 1} ${s.title}`;
+    chip.title = s.title;
+    inner.appendChild(chip);
+    if (i < STEPS.length - 1) {
+      const arr = document.createElement('span');
+      arr.className = 'flow-arrow';
+      arr.textContent = '→';
+      inner.appendChild(arr);
+    }
+  });
+}
+
+function activateNode(id, colorKey) {
+  const g = document.getElementById('node-' + id);
+  if (!g) return;
+  const rect = g.querySelector('.node');
+  const c = COLORS[colorKey];
+  if (rect && c) {
+    rect.style.fill = c.fill;
+    rect.style.stroke = c.stroke;
+    rect.style.strokeWidth = '2.5';
+    rect.style.filter = `drop-shadow(0 4px 10px rgba(${c.rgb},.28))`;
+  }
+}
+
+function activateConn(id, animClass) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.className = 'conn ' + animClass;
+  el.style.opacity = '1';
+}
+
+function triggerParticle(key) {
+  const p = document.getElementById('p-' + key);
+  const pg = document.getElementById('pg-' + key);
+  if (!p || !pg) return;
+  p.style.opacity = '1';
+  pg.style.opacity = '0.3';
+  const animP = document.getElementById('am-p-' + key);
+  const animPg = document.getElementById('am-pg-' + key);
+  const dur = parseFloat(animP?.getAttribute('dur') || '1.2') * 1000;
+  if (animP) animP.beginElement();
+  if (animPg) animPg.beginElement();
+  setTimeout(() => { p.style.opacity = '0'; pg.style.opacity = '0'; }, dur);
+}
+
+function applyStep(idx) {
+  resetAll();
+  if (idx < 0) {
+    document.getElementById('step-desc').innerHTML = '点击 <strong>下一步</strong> 或按 → / Space 开始演示。<strong>顶部横条</strong>为总执行顺序，节点角标为顺序号。';
+    updateDots(-1);
+    updateOrderUI(-1);
+    return;
+  }
+  const step = STEPS[idx];
+  document.getElementById('step-desc').innerHTML = step.html;
+
+  Object.entries(step.nodes).forEach(([id, color]) => activateNode(id, color));
+
+  Object.entries(step.conns).forEach(([id, [anim]]) => activateConn(id, anim));
+
+  (step.labels || []).forEach(lid => {
+    const el = document.getElementById(lid);
+    if (el) el.classList.add('show');
+  });
+
+  Object.entries(step.chips || {}).forEach(([id, color]) => {
+    const el = document.getElementById(id);
+    if (el) el.className = 'chip ' + (CHIP_LIT[color] || '');
+  });
+
+  (step.particles || []).forEach(key => triggerParticle(key));
+
+  updateDots(idx);
+  updateOrderUI(idx);
+}
+
+function updateDots(idx) {
+  const container = document.getElementById('dots');
+  container.innerHTML = '';
+  STEPS.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === idx ? ' active' : i < idx ? ' done' : '');
+    container.appendChild(d);
+  });
+}
+
+function goTo(idx) {
+  currentStep = idx;
+  applyStep(idx);
+  document.getElementById('btn-prev').disabled = idx <= 0;
+  document.getElementById('btn-next').disabled = idx >= STEPS.length - 1;
+  document.getElementById('btn-next').textContent = idx >= STEPS.length - 1 ? '完成' : '下一步 →';
+}
+
+document.getElementById('btn-next').addEventListener('click', () => {
+  if (currentStep < STEPS.length - 1) goTo(currentStep + 1);
+});
+document.getElementById('btn-prev').addEventListener('click', () => {
+  if (currentStep > 0) goTo(currentStep - 1);
+});
+document.getElementById('btn-reset').addEventListener('click', () => goTo(-1));
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); if (currentStep < STEPS.length - 1) goTo(currentStep + 1); }
+  if (e.key === 'ArrowLeft') { if (currentStep > 0) goTo(currentStep - 1); }
+  if (e.key === 'r' || e.key === 'R') goTo(-1);
+});
+
+/* Init dots + initial state */
+buildFlowStrip();
+STEPS.forEach(() => document.getElementById('dots').appendChild(document.createElement('div')));
+goTo(-1);
+</script>
+</body>
+</html>

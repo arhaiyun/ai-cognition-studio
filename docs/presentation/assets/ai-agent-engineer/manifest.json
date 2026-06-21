@@ -1,0 +1,44 @@
+[
+  {
+    "name": "cover",
+    "label": "",
+    "file": "cover.png",
+    "size": 821406
+  },
+  {
+    "name": "answer",
+    "label": "去成为一名 AI Agent 工程师。",
+    "file": "answer.png",
+    "size": 784350
+  },
+  {
+    "name": "system-engineering",
+    "label": "AI Agent，本质上是一个系统工程问题",
+    "file": "system-engineering.png",
+    "size": 789942
+  },
+  {
+    "name": "capabilities",
+    "label": "一个 AI Agent 工程师，到底需要什么能力？",
+    "file": "capabilities.png",
+    "size": 795729
+  },
+  {
+    "name": "scarcity",
+    "label": "为什么现在 Agent 工程师这么稀缺？",
+    "file": "scarcity.png",
+    "size": 778969
+  },
+  {
+    "name": "roadmap",
+    "label": "如果你是程序员，应该怎么转型成 Agent 工程师？",
+    "file": "roadmap.png",
+    "size": 827530
+  },
+  {
+    "name": "closing",
+    "label": "谁才更有机会成为下一阶段最稀缺的工程师。",
+    "file": "closing.png",
+    "size": 652515
+  }
+]

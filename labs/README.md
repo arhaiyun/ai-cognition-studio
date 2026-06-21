@@ -10,7 +10,8 @@
 | [studio-skill-sync](studio-skill-sync/) | Skill 三端同步 meta skill | ✅ 可用 |
 | [social-video-toolkit](social-video-toolkit/) | 社媒视频下载与字幕/帧分析 CLI | ✅ 可用 |
 | [feishu-doc-writer](feishu-doc-writer/) | 飞书 Wiki 子文档写入 Skill | ✅ 可用 |
-| [prompt-patterns](prompt-patterns/) | Markdown 模板 | ✅ 可用 |
+| [prompt-patterns](prompt-patterns/) | Markdown 模板 |
+| [arch-diagram-builder](arch-diagram-builder/) | 交互式分步动画架构图 HTML | ✅ 可用 |
 
 ## 新建 Lab
 

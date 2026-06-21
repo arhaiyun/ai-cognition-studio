@@ -27,6 +27,8 @@ description: 用单文件 HTML 生成大会级、可直接放映的幻灯片（P
 - **叙事弧线**：封面 → 钩子/核心问题 → 冲突对比 → 框架总览 → 逐点展开(每点1页) → 金句升华 → 3条Takeaway → 结尾CTA。
 - **绝不编造**：不确定的数据/案例用 [TODO] 占位让用户补，不杜撰。
 - **禁止仓库元信息入屏**：幻灯片正文不出现文件路径、文件名、文档链接（如 `cognition/xxx.md`）；资源引用放演讲者备注或口头说明。
+- **禁止原文作者/公众号署名入屏**：转载文章时不在幻灯片出现原作者名、公众号名；来源放演讲者备注。
+- **个人水印（固定）**：所有幻灯片必须带 **「云牧元宇宙」** 水印 — 封面 kicker 或 `.cover-foot` + 每套 deck 全局固定元素 `<div class="wm">云牧元宇宙</div>`（左下角，与页码对称）。禁止改用 AI Cognition Studio、连载编号、他人署名。
 - **自检两条**：
   - 标题党检验：遮住正文只看标题，能否猜到这页讲什么？不能就重写标题。
   - 5秒法则：每页 5 秒内能 get 到重点，否则拆页。
@@ -70,8 +72,10 @@ p.lead{font-size:1.7vw;line-height:1.6;color:var(--sub);max-width:62vw}
 .gbar span{flex:1}.gbar span:nth-child(1){background:var(--blue)}.gbar span:nth-child(2){background:var(--red)}.gbar span:nth-child(3){background:var(--yellow)}.gbar span:nth-child(4){background:var(--green)}
 .pageno{position:absolute;right:3vw;bottom:2.4vh;font-size:.95vw;color:var(--sub)}
 .progress{position:fixed;top:0;left:0;height:4px;background:var(--blue);z-index:50;transition:width .3s}
+.wm{position:fixed;left:3vw;bottom:2.4vh;font-size:.88vw;color:var(--sub);opacity:.62;z-index:50;letter-spacing:.14em}
 </style></head><body>
 <div class="progress" id="prog"></div>
+<div class="wm">云牧元宇宙</div>
 <div id="stage">
   <section class="slide dark active">
     <h1>{{标题}}</h1><p class="lead">{{副标题}}</p>

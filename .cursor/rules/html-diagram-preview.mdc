@@ -1,0 +1,17 @@
+---
+description: 生成 HTML 架构图/幻灯片后，用 Chrome 直接打开预览
+globs:
+alwaysApply: true
+---
+
+# HTML 图生成后 Chrome 预览
+
+生成或更新**单文件 HTML**（架构图 `docs/diagrams/*.html`、keynote `*-keynote.html` 等）后，**必须**在终端用 Google Chrome 打开，不要只用 `open` 默认浏览器或仅提示用户手动打开。
+
+macOS 命令：
+
+```bash
+open -a "Google Chrome" /absolute/path/to/file.html
+```
+
+生成完成后立即执行；若 Chrome 未安装，再回退 `open /absolute/path/to/file.html` 并说明。

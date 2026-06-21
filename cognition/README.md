@@ -11,6 +11,7 @@
 | [00-ai-cognition-map.md](00-ai-cognition-map.md) | #1 | exploring | 认知地图 v0.1：能力边界与人机分工 |
 | [01-domestic-llm-integration.md](01-domestic-llm-integration.md) | #2 | exploring | 国产大模型接入：DeepSeek / 千问 / Kimi / GLM |
 | [02-ai-product-six-layers.md](02-ai-product-six-layers.md) | #6 | stable | AI 产品六层 + L3–L6 能力框架（含交互架构图） |
+| [03-interactive-arch-diagram.md](03-interactive-arch-diagram.md) | #7 | stable | 交互式架构图方法论 + arch-diagram-builder Skill |
 
 ## 写什么
 
