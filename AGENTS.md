@@ -17,3 +17,7 @@
 - Reserve high reasoning for difficult architecture, debugging, security, or an
   explicit request. Use medium reasoning for normal engineering work.
 - Before expensive optional work, explain its benefit and ask for confirmation.
+- After creating or modifying user-facing HTML, automatically start or reuse a
+  localhost HTTP server and open the page in Chrome for preview. If `file://`
+  access is blocked, use the localhost URL instead of stopping or asking the
+  user to open the file manually.
