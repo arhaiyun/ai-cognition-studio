@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 智能革命阶段对比</title>
+<style>
+:root{--bg:#FFF;--sf:#FFF;--sf2:#EEF0F5;--bd:#B0B8C8;--blu:#1558D6;--pur:#6D28D9;--grn:#047857;--org:#C2410C;--cya:#0369A1;--tx:#0D1117;--mt:#374151}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;color:var(--tx)}
+.nav{position:fixed;top:0;left:0;right:0;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;border-bottom:1px solid var(--sf2);z-index:100;background:var(--bg)}
+.nav-title{font-size:15px;font-weight:700}
+.nav-badge{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blu);background:rgba(21,88,214,.08);padding:5px 12px;border-radius:20px}
+.flow-strip{position:fixed;top:56px;left:0;right:0;height:36px;display:flex;align-items:center;justify-content:center;background:var(--sf2);z-index:90;font-size:10px}
+.flow-chip{padding:3px 8px;border-radius:6px;border:1px solid var(--bd);background:var(--sf);font-weight:600;opacity:.45;transition:.2s;margin:0 2px}
+.flow-chip.active{opacity:1;background:var(--blu);border-color:var(--blu);color:#fff}
+.main{position:fixed;top:92px;left:0;right:0;bottom:88px;display:flex;align-items:center;justify-content:center;padding:12px}
+svg{max-width:980px;width:100%;height:auto}
+.lane{fill:rgba(0,0,0,.02);stroke:var(--bd);stroke-width:1.5;stroke-dasharray:5 4;transition:.3s}
+.lane.active{stroke-width:2.5}
+.lane-net.active{fill:rgba(21,88,214,.06);stroke:var(--blu)}
+.lane-mob.active{fill:rgba(109,40,217,.06);stroke:var(--pur)}
+.lane-ai.active{fill:rgba(4,120,87,.06);stroke:var(--grn)}
+.phase{fill:var(--sf);stroke:var(--bd);stroke-width:1.5;opacity:.35;transition:.3s}
+.phase.lit{opacity:1;stroke-width:2.5;filter:drop-shadow(0 2px 8px rgba(0,0,0,.1))}
+.phase.lit.p1{fill:rgba(21,88,214,.1);stroke:var(--blu)}
+.phase.lit.p2{fill:rgba(109,40,217,.1);stroke:var(--pur)}
+.phase.lit.p3{fill:rgba(194,65,12,.1);stroke:var(--org)}
+.phase.lit.p4{fill:rgba(3,105,161,.1);stroke:var(--cya)}
+.lbl{font-size:11px;font-weight:600;fill:var(--tx);text-anchor:middle}
+.sub{font-size:8.5px;fill:var(--mt);text-anchor:middle}
+.head{font-size:9.5px;font-weight:700;letter-spacing:.1em;fill:var(--mt);text-anchor:middle}
+.marker{opacity:0;transition:.3s}
+.marker.show{opacity:1}
+.now-line{stroke:var(--grn);stroke-width:2;stroke-dasharray:6 4;opacity:0;transition:.3s}
+.now-line.show{opacity:1}
+.controls{position:fixed;bottom:0;left:0;right:0;height:88px;display:flex;align-items:center;gap:20px;padding:0 28px;border-top:1px solid var(--sf2);background:var(--bg);z-index:100}
+.step-desc{flex:1;max-width:560px;font-size:13px;line-height:1.55;color:var(--mt)}
+.step-desc b{color:var(--tx)}
+.dots{display:flex;gap:6px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--sf2);border:1.5px solid var(--bd)}
+.dot.active{background:var(--blu);border-color:var(--blu);transform:scale(1.2)}
+.dot.done{background:var(--blu);opacity:.4;border-color:var(--blu)}
+.btns{display:flex;gap:8px}
+.btn{padding:8px 16px;border-radius:8px;border:1.5px solid var(--bd);background:var(--sf);font-size:12px;font-weight:600;cursor:pointer}
+.btn-primary{background:var(--blu);border-color:var(--blu);color:#fff}
+.btn:disabled{opacity:.35;cursor:default}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-title">AI 智能革命处在什么阶段？</div>
+  <div class="nav-badge">vs 互联网 · 移动互联网</div>
+</nav>
+<div class="flow-strip"><div id="flow-strip"></div></div>
+<div class="main">
+<svg viewBox="0 0 980 500" xmlns="http://www.w3.org/2000/svg">
+  <text class="head" x="490" y="24">三代技术革命 · 四阶段模型（基础设施 → 应用爆发 → 平台垄断 → 监管成熟）</text>
+
+  <!-- Lane labels -->
+  <text class="lbl" x="72" y="78" text-anchor="start">互联网</text>
+  <text class="sub" x="72" y="92" text-anchor="start">1995–2010</text>
+  <text class="lbl" x="72" y="198" text-anchor="start">移动互联网</text>
+  <text class="sub" x="72" y="212" text-anchor="start">2010–2020</text>
+  <text class="lbl" x="72" y="318" text-anchor="start">AI 智能革命</text>
+  <text class="sub" x="72" y="332" text-anchor="start">2020–今</text>
+
+  <rect id="lane-net" class="lane" x="150" y="52" width="800" height="88" rx="12"/>
+  <rect id="lane-mob" class="lane" x="150" y="172" width="800" height="88" rx="12"/>
+  <rect id="lane-ai" class="lane" x="150" y="292" width="800" height="88" rx="12"/>
+
+  <!-- Phase columns -->
+  <g id="phases-net">
+    <rect id="net-p1" class="phase" x="165" y="62" width="175" height="68" rx="10"/>
+    <text class="lbl" x="252" y="88">光纤宽带</text><text class="sub" x="252" y="102">PC · 门户</text>
+    <rect id="net-p2" class="phase" x="355" y="62" width="175" height="68" rx="10"/>
+    <text class="lbl" x="442" y="88">电商/搜索</text><text class="sub" x="442" y="102">应用大爆发</text>
+    <rect id="net-p3" class="phase" x="545" y="62" width="175" height="68" rx="10"/>
+    <text class="lbl" x="632" y="88">BAT 平台</text><text class="sub" x="632" y="102">流量垄断</text>
+    <rect id="net-p4" class="phase" x="735" y="62" width="175" height="68" rx="10"/>
+    <text class="lbl" x="822" y="88">成熟监管</text><text class="sub" x="822" y="102">反垄断</text>
+  </g>
+  <g id="phases-mob">
+    <rect id="mob-p1" class="phase" x="165" y="182" width="175" height="68" rx="10"/>
+    <text class="lbl" x="252" y="208">4G/智能手机</text><text class="sub" x="252" y="222">iPhone 时刻</text>
+    <rect id="mob-p2" class="phase" x="355" y="182" width="175" height="68" rx="10"/>
+    <text class="lbl" x="442" y="208">O2O/短视频</text><text class="sub" x="442" y="222">超级 App</text>
+    <rect id="mob-p3" class="phase" x="545" y="182" width="175" height="68" rx="10"/>
+    <text class="lbl" x="632" y="208">微信/抖音</text><text class="sub" x="632" y="222">时长垄断</text>
+    <rect id="mob-p4" class="phase" x="735" y="182" width="175" height="68" rx="10"/>
+    <text class="lbl" x="822" y="208">数据合规</text><text class="sub" x="822" y="222">隐私立法</text>
+  </g>
+  <g id="phases-ai">
+    <rect id="ai-p1" class="phase" x="165" y="302" width="175" height="68" rx="10"/>
+    <text class="lbl" x="252" y="328">GPU/智算中心</text><text class="sub" x="252" y="342">Capex 超级周期</text>
+    <rect id="ai-p2" class="phase" x="355" y="302" width="175" height="68" rx="10"/>
+    <text class="lbl" x="442" y="328">Chat/Copilot</text><text class="sub" x="442" y="342">应用渗透早期</text>
+    <rect id="ai-p3" class="phase" x="545" y="302" width="175" height="68" rx="10"/>
+    <text class="lbl" x="632" y="328">Agent 平台</text><text class="sub" x="632" y="342">尚未定型</text>
+    <rect id="ai-p4" class="phase" x="735" y="302" width="175" height="68" rx="10"/>
+    <text class="lbl" x="822" y="328">AI 治理</text><text class="sub" x="822" y="342">版权/安全</text>
+  </g>
+
+  <!-- Column headers -->
+  <text class="head" x="252" y="48">① 基础设施</text>
+  <text class="head" x="442" y="48">② 应用爆发</text>
+  <text class="head" x="632" y="48">③ 平台垄断</text>
+  <text class="head" x="822" y="48">④ 监管成熟</text>
+
+  <!-- NOW marker on AI lane between p1-p2 -->
+  <line id="now-line" class="now-line" x1="340" y1="280" x2="340" y2="400"/>
+  <g id="now-marker" class="marker">
+    <rect x="300" y="388" width="80" height="22" rx="11" fill="var(--grn)"/>
+    <text x="340" y="403" text-anchor="middle" fill="#fff" font-size="10" font-weight="700">NOW 2026</text>
+  </g>
+
+  <!-- Insight box -->
+  <rect x="150" y="410" width="760" height="72" rx="12" fill="var(--sf2)" stroke="var(--bd)"/>
+  <text id="insight-txt" x="170" y="438" font-size="11" fill="var(--mt)">按 → 逐步对比三代革命；AI 当前 ≈ 移动互联网 2012 年（基建狂飙 + 杀手应用前夜）</text>
+  <text x="170" y="458" font-size="10" fill="var(--mt)">关键差异：AI 资本强度更高、瓶颈在电力、商业化节奏更依赖 Agent/workflow 兑现</text>
+</svg>
+</div>
+<div class="controls">
+  <div class="step-desc" id="step-desc">点击下一步，按四个阶段横向对比三代技术革命。</div>
+  <div class="dots" id="dots"></div>
+  <div class="btns">
+    <button class="btn" id="btn-prev" disabled>← 上一步</button>
+    <button class="btn btn-primary" id="btn-next">下一步 →</button>
+    <button class="btn" id="btn-reset">重置</button>
+  </div>
+</div>
+<script>
+const STEPS=[
+  {title:'总览',html:'三代革命都经历 <b>基建 → 应用 → 平台 → 监管</b> 四阶段。AI 在 2026 年处于 <b>基建超级周期尾段</b>，同时 <b>Agent 应用前夜</b>。',lit:{net:[],mob:[],ai:[]},lane:null},
+  {title:'① 基础设施期',html:'<b>① 基础设施</b>：互联网铺光纤宽带；移动互联网靠 4G+智能手机；AI 靠 GPU/智算中心/AIDC。<b>当前 AI 正处在这一阶段峰值</b>（全球 hyperscaler 年 capex 数千亿美元）。',lit:{net:[1],mob:[1],ai:[1]},lane:'ai'},
+  {title:'② 应用爆发期',html:'<b>② 应用爆发</b>：互联网出现搜索/电商；移动互联网 O2O/短视频；AI 出现 Chat/Copilot，但 <b>Agent 工作流商业化刚起步</b>——类似 2012 年微信刚起量前。',lit:{net:[2],mob:[2],ai:[2]},lane:'ai'},
+  {title:'③ 平台垄断期',html:'<b>③ 平台垄断</b>：互联网 BAT、移动互联网微信/抖音；AI 平台格局 <b>尚未定型</b>（OpenAI/Google/Anthropic + 云厂商），仍处混战。',lit:{net:[3],mob:[3],ai:[3]},lane:null},
+  {title:'④ 监管成熟期',html:'<b>④ 监管成熟</b>：反垄断与数据隐私。AI 面临版权、安全、出口管制——<b>AI 远未到此阶段</b>，但投资需提前定价政策风险。',lit:{net:[4],mob:[4],ai:[4]},lane:null},
+  {title:'坐标结论',html:'<b>结论</b>：AI ≈ 移动互联网 <b>2010–2013</b>（基建+capex 狂飙）+ 互联网 <b>1999</b>（叙事过热）的叠加。投资主线：先吃基建红利，再精选能收钱的 Agent 应用。',lit:{net:[1,2],mob:[1,2],ai:[1,2]},lane:'ai',showNow:true},
+];
+let cur=-1;
+function reset(){
+  document.querySelectorAll('.phase').forEach(e=>e.className='phase');
+  document.querySelectorAll('.lane').forEach(e=>e.className='lane');
+  document.getElementById('now-line').classList.remove('show');
+  document.getElementById('now-marker').classList.remove('show');
+}
+function apply(i){
+  reset();
+  if(i<0){document.getElementById('step-desc').innerHTML='点击下一步，按四个阶段横向对比三代技术革命。';updateDots(-1);updateStrip(-1);return;}
+  const s=STEPS[i];
+  document.getElementById('step-desc').innerHTML=s.html;
+  ['net','mob','ai'].forEach(l=>{
+    (s.lit[l]||[]).forEach(p=>{
+      const el=document.getElementById(`${l}-p${p}`);
+      if(el) el.className=`phase lit p${p}`;
+    });
+  });
+  if(s.lane){
+    const lane=document.getElementById('lane-'+s.lane);
+    if(lane) lane.className='lane active lane-'+s.lane;
+  }
+  if(s.showNow){
+    document.getElementById('now-line').classList.add('show');
+    document.getElementById('now-marker').classList.add('show');
+  }
+  updateDots(i);updateStrip(i);
+}
+function updateDots(i){document.getElementById('dots').innerHTML='';STEPS.forEach((_,j)=>{const d=document.createElement('div');d.className='dot'+(j===i?' active':j<i?' done':'');document.getElementById('dots').appendChild(d);});}
+function updateStrip(i){const el=document.getElementById('flow-strip');el.innerHTML='';STEPS.forEach((s,j)=>{const c=document.createElement('span');c.className='flow-chip'+(j===i?' active':'');c.textContent=(j+1)+' '+s.title;el.appendChild(c);});}
+function go(i){cur=i;apply(i);document.getElementById('btn-prev').disabled=i<=0;document.getElementById('btn-next').disabled=i>=STEPS.length-1;}
+document.getElementById('btn-next').onclick=()=>{if(cur<STEPS.length-1)go(cur+1);};
+document.getElementById('btn-prev').onclick=()=>{if(cur>0)go(cur-1);};
+document.getElementById('btn-reset').onclick=()=>go(-1);
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();if(cur<STEPS.length-1)go(cur+1);}
+  if(e.key==='ArrowLeft'&&cur>0)go(cur-1);
+  if(e.key==='r'||e.key==='R')go(-1);
+});
+go(-1);
+</script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 产业链中美代表公司</title>
+<style>
+:root{--bg:#FFF;--sf:#FFF;--sf2:#EEF0F5;--bd:#B0B8C8;--blu:#1558D6;--pur:#6D28D9;--grn:#047857;--org:#C2410C;--cya:#0369A1;--tx:#0D1117;--mt:#374151;--us:#1558D6;--cn:#C2410C}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;color:var(--tx)}
+.nav{position:sticky;top:0;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;border-bottom:1px solid var(--sf2);background:var(--bg);z-index:100}
+.nav-title{font-size:15px;font-weight:700}
+.nav-badge{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blu);background:rgba(21,88,214,.08);padding:5px 12px;border-radius:20px}
+.wrap{max-width:980px;margin:0 auto;padding:20px 20px 100px}
+.hint{font-size:12px;color:var(--mt);margin-bottom:16px;line-height:1.5}
+.layer-row{display:grid;grid-template-columns:140px 1fr 1fr;gap:10px;margin-bottom:10px;align-items:stretch}
+.layer-name{padding:14px 12px;border-radius:12px;border:2px solid var(--bd);background:var(--sf);font-size:12px;font-weight:700;cursor:pointer;transition:.2s;display:flex;flex-direction:column;justify-content:center}
+.layer-name small{display:block;font-size:9px;font-weight:600;color:var(--mt);margin-top:4px}
+.layer-name.active{border-color:var(--blu);background:rgba(21,88,214,.08)}
+.col-hdr{text-align:center;font-size:10px;font-weight:700;letter-spacing:.1em;padding:8px;border-radius:8px;margin-bottom:4px}
+.col-hdr.us{background:rgba(21,88,214,.1);color:var(--us)}
+.col-hdr.cn{background:rgba(194,65,12,.1);color:var(--cn)}
+.col{border:1.5px solid var(--sf2);border-radius:12px;padding:10px;background:var(--sf);transition:.2s}
+.col.lit{border-color:var(--blu);box-shadow:0 4px 12px rgba(21,88,214,.12)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{padding:6px 10px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid var(--bd);background:var(--sf2);color:var(--mt)}
+.chip.us{border-color:rgba(21,88,214,.3);color:var(--us)}
+.chip.cn{border-color:rgba(194,65,12,.3);color:var(--cn)}
+.detail{position:fixed;bottom:0;left:0;right:0;min-height:72px;padding:16px 28px;border-top:1px solid var(--sf2);background:var(--bg);font-size:13px;line-height:1.55;color:var(--mt)}
+.detail b{color:var(--tx)}
+.note{font-size:10px;color:var(--mt);margin-top:20px;padding:12px;border-radius:8px;background:var(--sf2)}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="nav-title">AI 产业链 · 中美代表公司</div><div class="nav-badge">每层 5 家 · 点击层级高亮</div></nav>
+<div class="wrap">
+<p class="hint">点击左侧层级名称高亮对应中美各 5 家代表公司（产业链映射，非投资建议）。港股/美股以常见简称标注。</p>
+<div class="layer-row">
+  <div></div><div class="col-hdr us">🇺🇸 美国 · 代表 5 家</div><div class="col-hdr cn">🇨🇳 中国 A股/港股 · 代表 5 家</div>
+</div>
+<div id="matrix"></div>
+<p class="note">说明：部分公司为产业链龙头映射（如腾讯/阿里主要在港股）；未上市公司用同赛道可比标的替代。仅供研究框架与自媒体制图，不构成买卖建议。</p>
+</div>
+<div class="detail" id="detail">点击左侧任一层级，查看该层投资逻辑与中美差异。</div>
+<script>
+const DATA=[
+  {id:1,name:'① 制造设备',sub:'代工/EUV/封测',us:['TSMC','ASML','Applied Materials','Lam Research','KLA'],cn:['北方华创','中微公司','拓荆科技','华海清科','中芯国际'],insight:'壁垒最高、扩产最慢。美股垄断设备/代工；A股吃国产替代+资本开支上游。'},
+  {id:2,name:'② 芯片存储',sub:'GPU/ASIC/HBM',us:['NVIDIA','AMD','Broadcom','Micron','Intel'],cn:['海光信息','寒武纪','龙芯中科','江波龙','德明利'],insight:'训练看 NVDA；推理 ASIC 分流。A股国产 GPU+存储配套，集群替代逻辑。'},
+  {id:3,name:'③ 互连网络',sub:'光模块/交换机',us:['Arista Networks','Cisco','Astera Labs','Marvell','Coherent'],cn:['中际旭创','新易盛','天孚通信','光迅科技','沪电股份'],insight:'800G/1.6T 景气度高。A股光模块全球份额领先是独特 alpha。'},
+  {id:4,name:'④ AIDC配套',sub:'机房/液冷/运营',us:['Vertiv','Equinix','Digital Realty','Eaton','GE Vernova'],cn:['润泽科技','奥飞数据','英维克','光环新网','数据港'],insight:'上架率+绑定大客户。电力与液冷是 2026 配套主线。'},
+  {id:5,name:'⑤ 能源电力',sub:'电网/HVDC/储能',us:['NextEra Energy','Quanta Services','Emerson','Schneider','Vistra'],cn:['国电南瑞','许继电气','阳光电源','宁德时代','中国核电'],insight:'Power Wall 新叙事。订单驱动，需跟项目落地节奏。'},
+  {id:6,name:'⑥ 云与模型',sub:'Hyperscaler/大模型',us:['Microsoft','Alphabet','Amazon','Meta','Oracle'],cn:['阿里巴巴','腾讯','百度','科大讯飞','昆仑万维'],insight:'Capex 发动机+分发渠道。中国看互联网龙头+模型商业化。'},
+  {id:7,name:'⑦ 应用层',sub:'Agent/SaaS/垂类',us:['Palantir','Salesforce','ServiceNow','Adobe','Uber'],cn:['金山办公','同花顺','恒生电子','德赛西威','虹软科技'],insight:'分化最大的一层。看 workflow 嵌入深度与 ARR 兑现，不是概念。'},
+];
+const matrix=document.getElementById('matrix');
+DATA.forEach(row=>{
+  const r=document.createElement('div');r.className='layer-row';
+  const ln=document.createElement('div');ln.className='layer-name';ln.dataset.id=row.id;
+  ln.innerHTML=row.name+'<small>'+row.sub+'</small>';
+  ln.onclick=()=>select(row.id);
+  const us=document.createElement('div');us.className='col';us.id='col-us-'+row.id;
+  const cn=document.createElement('div');cn.className='col';cn.id='col-cn-'+row.id;
+  us.innerHTML='<div class="chips">'+row.us.map(c=>`<span class="chip us">${c}</span>`).join('')+'</div>';
+  cn.innerHTML='<div class="chips">'+row.cn.map(c=>`<span class="chip cn">${c}</span>`).join('')+'</div>';
+  r.append(ln,us,cn);matrix.appendChild(r);
+});
+function select(id){
+  document.querySelectorAll('.layer-name').forEach(e=>e.classList.toggle('active',+e.dataset.id===id));
+  document.querySelectorAll('.col').forEach(e=>e.classList.remove('lit'));
+  document.getElementById('col-us-'+id).classList.add('lit');
+  document.getElementById('col-cn-'+id).classList.add('lit');
+  const row=DATA.find(r=>r.id===id);
+  document.getElementById('detail').innerHTML=`<b>${row.name}</b>：${row.insight}`;
+}
+select(2);
+</script>
+</body>
+</html>

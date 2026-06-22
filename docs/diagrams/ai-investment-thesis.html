@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 投资逻辑与机会洞察</title>
+<style>
+:root{--bg:#FFF;--sf:#FFF;--sf2:#EEF0F5;--bd:#B0B8C8;--blu:#1558D6;--pur:#6D28D9;--grn:#047857;--org:#C2410C;--cya:#0369A1;--red:#B91C1C;--tx:#0D1117;--mt:#374151}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;color:var(--tx)}
+.nav{position:fixed;top:0;left:0;right:0;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;border-bottom:1px solid var(--sf2);z-index:100;background:var(--bg)}
+.nav-title{font-size:15px;font-weight:700}
+.nav-badge{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blu);background:rgba(21,88,214,.08);padding:5px 12px;border-radius:20px}
+.flow-strip{position:fixed;top:56px;left:0;right:0;height:36px;display:flex;align-items:center;justify-content:center;background:var(--sf2);z-index:90;font-size:10px}
+.flow-chip{padding:3px 8px;border-radius:6px;border:1px solid var(--bd);background:var(--sf);font-weight:600;opacity:.45;transition:.2s;margin:0 2px;white-space:nowrap}
+.flow-chip.active{opacity:1;background:var(--blu);border-color:var(--blu);color:#fff}
+.main{position:fixed;top:92px;left:0;right:0;bottom:88px;display:flex;align-items:center;justify-content:center;padding:8px}
+svg{max-width:960px;width:100%;height:auto}
+.box{fill:var(--sf);stroke:var(--bd);stroke-width:2;opacity:.3;transition:.3s}
+.box.lit{opacity:1;stroke-width:2.5;filter:drop-shadow(0 3px 10px rgba(0,0,0,.1))}
+.box.lit.core{fill:rgba(21,88,214,.1);stroke:var(--blu)}
+.box.lit.high{fill:rgba(4,120,87,.1);stroke:var(--grn)}
+.box.lit.mid{fill:rgba(109,40,217,.08);stroke:var(--pur)}
+.box.lit.risk{fill:rgba(185,28,28,.08);stroke:var(--red)}
+.box.lit.opp{fill:rgba(194,65,12,.1);stroke:var(--org)}
+.t{font-size:11px;font-weight:600;fill:var(--tx);text-anchor:middle}
+.s{font-size:8.5px;fill:var(--mt);text-anchor:middle}
+.conn{fill:none;stroke-width:2;stroke-dasharray:6 4;opacity:.2}
+.conn.lit{opacity:1}
+.controls{position:fixed;bottom:0;left:0;right:0;height:88px;display:flex;align-items:center;gap:20px;padding:0 28px;border-top:1px solid var(--sf2);background:var(--bg);z-index:100}
+.step-desc{flex:1;max-width:580px;font-size:13px;line-height:1.55;color:var(--mt)}
+.dots{display:flex;gap:6px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--sf2);border:1.5px solid var(--bd)}
+.dot.active{background:var(--blu);border-color:var(--blu);transform:scale(1.2)}
+.dot.done{background:var(--blu);opacity:.4;border-color:var(--blu)}
+.btns{display:flex;gap:8px}
+.btn{padding:8px 16px;border-radius:8px;border:1.5px solid var(--bd);background:var(--sf);font-size:12px;font-weight:600;cursor:pointer}
+.btn-primary{background:var(--blu);border-color:var(--blu);color:#fff}
+.btn:disabled{opacity:.35;cursor:default}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="nav-title">AI 智能革命 · 投资逻辑</div><div class="nav-badge">深度洞察 · 非投资建议</div></nav>
+<div class="flow-strip"><div id="flow-strip" style="display:flex"></div></div>
+<div class="main">
+<svg viewBox="0 0 960 500" xmlns="http://www.w3.org/2000/svg">
+  <text x="480" y="22" text-anchor="middle" font-size="9.5" font-weight="700" letter-spacing=".1em" fill="#374151">核心命题：巨额 Capex 能否在 2027–2028 换成可持续 Software Revenue？</text>
+
+  <rect id="b-core" class="box" x="330" y="40" width="300" height="56" rx="12"/>
+  <text class="t" x="480" y="64">Capex 超级周期</text>
+  <text class="s" x="480" y="80">Hyperscaler 年投入 $600B+ 量级</text>
+
+  <rect id="b-bottle" class="box" x="80" y="130" width="200" height="64" rx="12"/>
+  <text class="t" x="180" y="156">瓶颈迁移</text>
+  <text class="s" x="180" y="172">GPU → 封装 → 光 → 电力</text>
+
+  <rect id="b-train" class="box" x="380" y="130" width="200" height="64" rx="12"/>
+  <text class="t" x="480" y="156">训推共振</text>
+  <text class="s" x="480" y="172">Agent 推升推理算力</text>
+
+  <rect id="b-monet" class="box" x="680" y="130" width="200" height="64" rx="12"/>
+  <text class="t" x="780" y="156">商业化拐点</text>
+  <text class="s" x="780" y="172">应用要收入证明</text>
+
+  <path id="e1" class="conn" stroke="#1558D6" d="M 480 96 L 180 130"/>
+  <path id="e2" class="conn" stroke="#1558D6" d="M 480 96 L 480 130"/>
+  <path id="e3" class="conn" stroke="#1558D6" d="M 480 96 L 780 130"/>
+
+  <rect id="b-us" class="box" x="60" y="240" width="260" height="72" rx="12"/>
+  <text class="t" x="190" y="268">美股 Alpha</text>
+  <text class="s" x="190" y="284">芯片定价权 + 云变现</text>
+  <text class="s" x="190" y="298">NVDA · AVGO · MSFT · VRT</text>
+
+  <rect id="b-cn" class="box" x="370" y="240" width="260" height="72" rx="12"/>
+  <text class="t" x="500" y="268">A股 Alpha</text>
+  <text class="s" x="500" y="284">光模块 · 服务器 · AIDC</text>
+  <text class="s" x="500" y="298">国产算力 · CSP 产业链</text>
+
+  <rect id="b-app" class="box" x="680" y="240" width="220" height="72" rx="12"/>
+  <text class="t" x="790" y="268">应用选股</text>
+  <text class="s" x="790" y="284">Workflow / Agent 嵌入</text>
+  <text class="s" x="790" y="298">PLTR · 金山办公 · 同花顺</text>
+
+  <rect id="b-hc" class="box" x="120" y="350" width="220" height="56" rx="12"/>
+  <text class="t" x="230" y="374">高确信（2026）</text>
+  <text class="s" x="230" y="390">算力配套 · 电力 · 液冷</text>
+
+  <rect id="b-mc" class="box" x="370" y="350" width="220" height="56" rx="12"/>
+  <text class="t" x="480" y="374">中弹性</text>
+  <text class="s" x="480" y="390">云龙头 · 部分应用</text>
+
+  <rect id="b-lc" class="box" x="620" y="350" width="220" height="56" rx="12"/>
+  <text class="t" x="730" y="374">高风险</text>
+  <text class="s" x="730" y="390">纯叙事 · 无 ARR</text>
+
+  <rect id="b-risk" class="box" x="280" y="430" width="400" height="52" rx="12"/>
+  <text class="t" x="480" y="454">核心风险</text>
+  <text class="s" x="480" y="470">Capex-收入剪刀差 · 监管 · 技术路径颠覆 · 估值集中</text>
+</svg>
+</div>
+<div class="controls">
+  <div class="step-desc" id="step-desc">按 → 展开 AI 投资逻辑链；仅供研究框架，非投资建议。</div>
+  <div class="dots" id="dots"></div>
+  <div class="btns">
+    <button class="btn" id="btn-prev" disabled>← 上一步</button>
+    <button class="btn btn-primary" id="btn-next">下一步 →</button>
+    <button class="btn" id="btn-reset">重置</button>
+  </div>
+</div>
+<script>
+const STEPS=[
+  {title:'核心命题',html:'<b>核心命题</b>：全球 AI 基建投资已进入超级周期，但应用收入能否覆盖折旧，是 2026–2028 估值胜负手。',boxes:['b-core'],conns:[]},
+  {title:'瓶颈迁移',html:'<b>洞察① 瓶颈迁移</b>：钱跟着瓶颈走——从 GPU 到 CoWoS/HBM，再到光模块，再到 <b>电力与机房交付</b>（Power Wall）。',boxes:['b-core','b-bottle'],conns:['e1']},
+  {title:'训推共振',html:'<b>洞察② 训推共振</b>：Coding/Agent 推升 <b>推理 Token</b>，算力需求从训练单核驱动变为训练+推理双轮。',boxes:['b-core','b-train'],conns:['e2']},
+  {title:'商业化',html:'<b>洞察③ 商业化拐点</b>：市场从「信 capex 故事」转向「要看 organic revenue」。应用层选股时代开始。',boxes:['b-core','b-monet'],conns:['e3']},
+  {title:'中美Alpha',html:'<b>美股</b>：芯片+云定价权（NVDA/AVGO/四大云）。<b>A股</b>：光模块全球份额+智算产业链+国产替代。',boxes:['b-us','b-cn'],conns:[]},
+  {title:'应用选股',html:'<b>应用层</b>：看 workflow 嵌入与 ARR，不是「AI 概念」。代表：PLTR/CRM（美）、金山办公/同花顺（A）。',boxes:['b-app'],conns:[]},
+  {title:'机会分层',html:'<b>高确信</b>：算力配套/电力/液冷（订单可见）。<b>中弹性</b>：云+部分 SaaS。<b>高风险</b>：无收入纯叙事。',boxes:['b-hc','b-mc','b-lc'],conns:[]},
+  {title:'风险总览',html:'<b>风险</b>：① Capex ROI 不及预期 ② Custom ASIC 分流 GPU ③ 电力延期 ④ 中美监管 ⑤ Mag7 估值集中。',boxes:['b-risk'],conns:[]},
+];
+let cur=-1;
+const cls={core:'core',high:'high',mid:'mid',risk:'risk',opp:'opp'};
+function reset(){
+  document.querySelectorAll('.box').forEach(e=>e.className='box');
+  document.querySelectorAll('.conn').forEach(e=>e.className='conn');
+}
+function apply(i){
+  reset();
+  if(i<0){document.getElementById('step-desc').innerHTML='按 → 展开 AI 投资逻辑链；仅供研究框架，非投资建议。';updateDots(-1);updateStrip(-1);return;}
+  const s=STEPS[i];
+  document.getElementById('step-desc').innerHTML=s.html;
+  const typeMap={b-core:'core',b-bottle:'opp',b-train:'mid',b-monet:'high',b-us:'core',b-cn:'opp',b-app:'high',b-hc:'high',b-mc:'mid',b-lc:'risk',b-risk:'risk'};
+  (s.boxes||[]).forEach(id=>{const el=document.getElementById(id);if(el)el.className='box lit '+typeMap[id];});
+  (s.conns||[]).forEach(id=>{const el=document.getElementById(id);if(el)el.className='conn lit';});
+  updateDots(i);updateStrip(i);
+}
+function updateDots(i){document.getElementById('dots').innerHTML='';STEPS.forEach((_,j)=>{const d=document.createElement('div');d.className='dot'+(j===i?' active':j<i?' done':'');document.getElementById('dots').appendChild(d);});}
+function updateStrip(i){const el=document.getElementById('flow-strip');el.innerHTML='';STEPS.forEach((s,j)=>{const c=document.createElement('span');c.className='flow-chip'+(j===i?' active':'');c.textContent=s.title;el.appendChild(c);});}
+function go(i){cur=i;apply(i);document.getElementById('btn-prev').disabled=i<=0;document.getElementById('btn-next').disabled=i>=STEPS.length-1;}
+document.getElementById('btn-next').onclick=()=>{if(cur<STEPS.length-1)go(cur+1);};
+document.getElementById('btn-prev').onclick=()=>{if(cur>0)go(cur-1);};
+document.getElementById('btn-reset').onclick=()=>go(-1);
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();if(cur<STEPS.length-1)go(cur+1);}if(e.key==='ArrowLeft'&&cur>0)go(cur-1);if(e.key==='r'||e.key==='R')go(-1);});
+go(-1);
+</script>
+</body>
+</html>

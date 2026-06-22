@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 产业链全局</title>
+<style>
+:root{--bg:#FFF;--sf:#FFF;--sf2:#EEF0F5;--bd:#B0B8C8;--blu:#1558D6;--pur:#6D28D9;--grn:#047857;--org:#C2410C;--cya:#0369A1;--tx:#0D1117;--mt:#374151}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;color:var(--tx)}
+.nav{position:fixed;top:0;left:0;right:0;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;border-bottom:1px solid var(--sf2);z-index:100;background:var(--bg)}
+.nav-title{font-size:15px;font-weight:700}
+.nav-badge{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blu);background:rgba(21,88,214,.08);padding:5px 12px;border-radius:20px}
+.flow-strip{position:fixed;top:56px;left:0;right:0;height:36px;display:flex;align-items:center;justify-content:center;background:var(--sf2);z-index:90;font-size:10px;overflow-x:auto}
+.flow-chip{padding:3px 8px;border-radius:6px;border:1px solid var(--bd);background:var(--sf);font-weight:600;opacity:.45;transition:.2s;margin:0 2px;white-space:nowrap}
+.flow-chip.active{opacity:1;background:var(--blu);border-color:var(--blu);color:#fff}
+.main{position:fixed;top:92px;left:0;right:0;bottom:88px;display:flex;align-items:center;justify-content:center}
+svg{max-width:960px;width:100%;height:auto}
+.layer{fill:var(--sf);stroke:var(--bd);stroke-width:2;opacity:.35;transition:.3s;filter:drop-shadow(0 2px 6px rgba(0,0,0,.06))}
+.layer.lit{opacity:1;stroke-width:2.5}
+.layer.lit.L7{fill:rgba(21,88,214,.1);stroke:var(--blu)}
+.layer.lit.L6{fill:rgba(3,105,161,.1);stroke:var(--cya)}
+.layer.lit.L5{fill:rgba(194,65,12,.1);stroke:var(--org)}
+.layer.lit.L4{fill:rgba(109,40,217,.08);stroke:var(--pur)}
+.layer.lit.L3{fill:rgba(109,40,217,.1);stroke:var(--pur)}
+.layer.lit.L2{fill:rgba(4,120,87,.1);stroke:var(--grn)}
+.layer.lit.L1{fill:rgba(4,120,87,.08);stroke:var(--grn)}
+.lbl{font-size:12px;font-weight:600;fill:var(--tx)}
+.sub{font-size:9px;fill:var(--mt)}
+.tag{font-size:8px;font-weight:700;fill:var(--mt)}
+.conn{fill:none;stroke-width:2.5;stroke-dasharray:8 5;opacity:.2}
+.conn.lit{opacity:1}
+.conn.fwd{animation:dash .6s linear infinite}
+@keyframes dash{to{stroke-dashoffset:-26}}
+.particle{opacity:0}
+.controls{position:fixed;bottom:0;left:0;right:0;height:88px;display:flex;align-items:center;gap:20px;padding:0 28px;border-top:1px solid var(--sf2);background:var(--bg);z-index:100}
+.step-desc{flex:1;max-width:560px;font-size:13px;line-height:1.55;color:var(--mt)}
+.dots{display:flex;gap:6px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--sf2);border:1.5px solid var(--bd)}
+.dot.active{background:var(--blu);border-color:var(--blu);transform:scale(1.2)}
+.dot.done{background:var(--blu);opacity:.4;border-color:var(--blu)}
+.btns{display:flex;gap:8px}
+.btn{padding:8px 16px;border-radius:8px;border:1.5px solid var(--bd);background:var(--sf);font-size:12px;font-weight:600;cursor:pointer}
+.btn-primary{background:var(--blu);border-color:var(--blu);color:#fff}
+.btn:disabled{opacity:.35;cursor:default}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="nav-title">AI 产业链全局</div><div class="nav-badge">七层投资栈 · 自上而下</div></nav>
+<div class="flow-strip"><div id="flow-strip" style="display:flex"></div></div>
+<div class="main">
+<svg viewBox="0 0 960 520" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#1558D6"/></marker>
+<marker id="arr-g" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#047857"/></marker>
+</defs>
+<text x="480" y="22" text-anchor="middle" font-size="9.5" font-weight="700" letter-spacing=".12em" fill="#374151">CAPEX & 价值流向（应用层需求 → 拉动下层供给）</text>
+
+<rect id="L7" class="layer" x="120" y="38" width="720" height="52" rx="12"/>
+<text class="lbl" x="480" y="62" text-anchor="middle">⑦ 应用层 · Agent / SaaS / 垂类</text>
+<text class="sub" x="480" y="76" text-anchor="middle">Cursor · CRM · 医疗 · 广告 · 自动驾驶</text>
+
+<rect id="L6" class="layer" x="120" y="108" width="720" height="52" rx="12"/>
+<text class="lbl" x="480" y="132" text-anchor="middle">⑥ 云与模型层 · Hyperscaler + Foundation Model</text>
+<text class="sub" x="480" y="146" text-anchor="middle">AWS/Azure/GCP · OpenAI/Anthropic/Gemini/通义/文心</text>
+
+<rect id="L5" class="layer" x="120" y="178" width="720" height="52" rx="12"/>
+<text class="lbl" x="480" y="202" text-anchor="middle">⑤ 能源与电力 · 电网 / 燃气 / 储能 / HVDC</text>
+<text class="sub" x="480" y="216" text-anchor="middle">2026 新瓶颈：Power Wall · 微网 / 现场发电</text>
+
+<rect id="L4" class="layer" x="120" y="248" width="720" height="52" rx="12"/>
+<text class="lbl" x="480" y="272" text-anchor="middle">④ AIDC 与配套 · 机房 / 液冷 / 土建</text>
+<text class="sub" x="480" y="286" text-anchor="middle">智算中心 · 上架率 · 租赁 · REIT</text>
+
+<rect id="L3" class="layer" x="120" y="318" width="720" height="52" rx="12"/>
+<text class="lbl" x="480" y="342" text-anchor="middle">③ 互连与网络 · 光模块 / 交换机 / 铜缆</text>
+<text class="sub" x="480" y="356" text-anchor="middle">800G/1.6T · CPO · Scale-up NVLink</text>
+
+<rect id="L2" class="layer" x="120" y="388" width="720" height="52" rx="12"/>
+<text class="lbl" x="480" y="412" text-anchor="middle">② 算力芯片与存储 · GPU / ASIC / HBM</text>
+<text class="sub" x="480" y="426" text-anchor="middle">NVDA · AVGO TPU · 国产 GPU · 海光/寒武纪</text>
+
+<rect id="L1" class="layer" x="120" y="458" width="720" height="52" rx="12"/>
+<text class="lbl" x="480" y="482" text-anchor="middle">① 半导体制造与设备 · 代工 / EUV / 封测</text>
+<text class="sub" x="480" y="496" text-anchor="middle">TSMC · ASML · CoWoS · HBM 封装</text>
+
+<!-- Vertical flow paths -->
+<path id="c7-6" class="conn" stroke="#1558D6" marker-end="url(#arr)" d="M 480 90 L 480 108"/>
+<path id="c6-5" class="conn" stroke="#0369A1" marker-end="url(#arr)" d="M 460 160 L 460 178"/>
+<path id="c5-4" class="conn" stroke="#C2410C" marker-end="url(#arr)" d="M 500 230 L 500 248"/>
+<path id="c4-3" class="conn" stroke="#6D28D9" marker-end="url(#arr)" d="M 480 300 L 480 318"/>
+<path id="c3-2" class="conn" stroke="#047857" marker-end="url(#arr-g)" d="M 460 370 L 460 388"/>
+<path id="c2-1" class="conn" stroke="#047857" marker-end="url(#arr-g)" d="M 500 440 L 500 458"/>
+
+<circle class="particle" id="p-flow" r="5" fill="#1558D6" stroke="#fff" stroke-width="2" opacity="0">
+  <animateMotion id="am-flow" begin="indefinite" dur="2.5s" fill="freeze" keyPoints="0;1" keyTimes="0;1" calcMode="linear">
+    <mpath href="#flow-all"/>
+  </animateMotion>
+</circle>
+<path id="flow-all" fill="none" stroke="none" d="M 480 90 L 480 108 L 460 160 L 460 178 L 500 230 L 500 248 L 480 300 L 480 318 L 460 370 L 460 388 L 500 440 L 500 458"/>
+
+<text id="bottleneck" x="780" y="210" font-size="9" fill="#C2410C" font-weight="700" opacity="0">← 2026 瓶颈上移</text>
+</svg>
+</div>
+<div class="controls">
+  <div class="step-desc" id="step-desc">从应用层向下看七层产业链；按 → 逐步点亮。</div>
+  <div class="dots" id="dots"></div>
+  <div class="btns">
+    <button class="btn" id="btn-prev" disabled>← 上一步</button>
+    <button class="btn btn-primary" id="btn-next">下一步 →</button>
+    <button class="btn" id="btn-reset">重置</button>
+  </div>
+</div>
+<script>
+const LAYERS=[
+  {id:'L7',title:'⑦ 应用层',html:'<b>⑦ 应用层</b>：价值终点。Token/Agent 调用越多，越拉动下层算力。商业化兑现是 2026–2028 核心变量。',conn:'c7-6'},
+  {id:'L6',title:'⑥ 云与模型',html:'<b>⑥ 云与模型层</b>：Hyperscaler 是 capex 发动机（MSFT/AMZN/GOOG/META + 阿里/腾讯）。模型是「智能 API」。',conn:'c6-5'},
+  {id:'L5',title:'⑤ 能源电力',html:'<b>⑤ 能源层</b>：2026 瓶颈从「缺芯片」转向 <b>Power Wall</b>——电、并网、燃气轮机、储能、HVDC。',conn:'c5-4',bottleneck:true},
+  {id:'L4',title:'④ AIDC配套',html:'<b>④ AIDC</b>：机房土建、液冷、上架率、算力租赁。中国智算中心扩张 + 美国 DC REIT 受益。',conn:'c4-3'},
+  {id:'L3',title:'③ 互连网络',html:'<b>③ 互连层</b>：光模块 800G/1.6T、交换机、机柜内铜缆/光互连。算力密度越高，网络价值越大。',conn:'c3-2'},
+  {id:'L2',title:'② 芯片存储',html:'<b>② 芯片层</b>：GPU + Custom ASIC + HBM。NVDA 主导训练；AVGO/自研芯片分流推理。',conn:'c2-1'},
+  {id:'L1',title:'① 制造设备',html:'<b>① 制造层</b>：TSMC/ASML/设备商。壁垒最高、扩产最慢，决定全链供给上限。',conn:null},
+];
+const STEPS=[{title:'总览',html:'AI 产业链是 <b>七层栈</b>。需求从应用层向下传导；瓶颈像打地鼠一样逐层上移（GPU→封装→光→电）。',layers:[]},
+  ...LAYERS.map((l,i)=>({title:l.title,html:l.html,layers:LAYERS.slice(0,i+1).map(x=>x.id),conn:l.conn,bottleneck:l.bottleneck}))
+];
+let cur=-1;
+function reset(){
+  document.querySelectorAll('.layer').forEach(e=>e.className='layer');
+  document.querySelectorAll('.conn').forEach(e=>{e.className='conn';});
+  document.getElementById('bottleneck').style.opacity=0;
+  document.getElementById('p-flow').style.opacity=0;
+}
+function apply(i){
+  reset();
+  if(i<0){document.getElementById('step-desc').innerHTML='从应用层向下看七层产业链；按 → 逐步点亮。';updateDots(-1);updateStrip(-1);return;}
+  const s=STEPS[i];
+  document.getElementById('step-desc').innerHTML=s.html;
+  (s.layers||[]).forEach(id=>{const el=document.getElementById(id);if(el)el.className='layer lit '+id;});
+  if(s.conn){const c=document.getElementById(s.conn);if(c){c.className='conn lit fwd';}}
+  if(s.bottleneck)document.getElementById('bottleneck').style.opacity=1;
+  if(i>0){
+    const p=document.getElementById('p-flow');p.style.opacity=1;
+    document.getElementById('am-flow').beginElement();
+    setTimeout(()=>p.style.opacity=0,2500);
+  }
+  updateDots(i);updateStrip(i);
+}
+function updateDots(i){document.getElementById('dots').innerHTML='';STEPS.forEach((_,j)=>{const d=document.createElement('div');d.className='dot'+(j===i?' active':j<i?' done':'');document.getElementById('dots').appendChild(d);});}
+function updateStrip(i){const el=document.getElementById('flow-strip');el.innerHTML='';STEPS.forEach((s,j)=>{const c=document.createElement('span');c.className='flow-chip'+(j===i?' active':'');c.textContent=s.title;el.appendChild(c);});}
+function go(i){cur=i;apply(i);document.getElementById('btn-prev').disabled=i<=0;document.getElementById('btn-next').disabled=i>=STEPS.length-1;}
+document.getElementById('btn-next').onclick=()=>{if(cur<STEPS.length-1)go(cur+1);};
+document.getElementById('btn-prev').onclick=()=>{if(cur>0)go(cur-1);};
+document.getElementById('btn-reset').onclick=()=>go(-1);
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();if(cur<STEPS.length-1)go(cur+1);}if(e.key==='ArrowLeft'&&cur>0)go(cur-1);if(e.key==='r'||e.key==='R')go(-1);});
+go(-1);
+</script>
+</body>
+</html>
