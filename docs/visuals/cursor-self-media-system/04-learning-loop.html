@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>学习闭环｜Cursor 自媒体视频生产系统</title>
+  <style>
+    :root{--blue:#4285f4;--purple:#9c27b0;--green:#34a853;--orange:#ff6d00;--cyan:#00bcd4;--ink:#202124;--sub:#687184;--line:#dfe3ea;--soft:#f7f9fc}
+    *{box-sizing:border-box}body{margin:0;background:#eef2f7;color:var(--ink);font-family:"Google Sans",-apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+    .stage{width:min(1600px,100vw);aspect-ratio:16/9;margin:auto;background:#fff;padding:5% 7%;position:relative;overflow:hidden}
+    .eyebrow{color:var(--cyan);font-weight:700;letter-spacing:.16em;font-size:clamp(12px,1vw,18px)}
+    h1{font-size:clamp(32px,3vw,58px);margin:.32em 0 .16em;letter-spacing:-.04em}.lead{color:var(--sub);font-size:clamp(15px,1.3vw,23px);margin:0}
+    .loop{width:76%;height:55%;margin:3.7% auto 0;position:relative}
+    .ring{position:absolute;inset:4% 13%;border:4px solid #e5eaf1;border-radius:50%}
+    .ring:after{content:"";position:absolute;right:4%;top:7%;width:18px;height:18px;border-top:5px solid var(--green);border-right:5px solid var(--green);transform:rotate(36deg)}
+    .center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:25%;aspect-ratio:1;border-radius:50%;background:linear-gradient(145deg,#f5fbff,#edf8f1);display:grid;place-items:center;text-align:center;border:1px solid var(--line);box-shadow:0 16px 38px rgba(28,43,70,.09);font-weight:800;font-size:clamp(18px,1.55vw,28px);line-height:1.35}
+    .node{position:absolute;width:22%;min-height:118px;background:#fff;border:1px solid var(--line);border-radius:15px;padding:18px;box-shadow:0 12px 30px rgba(28,43,70,.07)}
+    .node h2{font-size:clamp(17px,1.25vw,23px);margin:0 0 8px}.node p{font-size:clamp(12px,.88vw,16px);line-height:1.55;color:var(--sub);margin:0}
+    .n1{left:0;top:28%;border-left:6px solid var(--blue)}.n2{left:26%;top:0;border-left:6px solid var(--orange)}.n3{right:26%;top:0;border-left:6px solid var(--cyan)}.n4{right:0;top:28%;border-left:6px solid var(--purple)}.n5{right:19%;bottom:0;border-left:6px solid var(--green)}.n6{left:19%;bottom:0;border-left:6px solid var(--blue)}
+    .rule{position:absolute;right:7%;bottom:5%;color:var(--green);font-size:clamp(13px,1vw,18px);font-weight:700}.wm{position:absolute;left:7%;bottom:5%;font-size:12px;color:#9aa3b2;letter-spacing:.14em}
+  </style>
+</head>
+<body>
+  <main class="stage">
+    <div class="eyebrow">LEARNING LOOP</div>
+    <h1>发布不是终点，而是下一轮创作的输入</h1>
+    <p class="lead">只有当数据改变选题、脚本与资产库，系统才真正具备学习能力。</p>
+    <section class="loop">
+      <div class="ring"></div>
+      <div class="center">每次发布<br>都增加系统资产</div>
+      <article class="node n1"><h2>内容上线</h2><p>获得真实用户行为，而非主观预期。</p></article>
+      <article class="node n2"><h2>采集信号</h2><p>点击、留存、评论、收藏与转化。</p></article>
+      <article class="node n3"><h2>解释原因</h2><p>区分选题、包装、结构和表达问题。</p></article>
+      <article class="node n4"><h2>形成动作</h2><p>把评价改写为下一轮可执行改变。</p></article>
+      <article class="node n5"><h2>更新资产</h2><p>沉淀案例、规则、来源和有效模板。</p></article>
+      <article class="node n6"><h2>进入新选题</h2><p>带着更多证据与更少不确定性开始。</p></article>
+    </section>
+    <div class="rule">复盘必须产生动作，而不是评价</div>
+    <div class="wm">云牧元宇宙</div>
+  </main>
+</body>
+</html>

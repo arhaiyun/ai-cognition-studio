@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>四层 Skill 架构｜Cursor 自媒体视频生产系统</title>
+  <style>
+    :root{--blue:#4285f4;--purple:#9c27b0;--green:#34a853;--orange:#ff6d00;--cyan:#00bcd4;--ink:#202124;--sub:#687184;--line:#dfe3ea;--soft:#f7f9fc}
+    *{box-sizing:border-box}body{margin:0;background:#eef2f7;color:var(--ink);font-family:"Google Sans",-apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+    .stage{width:min(1600px,100vw);aspect-ratio:16/9;margin:auto;background:#fff;padding:4.8% 6.5%;position:relative;overflow:hidden}
+    .eyebrow{color:var(--purple);font-weight:700;letter-spacing:.16em;font-size:clamp(12px,1vw,18px)}
+    h1{font-size:clamp(32px,3vw,58px);margin:.32em 0 .16em;letter-spacing:-.04em}.lead{color:var(--sub);font-size:clamp(15px,1.3vw,23px);margin:0}
+    .stack{margin-top:3.5%;display:grid;gap:13px}
+    .layer{display:grid;grid-template-columns:18% 26% 1fr;align-items:center;min-height:110px;border:1px solid var(--line);border-left:8px solid;border-radius:16px;padding:18px 26px;background:#fff;box-shadow:0 10px 28px rgba(28,43,70,.06)}
+    .layer:nth-child(1){border-left-color:var(--blue)}.layer:nth-child(2){border-left-color:var(--purple)}.layer:nth-child(3){border-left-color:var(--green)}.layer:nth-child(4){border-left-color:var(--cyan)}
+    .label{font-weight:800;font-size:clamp(18px,1.55vw,28px)}.role{color:var(--sub);font-size:clamp(13px,1vw,18px)}
+    .items{display:flex;gap:10px;flex-wrap:wrap}.pill{border:1px solid var(--line);border-radius:999px;padding:9px 14px;background:var(--soft);font-size:clamp(12px,.92vw,17px);white-space:nowrap}
+    .principle{position:absolute;right:6.5%;bottom:4.5%;font-weight:700;color:var(--orange);font-size:clamp(13px,1vw,18px)}
+    .wm{position:absolute;left:6.5%;bottom:4.7%;font-size:12px;color:#9aa3b2;letter-spacing:.14em}
+  </style>
+</head>
+<body>
+  <main class="stage">
+    <div class="eyebrow">SYSTEM ARCHITECTURE</div>
+    <h1>一个入口，四层分工</h1>
+    <p class="lead">编排流程、调用能力、复用资产、吸收反馈；避免把所有规则塞进一个巨型 Skill。</p>
+    <section class="stack">
+      <div class="layer"><div class="label">编排层</div><div class="role">管理阶段与交接</div><div class="items"><span class="pill">self-media-studio</span><span class="pill">项目状态</span><span class="pill">人工确认点</span></div></div>
+      <div class="layer"><div class="label">能力层</div><div class="role">执行单一专业任务</div><div class="items"><span class="pill">选题</span><span class="pill">研究</span><span class="pill">脚本</span><span class="pill">包装</span><span class="pill">分析</span></div></div>
+      <div class="layer"><div class="label">资产层</div><div class="role">保存创作者差异</div><div class="items"><span class="pill">定位</span><span class="pill">观点</span><span class="pill">案例</span><span class="pill">来源</span><span class="pill">视觉模板</span></div></div>
+      <div class="layer"><div class="label">反馈层</div><div class="role">从发布结果中学习</div><div class="items"><span class="pill">点击</span><span class="pill">留存</span><span class="pill">评论问题</span><span class="pill">转化</span><span class="pill">下一轮动作</span></div></div>
+    </section>
+    <div class="principle">边界清楚，比 Skill 数量更重要</div>
+    <div class="wm">云牧元宇宙</div>
+  </main>
+</body>
+</html>

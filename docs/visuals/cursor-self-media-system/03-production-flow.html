@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>视频生产流｜Cursor 自媒体视频生产系统</title>
+  <style>
+    :root{--blue:#4285f4;--purple:#9c27b0;--green:#34a853;--orange:#ff6d00;--cyan:#00bcd4;--ink:#202124;--sub:#687184;--line:#dfe3ea;--soft:#f7f9fc}
+    *{box-sizing:border-box}body{margin:0;background:#eef2f7;color:var(--ink);font-family:"Google Sans",-apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+    .stage{width:min(1600px,100vw);aspect-ratio:16/9;margin:auto;background:#fff;padding:5.2% 5.8%;position:relative;overflow:hidden}
+    .eyebrow{color:var(--orange);font-weight:700;letter-spacing:.16em;font-size:clamp(12px,1vw,18px)}
+    h1{font-size:clamp(32px,3vw,58px);margin:.32em 0 .16em;letter-spacing:-.04em}.lead{color:var(--sub);font-size:clamp(15px,1.3vw,23px);margin:0}
+    .pipeline{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-top:5.2%;align-items:stretch}
+    .step{position:relative;border:1px solid var(--line);border-top:6px solid;border-radius:15px;padding:22px 15px 18px;background:#fff;min-height:230px;box-shadow:0 12px 30px rgba(28,43,70,.07)}
+    .step:not(:last-child):after{content:"›";position:absolute;right:-15px;top:43%;z-index:3;width:20px;height:32px;background:#fff;color:#a5adba;font-size:30px;line-height:27px;text-align:center}
+    .step:nth-child(1),.step:nth-child(2){border-top-color:var(--blue)}.step:nth-child(3),.step:nth-child(4){border-top-color:var(--purple)}.step:nth-child(5){border-top-color:var(--orange)}.step:nth-child(6){border-top-color:var(--cyan)}.step:nth-child(7){border-top-color:var(--green)}
+    .num{font-size:12px;color:#929baa;font-weight:800;letter-spacing:.12em}.step h2{font-size:clamp(17px,1.25vw,24px);margin:14px 0 10px}.step p{font-size:clamp(12px,.88vw,16px);line-height:1.65;color:var(--sub);margin:0}
+    .gates{display:grid;grid-template-columns:2fr 2fr 3fr;gap:12px;margin-top:18px}
+    .gate{background:var(--soft);border-radius:10px;padding:10px 14px;color:var(--sub);font-size:clamp(11px,.82vw,15px);text-align:center}.gate b{color:var(--ink)}
+    .wm{position:absolute;left:5.8%;bottom:5%;font-size:12px;color:#9aa3b2;letter-spacing:.14em}
+  </style>
+</head>
+<body>
+  <main class="stage">
+    <div class="eyebrow">PRODUCTION FLOW</div>
+    <h1>每一步都在降低下一步的不确定性</h1>
+    <p class="lead">标准产物连接阶段；方向越早确认，后期返工越少。</p>
+    <section class="pipeline">
+      <article class="step"><div class="num">01</div><h2>想法</h2><p>记录观察、问题与初步判断。</p></article>
+      <article class="step"><div class="num">02</div><h2>选题</h2><p>明确受众、价值、差异与投入。</p></article>
+      <article class="step"><div class="num">03</div><h2>研究</h2><p>建立证据、来源、反例与边界。</p></article>
+      <article class="step"><div class="num">04</div><h2>Brief</h2><p>锁定结论、收益、案例与叙事。</p></article>
+      <article class="step"><div class="num">05</div><h2>制作</h2><p>脚本、分镜、素材、录制与剪辑。</p></article>
+      <article class="step"><div class="num">06</div><h2>发布</h2><p>平台包装、质量检查与分发。</p></article>
+      <article class="step"><div class="num">07</div><h2>复盘</h2><p>把表现转化为下一轮具体动作。</p></article>
+    </section>
+    <div class="gates">
+      <div class="gate"><b>确认点 1</b>｜这个选题值得做吗？</div>
+      <div class="gate"><b>确认点 2</b>｜结论与论证成立吗？</div>
+      <div class="gate"><b>确认点 3</b>｜成品是否准确代表创作者？</div>
+    </div>
+    <div class="wm">云牧元宇宙</div>
+  </main>
+</body>
+</html>

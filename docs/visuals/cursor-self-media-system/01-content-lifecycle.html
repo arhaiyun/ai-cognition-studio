@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>内容生命周期｜Cursor 自媒体视频生产系统</title>
+  <style>
+    :root{--blue:#4285f4;--purple:#9c27b0;--green:#34a853;--orange:#ff6d00;--cyan:#00bcd4;--ink:#202124;--sub:#687184;--line:#dfe3ea;--soft:#f7f9fc}
+    *{box-sizing:border-box}body{margin:0;background:#eef2f7;color:var(--ink);font-family:"Google Sans",-apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+    .stage{width:min(1600px,100vw);aspect-ratio:16/9;margin:auto;background:#fff;padding:5.6% 6.5%;position:relative;overflow:hidden}
+    .eyebrow{color:var(--blue);font-weight:700;letter-spacing:.16em;font-size:clamp(12px,1vw,18px)}
+    h1{font-size:clamp(34px,3.3vw,62px);margin:.35em 0 .18em;letter-spacing:-.04em}
+    .lead{color:var(--sub);font-size:clamp(15px,1.35vw,24px);margin:0}
+    .flow{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5%;margin-top:5.2%;position:relative}
+    .flow:before{content:"";position:absolute;left:8%;right:8%;top:44%;height:3px;background:linear-gradient(90deg,var(--blue),var(--purple),var(--orange),var(--cyan));opacity:.35}
+    .card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:9% 8%;min-height:260px;position:relative;box-shadow:0 14px 36px rgba(28,43,70,.08)}
+    .n{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;color:#fff;font-weight:800;font-size:18px;margin-bottom:20px}
+    .card:nth-child(1) .n{background:var(--blue)}.card:nth-child(2) .n{background:var(--purple)}.card:nth-child(3) .n{background:var(--orange)}.card:nth-child(4) .n{background:var(--cyan)}
+    h2{font-size:clamp(20px,1.65vw,30px);margin:0 0 12px}.card p{color:var(--sub);line-height:1.7;font-size:clamp(13px,1vw,18px);margin:0}
+    .return{position:absolute;right:7%;bottom:5.8%;display:flex;align-items:center;gap:12px;color:var(--green);font-weight:700;font-size:clamp(13px,1.1vw,19px)}
+    .return:before{content:"↺";display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:#e9f6ed;font-size:21px}
+    .wm{position:absolute;left:6.5%;bottom:6%;font-size:12px;color:#9aa3b2;letter-spacing:.14em}
+  </style>
+</head>
+<body>
+  <main class="stage">
+    <div class="eyebrow">CONTENT LIFECYCLE</div>
+    <h1>视频不是从脚本开始，也不在发布时结束</h1>
+    <p class="lead">系统效率来自阶段之间的可靠交接，而不是单点生成得更快。</p>
+    <section class="flow">
+      <article class="card"><div class="n">01</div><h2>判断</h2><p>定位受众、识别问题、确定价值与表达边界。</p></article>
+      <article class="card"><div class="n">02</div><h2>研究</h2><p>建立证据、案例、反例与事实来源。</p></article>
+      <article class="card"><div class="n">03</div><h2>生产</h2><p>完成 Brief、脚本、分镜、素材与视频制作。</p></article>
+      <article class="card"><div class="n">04</div><h2>经营</h2><p>包装、分发、分析数据并沉淀可复用经验。</p></article>
+    </section>
+    <div class="return">结果返回下一轮判断</div>
+    <div class="wm">云牧元宇宙</div>
+  </main>
+</body>
+</html>
