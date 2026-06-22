@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent Skills 使用说明 · 云牧元宇宙</title>
+<style>
+:root {
+  --blue: #4285F4;
+  --ink: #202124;
+  --sub: #5f6368;
+  --line: #e8eaed;
+  --bg: #f8f9fa;
+  --card: #fff;
+  --green: #34A853;
+  --purple: #9C27B0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: "PingFang SC", "Google Sans", -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.55;
+}
+header {
+  background: linear-gradient(135deg, #0a1628 0%, #1a2744 100%);
+  color: #fff;
+  padding: 48px 32px 40px;
+}
+header h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+header p { color: rgba(255,255,255,0.72); font-size: 15px; max-width: 720px; }
+.alfred-box {
+  margin-top: 20px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 12px;
+  padding: 16px 20px;
+  max-width: 900px;
+}
+.alfred-box label {
+  display: block;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+.alfred-url {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 13px;
+  word-break: break-all;
+  color: #fff;
+  cursor: pointer;
+  user-select: all;
+}
+.alfred-url:hover { color: var(--blue); }
+.alfred-hint { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 8px; }
+.wrap { max-width: 1100px; margin: 0 auto; padding: 32px 24px 64px; }
+.search {
+  width: 100%;
+  padding: 14px 18px;
+  font-size: 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  margin-bottom: 28px;
+  background: var(--card);
+  outline: none;
+}
+.search:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(66,133,244,0.15); }
+section { margin-bottom: 36px; }
+section h2 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--blue);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(66,133,244,0.12);
+  color: var(--blue);
+}
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 18px 20px;
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+.card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.06); border-color: #c5cae9; }
+.card h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.card h3 code {
+  font-size: 13px;
+  background: #f1f3f4;
+  padding: 2px 8px;
+  border-radius: 6px;
+  color: var(--purple);
+  font-weight: 600;
+}
+.card .desc { font-size: 14px; color: var(--sub); margin-bottom: 12px; }
+.triggers { font-size: 13px; color: var(--sub); margin-bottom: 12px; }
+.triggers strong { color: var(--ink); }
+.invoke {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.tag {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: #e8f0fe;
+  color: #1967d2;
+  font-weight: 500;
+}
+.tag.codex { background: #e6f4ea; color: #137333; }
+.tag.cursor { background: #fce8e6; color: #c5221f; }
+.links { display: flex; flex-wrap: wrap; gap: 8px; }
+.links a {
+  font-size: 13px;
+  color: var(--blue);
+  text-decoration: none;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: rgba(66,133,244,0.08);
+}
+.links a:hover { background: rgba(66,133,244,0.18); }
+.quick-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 10px;
+  margin-bottom: 28px;
+}
+.quick-links a {
+  display: block;
+  padding: 12px 16px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 500;
+}
+.quick-links a:hover { border-color: var(--blue); color: var(--blue); }
+.quick-links a span { display: block; font-size: 12px; color: var(--sub); font-weight: 400; margin-top: 2px; }
+footer {
+  text-align: center;
+  padding: 24px;
+  font-size: 13px;
+  color: var(--sub);
+  border-top: 1px solid var(--line);
+}
+.hidden { display: none !important; }
+.sync-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  background: var(--card);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+.sync-table th, .sync-table td {
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+}
+.sync-table th { background: #f1f3f4; font-weight: 600; }
+.yes { color: var(--green); font-weight: 700; }
+.no { color: #ea4335; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Agent Skills 使用说明</h1>
+  <p>Cursor / Codex 当前可用 Skill 索引 · 触发语 · 本地文档链接 · 供 Alfred 快速打开</p>
+  <div class="alfred-box">
+    <label>⭐ Alfred 收藏此 URL（主入口）</label>
+    <div class="alfred-url" id="main-url" title="点击复制">file:///Users/arhaiyun/github/ai-cognition-studio/docs/skills-guide.html</div>
+    <div class="alfred-hint">点击上方 URL 可复制 · 在 Alfred 中用 Open URL 或自定义 Keyword 打开</div>
+  </div>
+</header>
+
+<div class="wrap">
+  <input type="search" class="search" id="q" placeholder="搜索 Skill 名称、触发语…（如 架构图、飞书、PPT）" autofocus>
+
+  <div class="quick-links">
+    <a href="file:///Users/arhaiyun/github/ai-cognition-studio/docs/diagrams/ai-investment-index.html">投资系列图导航<span>5 张交互图入口</span></a>
+    <a href="file:///Users/arhaiyun/github/ai-cognition-studio/docs/diagrams/ai-agent-dev-system.html">Agent 系统架构图<span>8 步演示范例</span></a>
+    <a href="file:///Users/arhaiyun/github/ai-cognition-studio/ai-product-six-layers-keynote.html">六层产品 Keynote<span>15 页 Google I/O 风</span></a>
+    <a href="file:///Users/arhaiyun/github/ai-cognition-studio/cognition/08-design-for-self-media.md">自媒体设计方法论<span>cognition/08</span></a>
+    <a href="file:///Users/arhaiyun/github/ai-cognition-studio/playbooks/self-media-design.md">自媒体 Playbook<span>可勾选清单</span></a>
+    <a href="http://127.0.0.1:5173">Studio 门户<span>需 npm run dev</span></a>
+  </div>
+
+  <section data-cat="design">
+    <h2>内容与设计 <span class="badge">自媒体 / 演示</span></h2>
+    <div class="grid">
+      <article class="card" data-kw="design-studio 自媒体 设计 封面 口播 内容包装">
+        <h3><code>design-studio</code></h3>
+        <p class="desc">自媒体设计编排：判型 → 路由子 Skill → 品牌 token → 验收 → 发布 pipeline</p>
+        <p class="triggers"><strong>触发</strong>：自媒体设计、内容包装、封面、口播稿、信息图</p>
+        <div class="invoke"><span class="tag cursor">@design-studio</span><span class="tag codex">$design-studio</span></div>
+        <div class="links">
+          <a href="file:///Users/arhaiyun/github/ai-cognition-studio/labs/design-studio/SKILL.md">SKILL.md</a>
+          <a href="file:///Users/arhaiyun/github/ai-cognition-studio/labs/design-studio/README.md">README</a>
+          <a href="file:///Users/arhaiyun/github/ai-cognition-studio/labs/design-studio/references/brand-tokens.md">品牌 Token</a>
+        </div>
+      </article>
+      <article class="card" data-kw="ppt-builder keynote 幻灯片 PPT 演示">
+        <h3><code>ppt-builder</code></h3>
+        <p class="desc">大会级 Keynote / 幻灯片，单文件 HTML，Google I/O 四色，水印「云牧元宇宙」</p>
+        <p class="triggers"><strong>触发</strong>：做 PPT、做 keynote、把文章做成幻灯片</p>
+        <div class="invoke"><span class="tag cursor">@ppt-builder</span></div>
+        <div class="links">
+          <a href="file:///Users/arhaiyun/github/ai-cognition-studio/.cursor/skills/ppt-builder/SKILL.md">SKILL.md</a>
+        </div>
+      </article>
+      <article class="card" data-kw="arch-diagram-builder 架构图 动态图 交互 数据流 runtime">
+        <h3><code>arch-diagram-builder</code></h3>
+        <p class="desc">交互式分步架构图：节点高亮、连线粒子、顺序可见，白底录屏友好</p>
+        <p class="triggers"><strong>触发</strong>：画架构图、动态架构图、系统演示、数据流</p>
+        <div class="invoke"><span class="tag cursor">@arch-diagram-builder</span><span class="tag codex">$arch-diagram-builder</span></div>
+        <div class="links">
+          <a href="file:///Users/arhaiyun/github/ai-cognition-studio/labs/arch-diagram-builder/SKILL.md">SKILL.md</a>
+          <a href="file:///Users/arhaiyun/github/ai-cognition-studio/labs/arch-diagram-builder/references/design-system.md">设计系统</a>
+        </div>
+      </article>
+      <article class="card" data-kw="frontend-design UI landing 海报 美化">
+        <h3><code>frontend-design</code></h3>
+        <p class="desc">高审美前端页面 / 海报 / Landing，避免 AI slop，适合破圈实验封面</p>
+        <p class="triggers"><strong>触发</strong>：做 landing、美化 UI、设计海报</p>
+        <div class="invoke"><span class="tag cursor">自动触发</span></div>
+        <div class="links">
+          <a href="file:///Users/arhaiyun/.cursor/skills/frontend-design/SKILL.md">SKILL.md</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section data-cat="publish">
+    <h2>发布与素材 <span class="badge">飞书 / 视频</span></h2>
+    <div class="grid">
+      <article class="card" data-kw="feishu-doc-writer 飞书 知识库 发布 同步">
+        <h3><code>feishu-doc-writer</code></h3>
+        <p class="desc">Markdown 写入飞书 Wiki 子文档，默认父节点已配置</p>
+        <p class="triggers"><strong>触发</strong>：发飞书、同步 Wiki、上传文档到飞书</p>
+        <div class="invoke"><span class="tag cursor">自动触发</span><span class="tag codex">$feishu-doc-writer</span></div>
+        <div class="links">
+          <a href="file:///Users/arhaiyun/github/ai-cognition-studio/labs/feishu-doc-writer/SKILL.md">SKILL.md</a>
+        </div>
+      </article>
+      <article class="card" data-kw="social-video-toolkit 视频 下载 B站 抖音 字幕 转写">
+        <h3><code>social-video-toolkit</code></h3>
+        <p class="desc">社媒视频下载、ASR 转写、关键帧、烧录字幕 OCR、分析 summary.json</p>
+        <p class="triggers"><strong>触发</strong>：下载视频、提取字幕、分析小红书/B站链接</p>
+        <div class="invoke"><span class="tag cursor">自动触发</span><span class="tag codex">$social-video-toolkit</span></div>
+        <div class="links">
+          <a href="file:///Users/arhaiyun/github/ai-cognition-studio/labs/social-video-toolkit/SKILL.md">SKILL.md</a>
+          <a href="file:///Users/arhaiyun/github/ai-cognition-studio/labs/social-video-toolkit/README.md">README</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section data-cat="product">
+    <h2>产品与工程</h2>
+    <div class="grid">
+      <article class="card" data-kw="project-incubator 孵化 PRD Demo 0到1">
+        <h3><code>project-incubator</code></h3>
+        <p class="desc">0→1 孵化：访谈 → 方案 → PRD → UED HTML Demo → 实现 Prompt（每阶段确认）</p>
+        <p class="triggers"><strong>触发</strong>：我想做一个项目、从想法生成 PRD、做交互 Demo</p>
+        <div class="invoke"><span class="tag cursor">/project-incubator</span><span class="tag codex">$project-incubator</span></div>
+        <div class="links">
+          <a href="file:///Users/arhaiyun/github/ai-cognition-studio/labs/project-incubator/SKILL.md">SKILL.md</a>
+        </div>
+      </article>
+      <article class="card" data-kw="mcp-builder MCP server API">
+        <h3><code>mcp-builder</code></h3>
+        <p class="desc">搭建 MCP Server（Python FastMCP / Node MCP SDK）</p>
+        <p class="triggers"><strong>触发</strong>：写 MCP、对接外部 API</p>
+        <div class="invoke"><span class="tag cursor">自动触发</span></div>
+        <div class="links">
+          <a href="file:///Users/arhaiyun/.cursor/skills/mcp-builder/SKILL.md">SKILL.md</a>
+        </div>
+      </article>
+      <article class="card" data-kw="inspiration-curator 灵感 整理 brain dump">
+        <h3><code>inspiration-curator</code></h3>
+        <p class="desc">整理零散灵感 → cognition / essay / lab 任务结构</p>
+        <p class="triggers"><strong>触发</strong>：整理想法、brain dump、选题</p>
+        <div class="invoke"><span class="tag cursor">$inspiration-curator</span></div>
+        <div class="links">
+          <a href="file:///Users/arhaiyun/github/ai-cognition-studio/agents/inspiration-curator/SKILL.md">SKILL.md</a>
+        </div>
+      </article>
+      <article class="card" data-kw="doc-coauthoring 文档 提案 spec RFC">
+        <h3><code>doc-coauthoring</code></h3>
+        <p class="desc">结构化协作文档：Context → Refine → Reader Testing</p>
+        <p class="triggers"><strong>触发</strong>：写设计文档、起草 PRD、RFC</p>
+        <div class="invoke"><span class="tag cursor">自动触发</span></div>
+        <div class="links">
+          <a href="file:///Users/arhaiyun/.cursor/skills/doc-coauthoring/SKILL.md">SKILL.md</a>
+        </div>
+      </article>
+      <article class="card" data-kw="webapp-testing playwright 测试 截图">
+        <h3><code>webapp-testing</code></h3>
+        <p class="desc">Playwright 测本地 Web、截图、查 browser logs</p>
+        <p class="triggers"><strong>触发</strong>：测页面、Playwright 截图</p>
+        <div class="invoke"><span class="tag cursor">自动触发</span></div>
+        <div class="links">
+          <a href="file:///Users/arhaiyun/.cursor/skills/webapp-testing/SKILL.md">SKILL.md</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section data-cat="meta">
+    <h2>Skill 元工具 <span class="badge">创建 / 同步</span></h2>
+    <div class="grid">
+      <article class="card" data-kw="studio-skill-sync 同步 安装 skill 三端">
+        <h3><code>studio-skill-sync</code></h3>
+        <p class="desc">新建 Skill 强制三端同步：labs 源码 + Cursor + Codex</p>
+        <p class="triggers"><strong>触发</strong>：安装 skill、新建 skill、更新 SKILL.md</p>
+        <div class="invoke"><span class="tag cursor">自动触发</span><span class="tag codex">$studio-skill-sync</span></div>
+        <div class="links">
+          <a href="file:///Users/arhaiyun/github/ai-cognition-studio/labs/studio-skill-sync/SKILL.md">SKILL.md</a>
+          <a href="file:///Users/arhaiyun/github/ai-cognition-studio/playbooks/skill-dual-install.md">Playbook</a>
+        </div>
+      </article>
+      <article class="card" data-kw="skill-creator eval 优化 skill">
+        <h3><code>skill-creator</code></h3>
+        <p class="desc">创建 / 优化 Skill、跑 eval、benchmark 触发准确率</p>
+        <p class="triggers"><strong>触发</strong>：写一个 skill、优化 skill 描述</p>
+        <div class="invoke"><span class="tag cursor">自动触发</span></div>
+        <div class="links">
+          <a href="file:///Users/arhaiyun/.cursor/skills/skill-creator/SKILL.md">SKILL.md</a>
+        </div>
+      </article>
+      <article class="card" data-kw="create-skill create-rule cursor 官方">
+        <h3><code>create-skill</code> · <code>create-rule</code></h3>
+        <p class="desc">Cursor 官方：编写 SKILL.md 结构 / 写 Rules</p>
+        <div class="links">
+          <a href="file:///Users/arhaiyun/.cursor/skills-cursor/create-skill/SKILL.md">create-skill</a>
+          <a href="file:///Users/arhaiyun/.cursor/skills-cursor/create-rule/SKILL.md">create-rule</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section data-cat="cursor">
+    <h2>Cursor 内置 Skill <span class="badge">IDE 工作流</span></h2>
+    <div class="grid">
+      <article class="card" data-kw="babysit PR CI merge">
+        <h3><code>babysit</code></h3>
+        <p class="desc">PR 评论 triage、修 CI、保持 merge-ready</p>
+        <div class="links"><a href="file:///Users/arhaiyun/.cursor/skills-cursor/babysit/SKILL.md">SKILL.md</a></div>
+      </article>
+      <article class="card" data-kw="canvas 图表 分析 表格">
+        <h3><code>canvas</code></h3>
+        <p class="desc">数据分析 / 图表 / 审计 → 侧边 live React Canvas</p>
+        <div class="links"><a href="file:///Users/arhaiyun/.cursor/skills-cursor/canvas/SKILL.md">SKILL.md</a></div>
+      </article>
+      <article class="card" data-kw="automate automation 自动化">
+        <h3><code>automate</code></h3>
+        <p class="desc">创建 Cursor Automations</p>
+        <div class="links"><a href="file:///Users/arhaiyun/.cursor/skills-cursor/automate/SKILL.md">SKILL.md</a></div>
+      </article>
+      <article class="card" data-kw="sdk cursor agent api">
+        <h3><code>sdk</code></h3>
+        <p class="desc">Cursor SDK（@cursor/sdk / cursor-sdk）集成与 Agent API</p>
+        <div class="links"><a href="file:///Users/arhaiyun/.cursor/skills-cursor/sdk/SKILL.md">SKILL.md</a></div>
+      </article>
+      <article class="card" data-kw="review bugbot security split loop hook">
+        <h3>审查 · 拆分 · 其他</h3>
+        <p class="desc">review-bugbot · review-security · split-to-prs · loop · create-hook · statusline</p>
+        <div class="links">
+          <a href="file:///Users/arhaiyun/.cursor/skills-cursor/review-bugbot/SKILL.md">bugbot</a>
+          <a href="file:///Users/arhaiyun/.cursor/skills-cursor/review-security/SKILL.md">security</a>
+          <a href="file:///Users/arhaiyun/.cursor/skills-cursor/split-to-prs/SKILL.md">split-prs</a>
+          <a href="file:///Users/arhaiyun/.cursor/skills-cursor/loop/SKILL.md">loop</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <h2>三端安装对照</h2>
+    <table class="sync-table">
+      <thead><tr><th>Skill</th><th>labs 源码</th><th>Cursor</th><th>Codex</th></tr></thead>
+      <tbody>
+        <tr><td>design-studio</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+        <tr><td>arch-diagram-builder</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+        <tr><td>feishu-doc-writer</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+        <tr><td>social-video-toolkit</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+        <tr><td>studio-skill-sync</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+        <tr><td>project-incubator</td><td class="yes">✓</td><td class="no">—</td><td class="yes">✓</td></tr>
+        <tr><td>ppt-builder</td><td class="no">待迁入</td><td class="yes">项目级</td><td class="no">—</td></tr>
+        <tr><td>frontend-design 等</td><td class="no">外部</td><td class="yes">全局</td><td class="no">—</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top:12px;font-size:13px;color:var(--sub)">同步命令：<code>cd ~/github/ai-cognition-studio && ./scripts/sync-skill.sh &lt;name&gt;</code></p>
+  </section>
+</div>
+
+<footer>
+  云牧元宇宙 · ai-cognition-studio ·
+  <a href="file:///Users/arhaiyun/github/ai-cognition-studio/docs/skills-guide.md" style="color:var(--blue)">Markdown 版</a>
+</footer>
+
+<script>
+document.getElementById('main-url').addEventListener('click', function() {
+  navigator.clipboard.writeText(this.textContent.trim()).then(function() {
+    document.querySelector('.alfred-hint').textContent = '✓ 已复制到剪贴板';
+    setTimeout(function() {
+      document.querySelector('.alfred-hint').textContent = '点击上方 URL 可复制 · 在 Alfred 中用 Open URL 或自定义 Keyword 打开';
+    }, 2000);
+  });
+});
+document.getElementById('q').addEventListener('input', function() {
+  var q = this.value.trim().toLowerCase();
+  document.querySelectorAll('.card').forEach(function(card) {
+    var kw = (card.getAttribute('data-kw') || '') + ' ' + card.textContent;
+    card.classList.toggle('hidden', q && kw.toLowerCase().indexOf(q) === -1);
+  });
+});
+</script>
+</body>
+</html>

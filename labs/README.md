@@ -12,6 +12,7 @@
 | [feishu-doc-writer](feishu-doc-writer/) | 飞书 Wiki 子文档写入 Skill | ✅ 可用 |
 | [prompt-patterns](prompt-patterns/) | Markdown 模板 |
 | [arch-diagram-builder](arch-diagram-builder/) | 交互式分步动画架构图 HTML | ✅ 可用 |
+| [design-studio](design-studio/) | 自媒体设计编排（品牌 token + 子 Skill 路由 + pipeline） | ✅ 可用 |
 
 ## 新建 Lab
 

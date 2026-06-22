@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1146, height=717">
+<title>AI 投资研究 · B站封面</title>
+<style>
+:root {
+  --blue: #4285F4;
+  --purple: #9C27B0;
+  --green: #34A853;
+  --ink: #0a1628;
+  --sub: rgba(255,255,255,0.72);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 1146px;
+  height: 717px;
+  overflow: hidden;
+  font-family: "PingFang SC", "Google Sans", -apple-system, sans-serif;
+}
+body {
+  background: linear-gradient(135deg, #0a1628 0%, #152238 50%, #1a2744 100%);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 64px 80px;
+  position: relative;
+}
+.grid-bg {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(66,133,244,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(66,133,244,0.06) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+}
+.kicker {
+  font-size: 18px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--blue);
+  font-weight: 600;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 1;
+}
+h1 {
+  font-size: 56px;
+  line-height: 1.12;
+  font-weight: 700;
+  max-width: 900px;
+  position: relative;
+  z-index: 1;
+}
+h1 em {
+  font-style: normal;
+  color: var(--blue);
+}
+.lead {
+  font-size: 24px;
+  line-height: 1.5;
+  color: var(--sub);
+  margin-top: 24px;
+  max-width: 780px;
+  position: relative;
+  z-index: 1;
+}
+.chips {
+  display: flex;
+  gap: 12px;
+  margin-top: 36px;
+  position: relative;
+  z-index: 1;
+}
+.chip {
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.06);
+}
+.chip.purple { border-color: rgba(156,39,176,0.5); color: #ce93d8; }
+.chip.green { border-color: rgba(52,168,83,0.5); color: #81c995; }
+.wm {
+  position: absolute;
+  right: 48px;
+  bottom: 36px;
+  font-size: 15px;
+  letter-spacing: 0.14em;
+  color: rgba(255,255,255,0.45);
+  z-index: 1;
+}
+.accent-bar {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 8px;
+  width: 100%;
+  display: flex;
+}
+.accent-bar span { flex: 1; }
+.accent-bar span:nth-child(1) { background: var(--blue); }
+.accent-bar span:nth-child(2) { background: #EA4335; }
+.accent-bar span:nth-child(3) { background: #FBBC04; }
+.accent-bar span:nth-child(4) { background: var(--green); }
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<div class="kicker">AI 投资研究 · 四篇连载</div>
+<h1>算力是门票，<em>Agent 是兑现</em></h1>
+<p class="lead">七层产业链 × 美股指标 × A 股 CSP 链 — 用交互图讲清投资逻辑</p>
+<div class="chips">
+  <span class="chip">产业链</span>
+  <span class="chip purple">Power Wall</span>
+  <span class="chip green">Agent 兑现</span>
+  <span class="chip">风险纪律</span>
+</div>
+<div class="wm">云牧元宇宙</div>
+<div class="accent-bar"><span></span><span></span><span></span><span></span></div>
+</body>
+</html>

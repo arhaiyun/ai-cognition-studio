@@ -1,0 +1,56 @@
+{
+  "series": "ai-investment",
+  "palette": "arch-five-color",
+  "brand": "云牧元宇宙",
+  "updated": "2026-06-21",
+  "assets": [
+    {
+      "id": "index",
+      "file": "../../diagrams/ai-investment-index.html",
+      "label": "投资系列导航",
+      "type": "diagram-index"
+    },
+    {
+      "id": "thesis",
+      "file": "../../diagrams/ai-investment-thesis.html",
+      "label": "投资逻辑总图",
+      "type": "diagram",
+      "steps": 7
+    },
+    {
+      "id": "chain-global",
+      "file": "../../diagrams/ai-industry-chain-global.html",
+      "label": "七层产业链",
+      "type": "diagram"
+    },
+    {
+      "id": "chain-players",
+      "file": "../../diagrams/ai-industry-chain-players.html",
+      "label": "中美公司矩阵",
+      "type": "diagram"
+    },
+    {
+      "id": "stage-compare",
+      "file": "../../diagrams/ai-revolution-stage-comparison.html",
+      "label": "三波技术革命对比",
+      "type": "diagram"
+    },
+    {
+      "id": "cover-bilibili",
+      "file": "cover-bilibili.html",
+      "label": "B站封面模板",
+      "type": "cover",
+      "size": "1146x717"
+    }
+  ],
+  "cognition": [
+    "cognition/04-ai-investment-part1-seven-layers.md",
+    "cognition/05-ai-investment-part2-us-equities.md",
+    "cognition/06-ai-investment-part3-a-share-agent.md",
+    "cognition/07-ai-investment-part4-risks.md"
+  ],
+  "script": {
+    "file": "../ai-investment-presentation-script.md",
+    "status": "pending"
+  }
+}

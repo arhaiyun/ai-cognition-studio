@@ -1,0 +1,7 @@
+interface:
+  display_name: "自媒体设计编排"
+  short_description: "判型路由、品牌 token、平台规格与全链路编排，串联 ppt/架构图/封面/口播/发布"
+  default_prompt: "Use $design-studio to plan and produce self-media visual assets with correct sub-skill routing and brand tokens."
+
+policy:
+  allow_implicit_invocation: true

@@ -53,6 +53,8 @@ npm run dev    # 打开 http://127.0.0.1:5173
 - [MCP 设计 Checklist](playbooks/mcp-design-checklist.md)
 - [Skill 编写 Checklist](playbooks/skill-authoring-checklist.md)
 - [Skill 三端同步（Cursor + Codex + Studio）](playbooks/skill-dual-install.md)
+- [自媒体设计 Playbook](playbooks/self-media-design.md)
+- [Agent Skills 使用说明](docs/skills-guide.md) · [HTML 导航页（Alfred）](file:///Users/arhaiyun/github/ai-cognition-studio/docs/skills-guide.html)
 
 ### Agents（Sub-Agent 实践）
 
@@ -72,6 +74,7 @@ npm run dev    # 打开 http://127.0.0.1:5173
 | [social-video-toolkit](labs/social-video-toolkit/) | 社媒视频下载、转写与烧录字幕分析 |
 | [feishu-doc-writer](labs/feishu-doc-writer/) | Markdown 写入飞书 Wiki 子文档 |
 | [arch-diagram-builder](labs/arch-diagram-builder/) | 交互式分步动画架构图 HTML |
+| [design-studio](labs/design-studio/) | 自媒体设计编排（品牌 + 路由 + 全链路 pipeline） |
 | [prompt-patterns](labs/prompt-patterns/) | 可复用 Prompt 模式 |
 
 ---
