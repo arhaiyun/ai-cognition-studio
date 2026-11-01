@@ -64,4 +64,6 @@ cd ~/github/ai-cognition-studio && ./scripts/sync-skill.sh social-video-toolkit
 
 ## 来源
 
-上游参考仓库：`github.com/arhaiyun/social-video-toolkit`（或本地 `~/github/social-video-toolkit`）。
+上游仓库：[zhuangjunhong21-blip/social-video-toolkit](https://github.com/zhuangjunhong21-blip/social-video-toolkit)（本地参考 checkout：`~/github/social-video-toolkit`）。
+
+2026-11-01 已核对 GitHub 最新 HEAD：`9eac8bea32b2452ec43c0bbed8f33d208826faf4`（2026-06-13，`Add social video toolkit skill`）。核心脚本与该提交完全一致；保留 Studio 的本机路径适配及手动触发策略。来源与校验值见 `STUDIO-UPSTREAM.json`。
