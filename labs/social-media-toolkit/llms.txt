@@ -1,0 +1,71 @@
+# Social Media Toolkit
+
+Public SDK, CLI, and MCP server for Douyin, Xiaohongshu, Bilibili, and YouTube.
+
+Canonical install or update command:
+`npx -y github:risingjerry/social-media-toolkit`
+
+The NPX bootstrap installs `uv` from `astral.sh` only when missing, then uses
+an isolated `uv tool` environment. After installation, use `socialkit` and
+`social-media-toolkit-mcp` directly; cloning the repository is not required.
+
+Read first:
+- README.md
+- AGENTS.md
+- docs/architecture.md
+- docs/capabilities.md
+
+Single orchestrator:
+- social_media_toolkit.service.SocialMediaToolkit
+
+Text route:
+1. GetNote original content
+2. Free public platform parser
+3. For Douyin only, optional TikHub media resolution after public parsing fails
+4. Native platform subtitle/body
+5. Volcengine cloud ASR using VOLCENGINE_ASR_API_KEY
+6. On failure, return the reason; never use local ASR
+
+Timed YouTube route (opt-in on social_get_text):
+1. Require timed=true and an absolute output_dir
+2. Manual subtitle cues, then automatic subtitle cues
+3. Timestamped Volcengine ASR when no timed subtitle exists, or when force_asr=true
+4. Route media through two hours to flash ASR and over two through five hours
+   to standard ASR with one temporary private TOS object
+5. Reject media over five hours before download; do not auto-chunk
+6. Write requested md,srt,json artifacts and delete temporary media/TOS objects
+7. Skip GetNote because plain text cannot anchor source-video clips
+
+Only MCP tools:
+- social_inspect
+- social_get_text
+- social_get_comments
+- social_download
+- social_capture_bundle
+- social_doctor
+
+MCP runtime compatibility:
+- v0.4.1 uses the v1 FastMCP transport and requires mcp>=1.28.1,<2
+- do not remove the upper bound without migrating server.py to the MCP 2.x API
+- CI includes a real stdio initialize-handshake regression test
+
+Important:
+- This is a standalone public Python package. Agent Switch is optional and is
+  never a package or runtime requirement; public users may inject
+  VOLCENGINE_ASR_API_KEY and optional TIKHUB_API_KEY through the normal process
+  environment.
+- TikHub is a paid, optional Douyin media fallback. It runs only after the free
+  parser fails, returns ephemeral CDN URLs, and is never a text/ASR provider.
+- No legacy aliases or second scheduler.
+- No OCR, LLM cleanup, browser analytics, or publishing.
+- Media download and timed transcript artifacts require an explicit output directory.
+- Never output or store secret values.
+- Never call a public comment sample a global ranking.
+- Standard long-recording ASR requires TOS_ACCESS_KEY and TOS_SECRET_KEY plus
+  non-sensitive TOS bucket, region, and endpoint configuration.
+- The project collects no product telemetry.
+
+Public trust and contribution routes:
+- SECURITY.md
+- CONTRIBUTING.md
+- CHANGELOG.md

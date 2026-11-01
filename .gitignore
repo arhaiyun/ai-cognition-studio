@@ -30,3 +30,6 @@ docs/presentation/*.html
 .idea/
 .vscode/
 studio/tsconfig.tsbuildinfo
+
+# Local media tooling environments and validation artifacts
+.tmp/

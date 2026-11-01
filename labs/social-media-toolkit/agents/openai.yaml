@@ -1,0 +1,7 @@
+interface:
+  display_name: "social-media-toolkit"
+  short_description: "社媒内容下载、提取与解析"
+  default_prompt: "使用 $social-media-toolkit 处理用户提供的公开内容链接。"
+
+policy:
+  allow_implicit_invocation: true

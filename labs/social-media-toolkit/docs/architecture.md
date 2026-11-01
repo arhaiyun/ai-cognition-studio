@@ -1,0 +1,157 @@
+# Architecture
+
+## One orchestrator
+
+`SocialMediaToolkit` is the only workflow orchestrator used by the Python SDK,
+CLI, and MCP transport.
+
+```mermaid
+flowchart LR
+    X["npx GitHub bootstrap"] --> I["uv tool isolated install"]
+    I --> O
+    U["URL or share text"] --> S["SocialMediaToolkit"]
+    S --> R["PlatformRouter"]
+    R --> P["Public platform adapter"]
+    P -->|"Douyin failure + key"| H["Optional TikHub media fallback"]
+    H --> B
+    P --> B["PostBundle"]
+    S --> T["One text route"]
+    T --> G["GetNote original content"]
+    G --> N["Native subtitle"]
+    N --> V["Volcengine cloud ASR"]
+    S --> TT["Timed YouTube evidence route"]
+    TT --> TC["Manual cue → automatic cue → timed Volcengine ASR"]
+    TC --> A["MD / SRT / timeline JSON"]
+    S --> D["Explicit MediaDownloader"]
+    S --> C["Douyin public comments"]
+    B --> O["SDK / CLI / MCP"]
+    T --> O
+    D --> O
+    C --> O
+```
+
+## Packages
+
+### `social_media_toolkit`
+
+- `service.py`: the only orchestration policy.
+- `models.py`: stable `PostBundle` and text-result contracts.
+- `platforms/core.py`: public models, Douyin/Xiaohongshu/Bilibili adapters, and router.
+- `platforms/youtube.py`: YouTube metadata and native subtitles through `yt-dlp`.
+- `providers/getnote.py`: GetNote original-content reader.
+- `providers/tikhub.py`: optional paid Douyin metadata/CDN media fallback.
+- `providers/volcengine.py`: the only cloud ASR implementation.
+- `transcripts.py`: timestamp normalization plus atomic MD/SRT/JSON rendering.
+- `downloader.py`: explicit downloads and SHA-256 manifests.
+- `cli.py`: JSON CLI.
+
+### `social_post_extractor_mcp`
+
+A thin stdio MCP transport. It owns no alternate extraction logic and creates
+exactly one `SocialMediaToolkit` instance. The current transport is built on
+the v1 `FastMCP` API and therefore constrains the dependency to
+`mcp>=1.28.1,<2`; MCP 2.x requires an explicit transport migration.
+
+### npm bootstrap
+
+`bin/social-media-toolkit.mjs` is a dependency-free installation adapter. It
+uses an existing `uv` executable or installs official `uv` from `astral.sh`,
+then delegates the real package installation to an isolated `uv tool`
+environment. It contains no extraction, provider, MCP, or credential logic.
+
+## Text contract
+
+1. Ask GetNote for original content.
+2. If unavailable, parse the platform.
+3. If free Douyin parsing fails and `TIKHUB_API_KEY` is configured, call the
+   TikHub Web share-URL endpoint once and record its paid, ephemeral-media route.
+4. Use native Bilibili/YouTube subtitles when present.
+5. For a video still without text, route by duration: flash ASR through two
+   hours, standard asynchronous ASR from over two through five hours, and
+   reject longer media before download.
+6. If Volcengine fails, return the reason and stop.
+
+There is no provider selector, local ASR, image OCR, LLM cleanup, or silent
+fallback.
+
+## Timed YouTube transcript contract
+
+Timed mode is opt-in on the same `get_text` interface and requires an explicit
+output directory. It is an evidence route rather than a canonical-reading
+route:
+
+1. Parse one YouTube video with `noplaylist` enabled.
+2. Prefer manual subtitle cues in the source language.
+3. Otherwise use automatic subtitle cues in the source language.
+4. If no timed subtitle exists, temporarily prepare audio and call Volcengine.
+5. Preserve sanitized utterance/word intervals and write requested MD/SRT/JSON.
+6. Delete temporary media before returning.
+
+An explicit `force_asr=True` bypasses steps 2–3. In that route,
+`speaker_info=True` requests anonymous diarization and a caller-supplied JSON
+context may carry bounded public metadata for vocabulary hints. Context does
+not perform real-person identity mapping. Timed ASR preserves raw expression by
+using `enable_ddc=false`; mixed YouTube audio does not use channel splitting.
+Temporary YouTube audio uses yt-dlp's retry/resume path rather than streaming a
+long signed Googlevideo URL with a one-shot HTTP request.
+
+The standard route uploads prepared audio to one private temporary TOS object,
+submits its presigned URL, polls the standard API, and deletes the object in a
+`finally` boundary. It produces the same normalized timeline contract as the
+flash route. Media over five hours is not chunked because chunk-local speaker
+labels and seam timing would weaken the evidence contract.
+
+YouTube metadata extraction first uses yt-dlp's normal public route. If YouTube
+rejects that request with its anonymous bot check, the adapter retries once
+with yt-dlp's public `mweb` client. This fallback does not load browser cookies
+or require a signed-in account; when that client exposes no subtitle tracks,
+the normal timestamped Volcengine fallback remains responsible for the text.
+GetNote is intentionally skipped because its plain canonical text does not
+guarantee source-video timecodes. Default, non-timed `get_text` remains fully
+backward compatible.
+
+## Side effects
+
+- `npx` installer: may install official `uv`, create an isolated `uv tool`
+  environment, install command shims, and update the user's future shell
+  `PATH`; it never reads provider credentials.
+- `inspect`: public network reads only; when the free Douyin adapter fails and
+  TikHub is configured, it may make one paid TikHub request and returns an
+  explicit cost/ephemeral-URL warning.
+- `get_text`: by default runs configured GetNote, then free platform parsing,
+  optional paid TikHub media resolution for Douyin failures, native subtitles,
+  and possibly paid Volcengine ASR; timed mode instead writes explicitly
+  requested transcript artifacts and never persists media. Forced timed ASR
+  may add anonymous speaker labels and public-metadata context.
+- `get_comments`: public network reads only; resolving Douyin metadata may use
+  the same optional paid TikHub fallback and must disclose it.
+- `download`: persistent writes and always requires `output_dir`; resolving a
+  failed Douyin public page may first use the optional paid TikHub fallback.
+- `capture`: media writes only when `output_dir` is supplied.
+
+ASR media and extracted MP3 files live only inside a temporary directory and
+are deleted when the call ends. Standard-route TOS objects are also temporary
+and deleted before the call returns.
+
+Calling `get_text`, a text-enabled `capture`, or a full-chain smoke test is the
+execution signal for this documented route. Use `inspect` when metadata-only,
+side-effect-free behavior is required.
+
+## Security
+
+- Flash ASR secret name: `VOLCENGINE_ASR_API_KEY`.
+- Optional TikHub Douyin fallback secret name: `TIKHUB_API_KEY`.
+- Standard 2–5 hour ASR also needs `TOS_ACCESS_KEY` and `TOS_SECRET_KEY`, plus
+  non-sensitive bucket, region, and endpoint settings.
+- Secret values never appear in results or logs.
+- TikHub CDN URLs are treated as expiring transport inputs, not durable media
+  identities; the toolkit itself does not persist them.
+- The project does not load repository `.env` files.
+- Standard process environment is the portable public configuration path.
+- Agent Switch is an optional maintainer-only fallback, used through an
+  inherited file descriptor when its executable happens to be available; it is
+  not imported, packaged, or required.
+- Downloader accepts HTTP(S), rejects local/private literal IPs, limits bytes,
+  sanitizes filenames, and records SHA-256.
+- Tests use synthetic fixtures.
+- The project does not collect product telemetry.

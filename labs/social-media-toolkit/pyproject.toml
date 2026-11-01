@@ -1,0 +1,65 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "social-media-toolkit"
+version = "0.4.1"
+description = "Public SDK, CLI, and MCP server for normalized social-media metadata, text, timed transcripts, media, and supported comments"
+readme = "README.md"
+license = {text = "Apache-2.0"}
+authors = [
+    {name = "risingjerry", email = "87055815+risingjerry@users.noreply.github.com"}
+]
+keywords = [
+    "mcp",
+    "model-context-protocol",
+    "douyin",
+    "xiaohongshu",
+    "rednote",
+    "bilibili",
+    "youtube",
+    "transcript",
+    "asr",
+    "volcengine",
+    "cloud-asr",
+    "social-media",
+    "social-media-extraction",
+    "metadata-extraction",
+    "subtitle-downloader",
+    "video-downloader",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+requires-python = ">=3.10"
+dependencies = [
+    "defusedxml>=0.7.1",
+    "mcp>=1.28.1,<2",
+    "requests>=2.33.0",
+    "tos>=2.8.6",
+    "yt-dlp[default]>=2026.7.4",
+]
+
+[project.urls]
+Homepage = "https://github.com/risingjerry/social-media-toolkit"
+Repository = "https://github.com/risingjerry/social-media-toolkit"
+Issues = "https://github.com/risingjerry/social-media-toolkit/issues"
+Documentation = "https://github.com/risingjerry/social-media-toolkit#readme"
+Changelog = "https://github.com/risingjerry/social-media-toolkit/blob/main/CHANGELOG.md"
+Security = "https://github.com/risingjerry/social-media-toolkit/security/policy"
+Releases = "https://github.com/risingjerry/social-media-toolkit/releases"
+
+[project.scripts]
+social-post-extractor-mcp = "social_post_extractor_mcp.server:main"
+social-media-toolkit-mcp = "social_post_extractor_mcp.server:main"
+socialkit = "social_media_toolkit.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["social_media_toolkit", "social_post_extractor_mcp"]

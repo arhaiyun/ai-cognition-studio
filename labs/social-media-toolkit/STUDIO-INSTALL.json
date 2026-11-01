@@ -1,0 +1,20 @@
+{
+  "installed_at": "2026-11-01",
+  "sources": {
+    "video-batch-download": "https://github.com/ljb1020/video-batch-download",
+    "content-reader": "https://github.com/Jiaranbb/content-reader",
+    "social-media-toolkit": "https://github.com/risingjerry/social-media-toolkit"
+  },
+  "social_media_toolkit_commit": "96502f35b0a643a578d3841d83d11228224c3dca",
+  "skills": [
+    "video-batch-download",
+    "content-reader",
+    "xhs-reader",
+    "bilibili-reader",
+    "youtube-reader",
+    "twitter-reader",
+    "social-media-toolkit"
+  ],
+  "runtime": "../../.tmp/social-media-runtime",
+  "library": "../../.private/social-media-library"
+}

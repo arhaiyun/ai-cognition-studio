@@ -72,6 +72,9 @@ npm run dev    # 打开 http://127.0.0.1:5173
 | [project-incubator](labs/project-incubator/) | 项目 0→1 孵化 Skill（PRD → UED Demo → 实现 Prompt） |
 | [studio-skill-sync](labs/studio-skill-sync/) | Skill 三端同步（Cursor + Codex + Studio） |
 | [social-video-toolkit](labs/social-video-toolkit/) | 社媒视频下载、转写与烧录字幕分析 |
+| [video-batch-download](labs/video-batch-download/) | 多平台公开视频下载、本地转写 |
+| [content-reader](labs/content-reader/) | 小红书 / B站 / YouTube / X 内容归档技能组 |
+| [social-media-toolkit](labs/social-media-toolkit/) | 社媒图文、视频提取 CLI / MCP（[本机验证](docs/social-media-tools-validation.md)） |
 | [feishu-doc-writer](labs/feishu-doc-writer/) | Markdown 写入飞书 Wiki 子文档 |
 | [arch-diagram-builder](labs/arch-diagram-builder/) | 交互式分步动画架构图 HTML |
 | [design-studio](labs/design-studio/) | 自媒体设计编排（品牌 + 路由 + 全链路 pipeline） |
