@@ -1,6 +1,6 @@
 ---
 title: Agent Skills 使用说明
-date: 2026-06-21
+date: 2026-11-01
 status: stable
 type: handbook
 tags: [skill, cursor, codex, alfred]
@@ -49,10 +49,15 @@ Skill 会根据 **description 里的关键词**自动触发；说不准时可直
 
 ## 二、发布与素材工具
 
+自媒体素材的最新分工、命令和本地模型复现见 [使用手册](social-media-tools-guide.md)；已验证能力与限制见 [实测报告](social-media-tools-validation.md)。
+
 | Skill | 干什么 | 怎么说 | Cursor | Codex | 文档 |
 |-------|--------|--------|--------|-------|------|
 | **feishu-doc-writer** | Markdown → 飞书 Wiki 子文档 | 「发飞书」「同步到飞书知识库」 | 自动触发 | `$feishu-doc-writer` | [SKILL](file:///Users/arhaiyun/github/ai-cognition-studio/labs/feishu-doc-writer/SKILL.md) |
-| **social-video-toolkit** | 社媒视频下载、转写、帧分析、字幕 OCR | 「下载这个 B 站视频」「提取字幕」 | 自动触发 | `$social-video-toolkit` | [SKILL](file:///Users/arhaiyun/github/ai-cognition-studio/labs/social-video-toolkit/SKILL.md) |
+| **video-batch-download** | 视频主入口：抖音/小红书/B站下载、本地 tiny 转写 | 「下载并转写这个视频」 | `@video-batch-download` | `$video-batch-download` | [SKILL](../labs/video-batch-download/SKILL.md) |
+| **social-video-toolkit** | 本地视频抽帧、字幕裁剪、可选 OCR / Google ASR | 「抽帧」「分析烧录字幕」 | `@social-video-toolkit` | `$social-video-toolkit`（手动触发） | [SKILL](../labs/social-video-toolkit/SKILL.md) |
+| **content-reader** | 按平台保存 Markdown、图片、视频和逐字稿 | 「保存这个图文」「整理素材笔记」 | `@content-reader` | `$content-reader` | [SKILL](../labs/content-reader/SKILL.md) |
+| **social-media-toolkit** | 图文元数据、图片下载及独立 CLI / MCP | 「提取正文和图片」 | `@social-media-toolkit` | `$social-media-toolkit` | [SKILL](../labs/social-media-toolkit/SKILL.md) |
 
 ---
 
@@ -117,6 +122,9 @@ cd ~/github/ai-cognition-studio
 | arch-diagram-builder | ✅ | ✅ | ✅ |
 | feishu-doc-writer | ✅ | ✅ | ✅ |
 | social-video-toolkit | ✅ | ✅ | ✅ |
+| video-batch-download | ✅ | ✅ | ✅ |
+| content-reader 及四个平台子技能 | ✅ | ✅ | ✅ |
+| social-media-toolkit | ✅ | ✅ | ✅ |
 | studio-skill-sync | ✅ | ✅ | ✅ |
 | project-incubator | ✅ | — | ✅ |
 | ppt-builder | ❌ 待迁入 | ✅ 仅项目级 | ❌ |

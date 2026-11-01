@@ -55,6 +55,7 @@ npm run dev    # 打开 http://127.0.0.1:5173
 - [Skill 三端同步（Cursor + Codex + Studio）](playbooks/skill-dual-install.md)
 - [自媒体设计 Playbook](playbooks/self-media-design.md)
 - [Agent Skills 使用说明](docs/skills-guide.md) · [HTML 导航页（Alfred）](file:///Users/arhaiyun/github/ai-cognition-studio/docs/skills-guide.html)
+- [自媒体下载与内容解析使用手册](docs/social-media-tools-guide.md) · [安装、修复及实测报告](docs/social-media-tools-validation.md)
 
 ### Agents（Sub-Agent 实践）
 

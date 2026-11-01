@@ -2,6 +2,8 @@
 
 每个子目录是 **可 fork、可运行** 的最小示例。优先完整 artifact，而非链接清单。
 
+自媒体工具统一说明：[使用手册](../docs/social-media-tools-guide.md) · [安装与验证报告](../docs/social-media-tools-validation.md)。
+
 | Lab | 栈 | 状态 |
 |-----|-----|------|
 | [mcp-hello](mcp-hello/) | Python · FastMCP · stdio | ✅ 可运行 |
