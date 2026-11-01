@@ -2,6 +2,31 @@
 
 验证日期：2026-11-01（Asia/Shanghai）。环境：Intel Mac、Node 22.14.0、隔离 Python 3.12.13。
 
+## 后续修复与当前结果
+
+以下结果更新首次安装时的失败记录。统一视频入口为已修复的 **`video-batch-download`**；social-media-toolkit 保留独立的 CLI / MCP / 云转写路线，不把其结果与这条本地流程混淆。
+
+| 验证项 | 修复后的结果 |
+|---|---|
+| 抖音视频 | 正常主流程下载 18,511,787 字节、约 71 秒视频，提取音频并使用本地模型输出转写稿 |
+| 小红书视频 | 正常主流程下载完整 7,216,290 字节、11.58678 秒、720×1280 视频，提取音频并输出本地转写稿；严格整片解码通过 |
+| 本地模型 | tiny 必需文件逐一核验 SHA-256；权重为 75,538,270 字节，SHA-256 为 `dcb76c6586fc06cbdac6dd21f14cfd129cc4cdd9dce19bf4ffa62e59cbe6e6d1`，与原模型一致 |
+| 离线运行 | 以 `HF_HUB_OFFLINE=1` 验证本地模型，默认 CPU/int8，无需上传音频或云 ASR |
+| 文字质量 | tiny 中文误识别明显，原始稿已保留，不能作为准确逐字稿；解析示例主要依据实际画面、烧录字幕和正文，分别标注来源 |
+| 模型选择 | 用户明确选择先保留 tiny，不下载 small；默认命令已改为本地 tiny 路径 |
+
+修复的根因与对应改动：
+
+1. 抖音旧分享页缺少 `videoInfoRes`。官方匿名播放器仍提供视频详情和媒体地址，解析器改为优先使用它；删除等永久错误仍停止。
+2. 小红书同一链接在 Node HTTP 客户端返回空笔记页面、Python 返回目标笔记。主流程使用无账号 cookies 的 Python 请求，只接受目标 note ID；失败后才回退匿名浏览器。
+3. 完整 CDN 流停滞，256KB Range 请求可正常返回。新增分段下载、重试、Content-Range / 长度 / ETag 校验、分块哈希和断点恢复；完整拼接后才发布最终文件。
+4. PyAV 19.0.2 删除了 faster-whisper 1.2.1 使用的参数。约束 `av>=11,<16`，实装 15.1.0。
+5. OpenCC 纯 Python 实现自动追加 `.json`，旧配置名产生 `t2s.json.json`。改为 `t2s` 并声明对应依赖。
+
+最新视频、原始转写、抽样画面及解析报告位于 `<repo>/.private/social-media-debug/`。完整流程以正常 CLI、真实媒体校验和模型哈希为证据。
+
+修复后的回归检查：Node 测试 128 项通过，另有 6 项本地 HTTP 分段传输测试通过。测试覆盖错位响应拒绝、传输失败重试、断点恢复、错误哈希拒绝发布，以及目标笔记绑定、官方播放器回退与永久内容错误停止。
+
 ## 安装结果
 
 | 项目 | 来源 | 本机状态 |
@@ -16,10 +41,10 @@
 - 默认素材库：`<repo>/.private/social-media-library/`。
 - 验证材料：`<repo>/.private/social-media-validation/`，不提交公开仓库。
 - 命令入口：`~/.local/bin/` 下的 `socialkit`、`social-media-toolkit-mcp`、`video-batch-download`、`xhs-reader`、`bilibili-reader`、`yt-dlp`、`ffmpeg`、`ffprobe`。
-- video-batch-download 默认使用 CPU、int8、small 模型；默认输出到素材库的 `videos/`。调用者后续参数可覆盖默认值。
+- video-batch-download 默认使用 CPU、int8、已缓存的本地 tiny 模型；默认输出到素材库的 `videos/`。调用者后续参数可覆盖默认值。
 - FFmpeg 使用便携 7.1 版本，无需更新旧版 Homebrew；Python 包源下载超时后使用清华 PyPI 镜像安装。依赖版本见 `labs/social-media-toolkit/STUDIO-runtime-versions.json`。
 
-## 实际验证结果
+## 首次安装验证结果（修复前历史记录）
 
 这里分别记录安装、联网提取、文件下载与内容理解，不将其中一项成功视为全部成功。
 
@@ -69,6 +94,6 @@ xhs-reader --doctor
 
 `socialkit text` 及未加 `--no-text` 的 capture 会走文字提取路由；视频缺少平台字幕时，需要配置相应云 ASR 才能在第 3 项内部继续。第 3 项自身不支持本地 ASR 或图片 OCR。本地转写应使用第 1 项或其他已安装视频处理能力，并先完成模型下载。
 
-## 当前结论
+## 首次验证结论（已由上方后续修复更新）
 
 三个项目已安装并完成本机基础配置，不能宣称三平台的全部媒体类型均已可用。当前可靠通过的样例是 **B站视频下载与抽帧、小红书图文提取下载和结构解析、MCP 服务连接**。抖音、完整小红书视频下载、本地 ASR 和未覆盖的图文类型仍需后续处理。

@@ -4,6 +4,8 @@
 
 <h1 align="center">Video Batch Download</h1>
 
+> Studio 本机修复（2026-11-01）：抖音官方匿名播放器、小红书精确绑定的公开页面解析与分段下载已接入正常流程。本地默认模型为已校验的 tiny（CPU/int8），用户选择暂不下载 small。转写存在明显误识别，内容解析需结合画面和烧录字幕。依赖请按 `requirements.txt` 安装。见 [本机验证报告](../../docs/social-media-tools-validation.md)。
+
 <p align="center">
   <b>公开视频一键下载，本地生成文案和结构化数据。</b>
 </p>

@@ -6,6 +6,40 @@ import { DouyinParser } from "../scripts/platforms/douyin.js";
 
 const parser = new DouyinParser();
 
+test("Douyin public embed navigation preserves the original source URL", async () => {
+  const subject = new DouyinParser();
+  const source = "https://www.douyin.com/video/123456789";
+  const calls = [];
+  subject._parsePage = async (manager, original, options, navigation) => {
+    calls.push({ original, navigation });
+    return { sourceUrl: original, videoId: "123456789" };
+  };
+  assert.deepEqual(await subject.parse({}, source, {}), { sourceUrl: source, videoId: "123456789" });
+  assert.deepEqual(calls, [{ original: source, navigation: "https://open.douyin.com/player/video?vid=123456789" }]);
+});
+
+test("Douyin public embed failure falls back to the original page", async () => {
+  const subject = new DouyinParser();
+  const source = "https://www.douyin.com/video/123456789";
+  let attempts = 0;
+  subject._parsePage = async (manager, original, options, navigation) => {
+    attempts += 1;
+    if (navigation !== source) throw new PlatformError("temporary embed failure", { retryable: true });
+    return { sourceUrl: original };
+  };
+  assert.deepEqual(await subject.parse({}, source, {}), { sourceUrl: source });
+  assert.equal(attempts, 2);
+});
+
+test("Douyin permanent content errors stop public-page fallback", async () => {
+  const subject = new DouyinParser();
+  let attempts = 0;
+  const deleted = new PlatformError("deleted", { permanent: true, retryable: false });
+  subject._parsePage = async () => { attempts += 1; throw deleted; };
+  await assert.rejects(subject.parse({}, "https://www.douyin.com/video/123456789", {}), (error) => error === deleted);
+  assert.equal(attempts, 1);
+});
+
 test("Douyin detail collection keeps video variants and never collects music audio", () => {
   const candidates = [];
   parser._collectMediaUrls({

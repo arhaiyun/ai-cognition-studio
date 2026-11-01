@@ -19,6 +19,23 @@ export class DouyinParser extends PlatformParser {
   }
 
   async parse(browserManager, url, options) {
+    const videoId = this._extractVideoId(url);
+    const navigationUrls = videoId && !/\/note\//i.test(url)
+      ? [`https://open.douyin.com/player/video?vid=${videoId}`, url]
+      : [url];
+    let lastError;
+    for (const navigationUrl of navigationUrls) {
+      try {
+        return await this._parsePage(browserManager, url, options, navigationUrl);
+      } catch (error) {
+        if (error.permanent || error.retryable === false) throw error;
+        lastError = error;
+      }
+    }
+    throw lastError;
+  }
+
+  async _parsePage(browserManager, url, options, navigationUrl = url) {
     const browser = await browserManager.start();
     const contextOptions = DouyinParser.getBrowserContextOptions(browserManager, options);
 
@@ -91,7 +108,7 @@ export class DouyinParser extends PlatformParser {
     });
 
     try {
-      await page.goto(url, {
+      await page.goto(navigationUrl, {
         waitUntil: "domcontentloaded",
         timeout: options.pageTimeoutMs,
       });
@@ -177,14 +194,14 @@ export class DouyinParser extends PlatformParser {
       )];
       const selectedQuality = selectedVideo ? this._qualityLabel(selectedVideo) : null;
 
-      const videoId = this._extractVideoId(finalUrl) ?? itemKey(url);
+      const videoId = this._extractVideoId(url) ?? this._extractVideoId(finalUrl) ?? itemKey(url);
 
       return {
         platform: DouyinParser.getPlatformName(),
         sourceUrl: url,
-        canonicalUrl: finalUrl,
+        canonicalUrl: `https://www.douyin.com/video/${videoId}`,
         videoId,
-        title: pageTitle,
+        title: (pageTitle !== "video" && pageTitle) || sanitizeName(detailMeta?.description ?? videoId),
         author: detailMeta?.author ?? { nickname: null, uid: null, url: null },
         description: detailMeta?.description ?? null,
         postTime: detailMeta?.post_time ?? null,

@@ -3,6 +3,9 @@ import fsp from "node:fs/promises";
 import path from "node:path";
 import { Readable } from "node:stream";
 import { finished } from "node:stream/promises";
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
+import { fileURLToPath } from "node:url";
 
 import { ProcessingError, normalizeError, sanitizeCandidateFailure } from "../core/errors.js";
 import { QUALITY_SELECTION_VERSION } from "../core/policies.js";
@@ -11,6 +14,7 @@ import { isValidMp4, itemKey, USER_AGENT } from "../utils/common.js";
 import { assertExpectedQuality, assertPlayableVideo, mergeStreams } from "./ffmpeg.js";
 
 const activeDownloadControllers = new Set();
+const execFileAsync = promisify(execFile);
 
 function safePathSegment(value, fallback = "video", maxLen = 80) {
   const raw = String(value ?? "");
@@ -98,6 +102,22 @@ async function downloadSingleStream(stream, mediaKey, suffix, outputDir, timeout
 
   try {
     const referer = stream.referer ?? "https://www.google.com/";
+    if (stream.downloadMode === "range") {
+      const helper = fileURLToPath(new URL("../range_download.py", import.meta.url));
+      const { stdout } = await execFileAsync(process.env.SOCIAL_MEDIA_PYTHON || "python3", [
+        helper, stream.url, partialPath, "--referer", referer,
+      ], { signal: controller.signal, timeout: timeoutMs, maxBuffer: 1024 * 1024 });
+      const result = JSON.parse(stdout.trim());
+      const stat = await fsp.stat(partialPath);
+      if (result.status !== "success" || stat.size !== result.bytes || !(await isValidMp4(partialPath))) {
+        throw mediaError("Ranged download did not produce a complete MP4", {
+          code: "MEDIA_INCOMPLETE", category: "network",
+        });
+      }
+      await fsp.rm(finalPath, { force: true });
+      await fsp.rename(partialPath, finalPath);
+      return { filePath: finalPath, bytes: stat.size, skipped: false };
+    }
     const response = await fetch(stream.url, {
       redirect: "follow",
       signal: controller.signal,

@@ -1,5 +1,10 @@
 import { PlatformError, PlatformParser, preferPlatformError } from "./base.js";
 import { itemKey, sleep, settleWithin } from "../utils/common.js";
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
+import { fileURLToPath } from "node:url";
+
+const execFileAsync = promisify(execFile);
 
 const URL_PATTERNS = [
   /^https?:\/\/(?:www\.)?xiaohongshu\.com\/(?:explore|discovery\/item)\/[\w]+/i,
@@ -35,6 +40,8 @@ export class XiaohongshuParser extends PlatformParser {
   }
 
   async parse(browserManager, url, options) {
+    const publicNote = await this._fetchPublicNote(url, options);
+    if (publicNote) return this._buildParsedVideo(publicNote.note, [], url, publicNote.resolvedUrl);
     const browser = await browserManager.start();
     const contextOptions = XiaohongshuParser.getBrowserContextOptions(browserManager, options);
 
@@ -197,91 +204,120 @@ export class XiaohongshuParser extends PlatformParser {
         });
       }
 
-      const availableStreams = this._resolveAvailableStreams(
-        noteData,
-        runtimeMediaCandidates,
-        "https://www.xiaohongshu.com/",
-        this._noteDataIndicatesVideo(noteData) || this._urlIndicatesVideo(finalUrl),
-      );
-      const videoUrl = availableStreams[0]?.url ?? null;
-
-      // 判断是否为视频笔记
-      const noteType = noteData.type ?? noteData.noteType ?? "";
-      const hasVideo = noteType === "video" || noteData.video != null || Boolean(videoUrl) || this._urlIndicatesVideo(finalUrl);
-      if (!hasVideo) {
-        throw new PlatformError("This is an image/text note, not a video note", {
-          code: "UNSUPPORTED_CONTENT_TYPE",
-          category: "content",
-          permanent: true,
-          retryable: false,
-          userMessage: "这是小红书图文笔记，不是可转写视频，已跳过。",
-          suggestion: "如果需要处理图文内容，需要新增图片/文字提取能力。",
-          details: { contentType: "image_note" },
-        });
-      }
-
-      if (!videoUrl) {
-        throw new PlatformError("No video URL found in note data", {
-          code: "MEDIA_DISCOVERY_FAILED",
-          category: "platform",
-          retryable: true,
-          retryScope: "item",
-          userMessage: "没有找到小红书视频地址，稍后会重新解析。",
-        });
-      }
-
-      // 提取元数据
-      const noteId = noteData.noteId ?? noteData.id ?? this._extractNoteIdFromUrl(finalUrl) ?? itemKey(url);
-      const user = noteData.user ?? noteData.author ?? {};
-
-      const author = {
-        nickname: user.nickname ?? user.nick_name ?? null,
-        uid: user.userId ?? user.user_id ?? null,
-        url: user.userId ? `https://www.xiaohongshu.com/user/profile/${user.userId}` : null,
-      };
-
-      const createTime = noteData.time ?? noteData.createTime ?? noteData.create_time;
-      const postTime = createTime
-        ? new Date(typeof createTime === "number" && createTime < 1e12 ? createTime * 1000 : createTime)
-            .toISOString().replace("T", " ").slice(0, 19)
-        : null;
-
-      const interactInfo = noteData.interactInfo ?? noteData.interact_info ?? {};
-
-      const statistics = {
-        like_count: interactInfo.likedCount ?? interactInfo.liked_count ?? null,
-        collect_count: interactInfo.collectedCount ?? interactInfo.collected_count ?? null,
-        comment_count: interactInfo.commentCount ?? interactInfo.comment_count ?? null,
-        share_count: interactInfo.shareCount ?? interactInfo.share_count ?? null,
-      };
-
-      const videoInfo = noteData.video ?? {};
-      const duration = videoInfo.duration ?? videoInfo.dur ?? null;
-      const mediaAlternatives = availableStreams.map((stream) => [{ ...stream }]);
-
-      return {
-        platform: XiaohongshuParser.getPlatformName(),
-        sourceUrl: url,
-        canonicalUrl: finalUrl,
-        videoId: noteId,
-        title: noteData.title ?? noteData.displayTitle ?? "",
-        author,
-        description: noteData.desc ?? null,
-        postTime,
-        duration: this._normalizeDuration(duration),
-        statistics,
-        referer: "https://www.xiaohongshu.com/",
-        availableStreams,
-        qualityAudit: this._buildQualityAudit(availableStreams, availableStreams[0]),
-        mediaAlternatives,
-        mediaStreams: mediaAlternatives[0],
-      };
+      return this._buildParsedVideo(noteData, runtimeMediaCandidates, url, finalUrl);
     } finally {
       closing = true;
       page.off("response", handleResponse);
       await settleWithin(Promise.allSettled([...responseTasks]), 5_000);
       await settleWithin(context.close(), 5_000);
     }
+  }
+
+  async _fetchPublicNote(url, options) {
+    try {
+      const helper = fileURLToPath(new URL("../xhs_public_page.py", import.meta.url));
+      const { stdout } = await execFileAsync(process.env.SOCIAL_MEDIA_PYTHON || "python3", [helper, url], {
+        timeout: Math.min(options.pageTimeoutMs ?? 15000, 15000), maxBuffer: 8 * 1024 * 1024,
+      });
+      const page = JSON.parse(stdout);
+      const note = this._parsePublicHtml(page.html, url, page.url);
+      return note ? { note, resolvedUrl: page.url } : null;
+    } catch { return null; }
+  }
+
+  _parsePublicHtml(html, sourceUrl, resolvedUrl) {
+    const match = html.match(/window\.__INITIAL_STATE__\s*=\s*(.*?)<\/script>/s);
+    if (!match) return null;
+    try {
+      const state = JSON.parse(match[1].replace(/:undefined(?=[,}])/g, ":null").replace(/;\s*$/, ""));
+      const target = this._extractNoteIdFromUrl(sourceUrl) ?? this._extractNoteIdFromUrl(resolvedUrl);
+      if (!target) return null;
+      const note = state.note?.noteDetailMap?.[target]?.note;
+      return note && this._noteMatches(note, target) ? note : null;
+    } catch { return null; }
+  }
+
+  _buildParsedVideo(noteData, runtimeMediaCandidates, url, finalUrl) {
+    const availableStreams = this._resolveAvailableStreams(
+      noteData,
+      runtimeMediaCandidates,
+      "https://www.xiaohongshu.com/",
+      this._noteDataIndicatesVideo(noteData) || this._urlIndicatesVideo(finalUrl),
+    );
+    for (const stream of availableStreams) stream.downloadMode = "range";
+    const videoUrl = availableStreams[0]?.url ?? null;
+
+    // 判断是否为视频笔记
+    const noteType = noteData.type ?? noteData.noteType ?? "";
+    const hasVideo = noteType === "video" || noteData.video != null || Boolean(videoUrl) || this._urlIndicatesVideo(finalUrl);
+    if (!hasVideo) {
+      throw new PlatformError("This is an image/text note, not a video note", {
+        code: "UNSUPPORTED_CONTENT_TYPE",
+        category: "content",
+        permanent: true,
+        retryable: false,
+        userMessage: "这是小红书图文笔记，不是可转写视频，已跳过。",
+        suggestion: "如果需要处理图文内容，需要新增图片/文字提取能力。",
+        details: { contentType: "image_note" },
+      });
+    }
+
+    if (!videoUrl) {
+      throw new PlatformError("No video URL found in note data", {
+        code: "MEDIA_DISCOVERY_FAILED",
+        category: "platform",
+        retryable: true,
+        retryScope: "item",
+        userMessage: "没有找到小红书视频地址，稍后会重新解析。",
+      });
+    }
+
+    // 提取元数据
+    const noteId = noteData.noteId ?? noteData.id ?? this._extractNoteIdFromUrl(finalUrl) ?? itemKey(url);
+    const user = noteData.user ?? noteData.author ?? {};
+
+    const author = {
+      nickname: user.nickname ?? user.nick_name ?? null,
+      uid: user.userId ?? user.user_id ?? null,
+      url: user.userId ? `https://www.xiaohongshu.com/user/profile/${user.userId}` : null,
+    };
+
+    const createTime = noteData.time ?? noteData.createTime ?? noteData.create_time;
+    const postTime = createTime
+      ? new Date(typeof createTime === "number" && createTime < 1e12 ? createTime * 1000 : createTime)
+          .toISOString().replace("T", " ").slice(0, 19)
+      : null;
+
+    const interactInfo = noteData.interactInfo ?? noteData.interact_info ?? {};
+
+    const statistics = {
+      like_count: interactInfo.likedCount ?? interactInfo.liked_count ?? null,
+      collect_count: interactInfo.collectedCount ?? interactInfo.collected_count ?? null,
+      comment_count: interactInfo.commentCount ?? interactInfo.comment_count ?? null,
+      share_count: interactInfo.shareCount ?? interactInfo.share_count ?? null,
+    };
+
+    const videoInfo = noteData.video ?? {};
+    const duration = videoInfo.duration ?? videoInfo.dur ?? null;
+    const mediaAlternatives = availableStreams.map((stream) => [{ ...stream }]);
+
+    return {
+      platform: XiaohongshuParser.getPlatformName(),
+      sourceUrl: url,
+      canonicalUrl: finalUrl,
+      videoId: noteId,
+      title: noteData.title || noteData.displayTitle || noteData.desc?.split("\n")[0]?.slice(0, 80) || noteId,
+      author,
+      description: noteData.desc ?? null,
+      postTime,
+      duration: this._normalizeDuration(duration),
+      statistics,
+      referer: "https://www.xiaohongshu.com/",
+      availableStreams,
+      qualityAudit: this._buildQualityAudit(availableStreams, availableStreams[0]),
+      mediaAlternatives,
+      mediaStreams: mediaAlternatives[0],
+    };
   }
 
   /**

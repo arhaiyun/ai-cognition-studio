@@ -137,7 +137,7 @@ def main():
             if converter is None:
                 try:
                     import opencc
-                    converter = opencc.OpenCC("t2s.json")
+                    converter = opencc.OpenCC("t2s")
                 except ImportError:
                     print(
                         "Missing opencc. Run: pip install -U opencc",

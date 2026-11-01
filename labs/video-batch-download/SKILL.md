@@ -28,7 +28,7 @@ node scripts/setup.mjs
 ### Python dependencies (for transcription)
 
 ```bash
-pip install -U faster-whisper opencc
+python3 -m pip install -r requirements.txt
 ```
 
 Also requires `ffmpeg` on PATH.
@@ -387,6 +387,22 @@ Read [references/architecture.md](references/architecture.md) when coordinating 
 
 
 ## Studio installation
+
+Verified local video path (2026-11-01): prefer the `video-batch-download` command
+in `~/.local/bin`. It selects the isolated Python and the verified local Whisper
+tiny model with CPU/int8. The user chose to keep tiny rather than download small.
+Transcripts are machine drafts with substantial errors; combine actual frames
+and burned-in captions for analysis and never present them as exact subtitles.
+
+- Douyin canonical videos use the official public embedded player first, with
+  original-page fallback on retryable failure. Permanent content errors stop.
+- Xiaohongshu public HTML is fetched without account cookies and bound to the
+  exact requested note. MP4 transfers use resumable, verified HTTP ranges;
+  anonymous browser parsing remains a fallback. This video skill excludes image notes.
+- Install `requirements.txt`: PyAV 19 is incompatible with faster-whisper 1.2.x.
+  OpenCC uses `t2s`; this installation provides the pure Python implementation.
+- For a stalled public CDN, `scripts/range_download.py URL OUTPUT --referer PAGE`
+  transfers bounded ranges. `--sha256 HASH` additionally verifies a known model hash.
 
 - Cursor / Claude Code: `/video-batch-download` followed by the request.
 - Codex: `$video-batch-download` followed by the request.
